@@ -1,6 +1,28 @@
 [project]
-name = "placeholder"
+name = "saldo"
 version = "0.1"
+description = "calculate taxes to pay and net salary if you're a portuguese worker. Keep track of your balance (or \"saldo\")!"
+readme = "README.md"
+requires-python = ">=3.8"
+authors = [{name = "Francisco Macedo"}]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+dependencies = [
+
+]
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project.urls]
+Homepage = "https://github.com/franciscobmacedo/saldo"
+Changelog = "https://github.com/franciscobmacedo/saldo/releases"
+Issues = "https://github.com/franciscobmacedo/saldo/issues"
+CI = "https://github.com/franciscobmacedo/saldo/actions"
+
 
 [project.optional-dependencies]
 test = ["pytest"]
