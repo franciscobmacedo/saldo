@@ -1,0 +1,84 @@
+{
+  "region": "Portugal Continental",
+  "situation": "Não casado sem dependentes ou casado dois titulares",
+  "taxBrackets": [
+    {
+      "maxAmount": 820.0,
+      "marginalRate": 0.0,
+      "deductibleAmount": 0.0,
+      "effectiveRate": 0.0
+    },
+    {
+      "maxAmount": 935.0,
+      "marginalRate": 13.25,
+      "deductibleFormula": "13.25% * 2.6 * (1135.39 - R)",
+      "effectiveRate": 5.9
+    },
+    {
+      "maxAmount": 1001.0,
+      "marginalRate": 18.0,
+      "deductibleFormula": "18.00% * 1.4 * (1385.20 - R)",
+      "effectiveRate": 8.3
+    },
+    {
+      "maxAmount": 1123.0,
+      "marginalRate": 18.0,
+      "deductibleAmount": 96.82,
+      "effectiveRate": 9.4
+    },
+    {
+      "maxAmount": 1765.0,
+      "marginalRate": 26.0,
+      "deductibleAmount": 186.66,
+      "effectiveRate": 13.53
+    },
+    {
+      "maxAmount": 2057.0,
+      "marginalRate": 32.75,
+      "deductibleAmount": 305.8,
+      "effectiveRate": 17.9
+    },
+    {
+      "maxAmount": 2664.0,
+      "marginalRate": 37.0,
+      "deductibleAmount": 393.23,
+      "effectiveRate": 22.2
+    },
+    {
+      "maxAmount": 3193.0,
+      "marginalRate": 38.72,
+      "deductibleAmount": 439.05,
+      "effectiveRate": 24.07
+    },
+    {
+      "maxAmount": 4173.0,
+      "marginalRate": 40.05,
+      "deductibleAmount": 481.52,
+      "effectiveRate": 28.5
+    },
+    {
+      "maxAmount": 5470.0,
+      "marginalRate": 41.0,
+      "deductibleAmount": 521.17,
+      "effectiveRate": 31.5
+    },
+    {
+      "maxAmount": 6540.0,
+      "marginalRate": 42.7,
+      "deductibleAmount": 614.16,
+      "effectiveRate": 33.3
+    },
+    {
+      "maxAmount": 20067.0,
+      "marginalRate": 44.95,
+      "deductibleAmount": 761.31,
+      "effectiveRate": 41.2
+    },
+    {
+      "maxAmount": null,
+      "marginalRate": 47.17,
+      "deductibleAmount": 1206.8,
+      "effectiveRate": null
+    }
+  ]
+}
