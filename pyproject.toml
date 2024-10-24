@@ -1,21 +1,23 @@
 [project]
 name = "saldo"
-version = "0.1"
-description = "calculate taxes to pay and net salary if you're a portuguese worker. Keep track of your balance (or \"saldo\")!"
+version = "0.1.1"
+description = "net income calculator for Portugal"
 readme = "README.md"
-requires-python = ">=3.8"
-authors = [{name = "Francisco Macedo"}]
-license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+authors = [
+    {name = "Francisco Macedo"},
+    {name = "Francisco Macedo", email = "franciscovcbm@gmail.com"},
+]
+license = {text = "MIT"}
 classifiers = [
     "License :: OSI Approved :: Apache Software License"
 ]
 dependencies = [
-
 ]
 
 [build-system]
-requires = ["setuptools"]
-build-backend = "setuptools.build_meta"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
 [project.urls]
 Homepage = "https://github.com/franciscobmacedo/saldo"
@@ -27,3 +29,6 @@ CI = "https://github.com/franciscobmacedo/saldo/actions"
 [project.optional-dependencies]
 test = ["pytest"]
 dev = ["ruff", "mypy"]
+
+[tool.pdm]
+distribution = true
