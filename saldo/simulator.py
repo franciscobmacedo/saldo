@@ -1,31 +1,52 @@
-from typing import Literal
+import datetime
+from typing import Literal, Optional
+from saldo.config.schemas import Condition, Situations
 from saldo.schemas import Twelfths, LunchAllowance, SimulationResult
 from saldo.tables.tax_retention import TaxRetentionTable
 
 
 def simulate_dependent_worker(
-    taxable_income: float,
+    income: float,
     location: Literal[
         "Portugal Continental",
         "Região Autónoma dos Açores",
         "Região Autónoma da Madeira",
     ],
-    year: int = 2024,
-    marital_status: Literal[
-        "single", "married_1_holder", "married_2_holder"
-    ] = "single",
-    number_of_dependents: int = 0,
+    married: bool,
+    disabled: bool,
+    number_of_holders: Optional[int] = None,
+    number_of_dependents: Optional[int]= None,
+    date_start: datetime.date = datetime.date(2024, 1, 1),
+    date_end: datetime.date = datetime.date(2024, 8, 31),
     social_security_tax: float = 0.11,
     twelfths: Twelfths = Twelfths.TWO_MONTHS,
     lunch_allowance: LunchAllowance = LunchAllowance(),
 ) -> SimulationResult:
-    twelfths_income = get_twelfths_income(taxable_income, twelfths)
-    retention_income = taxable_income + twelfths_income
-    gross_income = retention_income + lunch_allowance.monthly_value
+    
+    if married and not number_of_holders:
+        raise ValueError("number_of_holders is required for married workers")
+    twelfths_income = get_twelfths_income(income, twelfths)
 
-    tax_retention_table = TaxRetentionTable.load(year, marital_status)
+    taxable_income = income + lunch_allowance.taxable_monthly_value
+    retention_income = taxable_income + twelfths_income 
+    gross_income = retention_income + lunch_allowance.tax_free_monthly_value
+
+    
+    condition = Condition(
+        married=married,
+        number_of_holders=number_of_holders,
+        number_of_dependents=number_of_dependents,
+        disabled=disabled,
+    )
+
+    # print(f"{condition=}")
+    situation = Situations.get_situation_from_condition(condition)
+    # print("situation", situation)
+
+    tax_retention_table = TaxRetentionTable.load(date_start, date_end, situation.code)
     bracket = tax_retention_table.find_bracket(taxable_income)
-    tax = bracket.calculate_tax(taxable_income, twelfths_income) if bracket else 0.0
+    # print("bracket", bracket)
+    tax = bracket.calculate_tax(taxable_income, twelfths_income, number_of_dependents or 0) if bracket else 0.0
 
     social_security = retention_income * social_security_tax
 
@@ -44,6 +65,7 @@ def simulate_dependent_worker(
         net_salary=net_salary,
         yearly_net_salary=yearly_net_salary,
         yearly_gross_salary=yearly_gross_salary,
+        lunch_allowance=lunch_allowance,
     )
 
 

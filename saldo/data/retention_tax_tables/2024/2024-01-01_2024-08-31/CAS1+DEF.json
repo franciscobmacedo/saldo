@@ -1,0 +1,56 @@
+{
+    "situation": "CAS1+DEF",
+    "description": "Trabalho dependente - Casado \u00fanico titular - deficiente",
+    "brackets": [
+        {
+            "signal": "max",
+            "limit": 2105.51,
+            "max_marginal_rate": 0.0,
+            "deduction": 0.0,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 0.0,
+            "effective_mensal_rate": 0.0
+        },
+        {
+            "signal": "max",
+            "limit": 3622.95,
+            "max_marginal_rate": 0.316,
+            "deduction": 719.35,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 11.7
+        },
+        {
+            "signal": "max",
+            "limit": 6587.01,
+            "max_marginal_rate": 0.33,
+            "deduction": 770.07,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 21.3
+        },
+        {
+            "signal": "max",
+            "limit": 20264.85,
+            "max_marginal_rate": 0.425,
+            "deduction": 1395.84,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 35.6
+        },
+        {
+            "signal": "min",
+            "limit": 20264.85,
+            "max_marginal_rate": 0.4717,
+            "deduction": 2342.21,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": -1.0
+        }
+    ]
+}

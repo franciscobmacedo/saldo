@@ -10,3 +10,6 @@ venv
 dist
 build
 .pdm-python
+
+# vscode
+.vscode
