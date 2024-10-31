@@ -10,6 +10,12 @@ SituationCodesT = Literal[
     "SOLCAS2", "SOLD", "CAS1", "SOLCAS2+DEF", "SOLD+DEF", "CAS2D+DEF", "CAS1+DEF"
 ]
 
+LocationT = Literal[
+    "continente",
+    "acores",
+    "madeira",
+]
+
 
 @dataclass
 class Condition:
@@ -225,6 +231,7 @@ class Situations(Enum):
 @dataclass
 class RetentionPathsSchema:
     year: Path
+    location: Path
     date_range: Path
     situation_code: Path
 
@@ -232,13 +239,15 @@ class RetentionPathsSchema:
         self,
         date_start: datetime.date,
         date_end: datetime.date,
+        location: LocationT,
         situation_code: SituationCodesT,
         year: int | str,
     ):
         # Create a new instance of the class with retention path and year
         _year = str(year)
         self.year = Path(RETENTION_TAX_TABLES_PATH, _year)
-        self.date_range = Path(self.year, f"{date_start}_{date_end}")
+        self.location = Path(self.year, location)
+        self.date_range = Path(self.location, f"{date_start}_{date_end}")
         self.situation = Path(self.date_range, situation_code + ".json")
 
     @property

@@ -3,7 +3,7 @@ from .consts import (
     BASE_PATH,
     DATA_PATH,
 )
-from .schemas import RetentionPathsSchema, Situation, SituationCodesT, Condition
+from .schemas import RetentionPathsSchema, Situation, SituationCodesT, Condition, LocationT
 
 __all__ = [
     "RETENTION_TAX_TABLES_PATH",
@@ -13,4 +13,5 @@ __all__ = [
     "Situation",
     "SituationCodesT",
     "Condition",
+    "LocationT"
 ]

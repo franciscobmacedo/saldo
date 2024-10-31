@@ -7,7 +7,7 @@ from saldo.schemas import Twelfths, LunchAllowance
 def base_single_params():
     return {
         "income": 1500,
-        "location": "Portugal Continental",
+        "location": "continente",
         "married": False,
         "disabled": False,
         "date_start": date(2024, 1, 1),
@@ -26,7 +26,7 @@ def base_single_params():
 def base_married_params():
     return {
         "income": 1500,
-        "location": "Portugal Continental",
+        "location": "continente",
         "married": True,
         "disabled": False,
         "date_start": date(2024, 1, 1),

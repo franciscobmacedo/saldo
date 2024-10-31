@@ -14,6 +14,7 @@ class SalaryTestCase:
     """Data class to hold test parameters and expected results for salary calculations."""
 
     description: str
+    location: str = "continente"
     twelfths: float = 0
     lunch_allowance: Optional[LunchAllowance] = None
     number_of_dependents: int = 0
@@ -32,7 +33,7 @@ def verify_salary_calculation(test_case: SalaryTestCase, base_params: dict):
         test_case: SalaryTestCase containing test parameters and expected results
         base_params: Base simulation parameters
     """
-    simulation_params = {**base_params, "twelfths": test_case.twelfths, "number_of_dependents": test_case.number_of_dependents}
+    simulation_params = {**base_params, "twelfths": test_case.twelfths, "number_of_dependents": test_case.number_of_dependents, "location": test_case.location}
 
     if test_case.lunch_allowance:
         simulation_params["lunch_allowance"] = test_case.lunch_allowance
@@ -106,6 +107,120 @@ def test_salary_with_different_dependents(
 ):
     """Test salary calculations with different twelfth configurations."""
     verify_salary_calculation(test_case, base_single_params)
+
+
+@pytest.mark.parametrize(
+    "test_case",
+    [
+        SalaryTestCase(
+            description="1 dependent",
+            location="acores",
+            number_of_dependents=1,
+            expected_gross_income=1500,
+            expected_tax=102.75,
+            expected_social_security=165,
+            expected_net_salary=1232.25,
+        ),
+        SalaryTestCase(
+            description="2 dependents",
+            location="acores",
+            number_of_dependents=2,
+            expected_gross_income=1500,
+            expected_tax=68.46,
+            expected_social_security=165,
+            expected_net_salary=1266.54,
+        ),
+        SalaryTestCase(
+            description="5 dependents",
+            location="acores",
+            number_of_dependents=5,
+            expected_gross_income=1500,
+            expected_tax=0,
+            expected_social_security=165,
+            expected_net_salary=1335.0,
+        ),
+        SalaryTestCase(
+            description="10 dependents",
+            location="acores",
+            number_of_dependents=10,
+            expected_gross_income=1500,
+            expected_tax=0,
+            expected_social_security=165,
+            expected_net_salary=1335,
+        ),
+        
+    ],
+    ids=[
+        "1 dependent",
+        "2 dependents",
+        "5 dependents",
+        "10 dependents",
+    ],
+)
+def test_salary_with_different_dependents_acores(
+    test_case: SalaryTestCase, base_single_params: dict
+):
+    """Test salary calculations with different twelfth configurations."""
+    verify_salary_calculation(test_case, base_single_params)
+
+
+
+
+@pytest.mark.parametrize(
+    "test_case",
+    [
+        SalaryTestCase(
+            description="1 dependent",
+            location="madeira",
+            number_of_dependents=1,
+            expected_gross_income=1500,
+            expected_tax=124.3,
+            expected_social_security=165,
+            expected_net_salary=1210.7,
+        ),
+        SalaryTestCase(
+            description="2 dependents",
+            location="madeira",
+            number_of_dependents=2,
+            expected_gross_income=1500,
+            expected_tax=90.01,
+            expected_social_security=165,
+            expected_net_salary=1244.99,
+        ),
+        SalaryTestCase(
+            description="5 dependents",
+            location="madeira",
+            number_of_dependents=5,
+            expected_gross_income=1500,
+            expected_tax=0,
+            expected_social_security=165,
+            expected_net_salary=1335.0,
+        ),
+        SalaryTestCase(
+            description="10 dependents",
+            location="madeira",
+            number_of_dependents=10,
+            expected_gross_income=1500,
+            expected_tax=0,
+            expected_social_security=165,
+            expected_net_salary=1335,
+        ),
+        
+    ],
+    ids=[
+        "1 dependent",
+        "2 dependents",
+        "5 dependents",
+        "10 dependents",
+    ],
+)
+def test_salary_with_different_dependents_madeira(
+    test_case: SalaryTestCase, base_single_params: dict
+):
+    """Test salary calculations with different twelfth configurations."""
+    verify_salary_calculation(test_case, base_single_params)
+
+
 
 @pytest.mark.parametrize(
     "test_case",
