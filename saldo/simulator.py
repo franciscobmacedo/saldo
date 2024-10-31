@@ -3,13 +3,15 @@ from typing import Optional
 from saldo.config.schemas import Condition, Situations, LocationT
 from saldo.schemas import Twelfths, LunchAllowance, SimulationResult
 from saldo.tables.tax_retention import TaxRetentionTable
+from saldo import validators
+from saldo import dependent_worker
 
 
 def simulate_dependent_worker(
     income: float,
-    married: bool,
-    disabled: bool,
-    partner_disabled: Optional[bool] = False,
+    married: bool = False,
+    disabled: bool = False,
+    partner_disabled: bool = False,
     location: LocationT = "continente",
     number_of_holders: Optional[int] = None,
     number_of_dependents: Optional[int] = None,
@@ -20,68 +22,60 @@ def simulate_dependent_worker(
     twelfths: Twelfths = Twelfths.TWO_MONTHS,
     lunch_allowance: LunchAllowance = LunchAllowance(),
 ) -> SimulationResult:
-    if number_of_holders is not None and number_of_holders > 2:
-        raise ValueError("number_of_holders must be None, 1 or 2")
+    # validate input
+    validators.validate_number_of_holders(number_of_holders)
+    validators.validate_married_and_number_of_holders(married, number_of_holders)
+    validators.validate_dependents(number_of_dependents, number_of_dependents_disabled)
 
-    if married and not number_of_holders:
-        raise ValueError("number_of_holders is required for married workers")
+    # partner with disability results in extra deduction
+    extra_deduction = dependent_worker.get_partner_extra_deduction(
+        married, number_of_holders, partner_disabled
+    )
 
-    if married and number_of_holders == 1 and partner_disabled:
-        """
-        https://diariodarepublica.pt/dr/detalhe/despacho/9971-a-2024-885806206#:~:text=b)%20Na%20situa%C3%A7%C3%A3o%20de%20%22casado%2C%20%C3%BAnico%20titular%22%20em
+    # holidays and christmas income distributed over the year
+    twelfths_income = dependent_worker.get_twelfths_income(income, twelfths)
 
-        b) Na situação de "casado, único titular" em que o cônjuge 
-        não aufira rendimentos das categorias A ou H e apresente 
-        um grau de incapacidade permanente igual ou superior a 60 %, 
-        é adicionado o valor de € 135,71 à parcela a abater;
-        """
-        extra_deduction = 135.71
-    else:
-        extra_deduction = 0.0
-    twelfths_coefficient = twelfths / 12
-    twelfths_income = income * twelfths_coefficient
-
+    # income for tax calculation
     taxable_income = income + lunch_allowance.taxable_monthly_value
+
+    # income for gross salary and social security
     retention_income = taxable_income + twelfths_income
+
+    # gross salary per month
     gross_income = retention_income + lunch_allowance.tax_free_monthly_value
 
-    condition = Condition(
+    # the situation to determine the tax bracket - it's connected with the table code
+    situation = Situations.get_situation(
         married=married,
         number_of_holders=number_of_holders,
         number_of_dependents=number_of_dependents,
         disabled=disabled,
     )
-
-    situation = Situations.get_situation_from_condition(condition)
+    
+    # load the corresponding tax retention table
     tax_retention_table = TaxRetentionTable.load(
         date_start, date_end, location, situation.code
     )
-    if (
-        tax_retention_table.dependent_disabled_addition_deduction is not None
-        and number_of_dependents_disabled is not None
-    ):
-        extra_deduction += (
-            tax_retention_table.dependent_disabled_addition_deduction
-            * number_of_dependents_disabled
-        )
-
+    
+    # find the tax bracket for the taxable income
     bracket = tax_retention_table.find_bracket(taxable_income)
 
-    tax = (
-        bracket.calculate_tax(
-            taxable_income,
-            twelfths_income,
-            number_of_dependents or 0,
-            extra_deduction,
-        )
-        if bracket
-        else 0.0
+    # extra deduction for dependents with disability
+    extra_deduction += dependent_worker.get_disabled_dependent_extra_deduction(
+        tax_retention_table, number_of_dependents_disabled or 0
     )
-
+    
+    # calculate the tax, social security and net salary
+    tax = bracket.calculate_tax(
+        taxable_income,
+        twelfths_income,
+        number_of_dependents or 0,
+        extra_deduction,
+    )
     social_security = retention_income * social_security_tax
-
     net_salary = gross_income - tax - social_security
 
+    # calculate yearly values
     yearly_lunch_allowance = lunch_allowance.monthly_value * 11
     yearly_gross_salary = taxable_income * 14 + yearly_lunch_allowance
     yearly_net_salary = net_salary * (14 - twelfths)

@@ -16,7 +16,6 @@ class TaxBracket:
     var2_deduction: float
     dependent_aditional_deduction: float
     effective_mensal_rate: float
-    dependent_disabled_addition_deduction: Optional[float] = None
 
     def calculate_deductible(self, salary: float) -> float:
         """Calculate deductible amount for this bracket."""
@@ -70,7 +69,7 @@ class TaxRetentionTable:
     tax_brackets: List[TaxBracket]
     dependent_disabled_addition_deduction: Optional[float] = None
 
-    def find_bracket(self, salary: float) -> Optional[TaxBracket]:
+    def find_bracket(self, salary: float) -> TaxBracket:
         """Find the appropriate tax bracket for a given salary."""
         for bracket in self.tax_brackets:
             if bracket.signal == "max" and salary <= bracket.limit:

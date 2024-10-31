@@ -108,6 +108,12 @@ def scrape_irs_table(table: TableMeta, location: LocationT):
             )
         situation: str = cleaned_row[0]
         description: str = table.situation_to_description_map.get(situation, "")
+        """
+        https://diariodarepublica.pt/dr/detalhe/despacho/9971-a-2024-885806206#:~:text=a)%20Por%20cada%20dependente%20com
+        a) Por cada dependente com grau de incapacidade permanente igual ou superior a 60 %, 
+        é adicionado à parcela a abater o valor de € 84,82, no caso das tabelas ii, iii, v, vii, ii-a, iii-a, v-a e vii-a 
+        e o valor de € 42,41, no caso das tabelas i, vi, i-a e vi-a;
+        """
         dependent_disabled_addition_deduction = None
         if situation in ["SOLD", "CAS1", "SOLD+DEF", "CAS1+DEF"]:
             dependent_disabled_addition_deduction = 84.82

@@ -193,6 +193,21 @@ class Situations(Enum):
         raise ValueError(f"Situation with code {code} not found.")
 
     @staticmethod
+    def get_situation(
+        married: bool,
+        disabled: bool,
+        number_of_holders: Optional[int] = None,
+        number_of_dependents: Optional[int] = None,
+    ):
+        condition: Condition = Condition(
+            married=married,
+            number_of_holders=number_of_holders,
+            number_of_dependents=number_of_dependents,
+            disabled=disabled,
+        )
+        return Situations.get_situation_from_condition(condition)
+
+    @staticmethod
     def get_situation_from_condition(
         condition: Condition,
     ) -> Situation:
