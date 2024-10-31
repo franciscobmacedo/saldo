@@ -35,7 +35,7 @@ YEARLY PROJECTION:
 • Total Annual Tax: {(result.tax * 12):,.2f}€
 • Total Annual Social Security: {(result.social_security * 12):,.2f}€
 
-Note: This calculation assumes a standard tax situation and may not include special deductions, 
-benefits, or specific contractual conditions. Your actual values might vary based on your 
+Note: This calculation assumes a standard tax situation and may not include special deductions,
+benefits, or specific contractual conditions. Your actual values might vary based on your
 personal circumstances and any additional benefits or deductions that may apply.
 """

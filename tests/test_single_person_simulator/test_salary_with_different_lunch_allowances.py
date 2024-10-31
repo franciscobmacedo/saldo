@@ -1,9 +1,10 @@
-from tests.test_single_person_simulator.base import (
-    verify_salary_calculation,
-    SalaryTestCase,
-)
 import pytest
+
 from saldo.schemas import LunchAllowance
+from tests.test_single_person_simulator.base import (
+    SalaryTestCase,
+    verify_salary_calculation,
+)
 
 
 @pytest.mark.parametrize(

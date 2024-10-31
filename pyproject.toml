@@ -28,7 +28,7 @@ CI = "https://github.com/franciscobmacedo/saldo/actions"
 
 [project.optional-dependencies]
 test = ["pytest"]
-dev = ["ruff", "mypy"]
+dev = ["ruff", "mypy", "pre-commit"]
 
 [tool.pdm]
 distribution = true

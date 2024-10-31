@@ -1,8 +1,10 @@
-from saldo.schemas import LunchAllowance
-from saldo.simulator import simulate_dependent_worker
-import pytest
 from dataclasses import dataclass
 from typing import Optional
+
+import pytest
+
+from saldo.schemas import LunchAllowance
+from saldo.simulator import simulate_dependent_worker
 
 # Constants for better readability
 APPROX_FACTOR = 0.00001
@@ -33,7 +35,12 @@ def verify_salary_calculation(test_case: SalaryTestCase, base_params: dict):
         test_case: SalaryTestCase containing test parameters and expected results
         base_params: Base simulation parameters
     """
-    simulation_params = {**base_params, "twelfths": test_case.twelfths, "number_of_dependents": test_case.number_of_dependents, "location": test_case.location}
+    simulation_params = {
+        **base_params,
+        "twelfths": test_case.twelfths,
+        "number_of_dependents": test_case.number_of_dependents,
+        "location": test_case.location,
+    }
 
     if test_case.lunch_allowance:
         simulation_params["lunch_allowance"] = test_case.lunch_allowance
@@ -56,5 +63,3 @@ def verify_salary_calculation(test_case: SalaryTestCase, base_params: dict):
     assert result.net_salary == pytest.approx(
         test_case.expected_net_salary, APPROX_FACTOR
     ), f"Net salary mismatch for {test_case.description}"
-
-

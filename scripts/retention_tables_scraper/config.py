@@ -1,5 +1,6 @@
-from dataclasses import dataclass
 import datetime
+from dataclasses import dataclass
+
 from saldo.config import LocationT
 
 situation_to_description_map_2024 = {
@@ -13,7 +14,6 @@ situation_to_description_map_2024 = {
 }
 
 
-
 @dataclass
 class TableMeta:
     path: str
@@ -21,7 +21,6 @@ class TableMeta:
     situation_to_description_map: dict[str, str]
     start_date: datetime.date
     end_date: datetime.date
-    
 
     def get_url(self, location: LocationT) -> str:
         return f"https://www.doutorfinancas.pt/wp-content/themes/drfinancas/vendor/doutorfinancas/simulators/{self.path}/taxas_{location}.csv?tmp"

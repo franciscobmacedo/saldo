@@ -1,8 +1,9 @@
-from tests.test_married_person_simulator.base import (
-    verify_salary_calculation,
-    SalaryTestCase,
-)
 import pytest
+
+from tests.test_married_person_simulator.base import (
+    SalaryTestCase,
+    verify_salary_calculation,
+)
 
 
 @pytest.mark.parametrize(

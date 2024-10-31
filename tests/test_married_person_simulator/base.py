@@ -1,7 +1,8 @@
-from saldo.schemas import LunchAllowance
-from saldo.simulator import simulate_dependent_worker
-import pytest
 from dataclasses import dataclass
+
+import pytest
+
+from saldo.simulator import simulate_dependent_worker
 
 # Constants for better readability
 APPROX_FACTOR = 0.00001
@@ -47,12 +48,12 @@ def verify_salary_calculation(test_case: SalaryTestCase, base_params: dict):
     assert result.gross_income == pytest.approx(
         test_case.expected_gross_income, APPROX_FACTOR
     ), f"Gross income mismatch for {test_case.description}"
-    assert result.tax == pytest.approx(
-        test_case.expected_tax, APPROX_FACTOR
+    assert (
+        result.tax == pytest.approx(test_case.expected_tax, APPROX_FACTOR)
     ), f"Tax calculation mismatch for {test_case.description}: {result.tax} != {test_case.expected_tax}"
     assert result.social_security == pytest.approx(
         test_case.expected_social_security, APPROX_FACTOR
     ), f"Social security mismatch for {test_case.description}"
-    assert result.net_salary == pytest.approx(
-        test_case.expected_net_salary, APPROX_FACTOR
+    assert (
+        result.net_salary == pytest.approx(test_case.expected_net_salary, APPROX_FACTOR)
     ), f"Net salary mismatch for {test_case.description}: {result.net_salary} != {test_case.expected_net_salary}"

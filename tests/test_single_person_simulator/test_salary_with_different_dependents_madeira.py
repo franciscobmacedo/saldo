@@ -1,11 +1,9 @@
-from tests.test_single_person_simulator.base import (
-    verify_salary_calculation,
-    SalaryTestCase,
-)
 import pytest
 
-
-
+from tests.test_single_person_simulator.base import (
+    SalaryTestCase,
+    verify_salary_calculation,
+)
 
 
 @pytest.mark.parametrize(
@@ -47,7 +45,6 @@ import pytest
             expected_social_security=165,
             expected_net_salary=1335,
         ),
-        
     ],
     ids=[
         "1 dependent",
@@ -61,4 +58,3 @@ def test_salary_with_different_dependents_madeira(
 ):
     """Test salary calculations with different twelfth configurations."""
     verify_salary_calculation(test_case, base_single_params)
-

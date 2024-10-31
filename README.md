@@ -60,7 +60,7 @@ So the feature planing is:
 - do it for B Category workers as well
 - Write documentation on how to use it
 - Write documentation about how this calculation works, with iteractive parts - the user can change their income and the explanation changes as well. Might use pyodide for that or just have this in javascript?
-  
+
 
 
 

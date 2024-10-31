@@ -1,10 +1,10 @@
-from dataclasses import dataclass
 import datetime
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 from typing import Literal, Optional
-from saldo.config.consts import RETENTION_TAX_TABLES_PATH
 
+from saldo.config.consts import RETENTION_TAX_TABLES_PATH
 
 SituationCodesT = Literal[
     "SOLCAS2", "SOLD", "CAS1", "SOLCAS2+DEF", "SOLD+DEF", "CAS2D+DEF", "CAS1+DEF"

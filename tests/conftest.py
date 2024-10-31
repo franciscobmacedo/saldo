@@ -1,7 +1,10 @@
 # conftest.py
-import pytest
 from datetime import date
-from saldo.schemas import Twelfths, LunchAllowance
+
+import pytest
+
+from saldo.schemas import LunchAllowance, Twelfths
+
 
 @pytest.fixture
 def base_single_params():

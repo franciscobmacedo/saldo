@@ -1,9 +1,10 @@
-from dataclasses import dataclass
 import datetime
-from typing import List, Literal, Optional, Union
 import json
+from dataclasses import dataclass
 from pathlib import Path
-from saldo.config import RetentionPathsSchema, SituationCodesT, LocationT
+from typing import List, Literal, Optional, Union
+
+from saldo.config import LocationT, RetentionPathsSchema, SituationCodesT
 
 
 @dataclass
@@ -36,15 +37,15 @@ class TaxBracket:
         if number_of_dependents >= 3:
             # https://diariodarepublica.pt/dr/detalhe/despacho/9971-a-2024-885806206#:~:text=h)%20Aos%20titulares,abater%20por%20dependente%3B
             """
-            h) Aos titulares de rendimentos de trabalho dependente com três ou mais dependentes 
-            que se enquadrem nas tabelas previstas nas alíneas a) e b) do n.º 1, é aplicada uma 
+            h) Aos titulares de rendimentos de trabalho dependente com três ou mais dependentes
+            que se enquadrem nas tabelas previstas nas alíneas a) e b) do n.º 1, é aplicada uma
             redução de um ponto percentual à taxa marginal máxima correspondente ao escalão em que
             se integram, mantendo-se inalterada a parcela a abater e a parcela adicional a abater por dependente;
             """
             rate = self.max_marginal_rate - 0.01
         else:
             rate = self.max_marginal_rate
-        
+
         base_tax = (
             taxable_income * rate
             - deduction
@@ -79,9 +80,7 @@ class TaxRetentionTable:
         raise ValueError(f"No bracket found for salary {salary}")
 
     @staticmethod
-    def load_from_file(
-        filepath: Union[str, Path]
-    ) -> "TaxRetentionTable":
+    def load_from_file(filepath: Union[str, Path]) -> "TaxRetentionTable":
         """Load tax table from a JSON file."""
         filepath = Path(filepath)
         if not filepath.exists():
@@ -90,8 +89,6 @@ class TaxRetentionTable:
         with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
 
-        
-        
         # Convert dictionary to TaxBracket instances
         brackets = [
             TaxBracket(
@@ -111,7 +108,9 @@ class TaxRetentionTable:
             region="continente",
             situation=data["situation"],
             description=data["description"],
-            dependent_disabled_addition_deduction=data["dependent_disabled_addition_deduction"],
+            dependent_disabled_addition_deduction=data[
+                "dependent_disabled_addition_deduction"
+            ],
             tax_brackets=brackets,
         )
 

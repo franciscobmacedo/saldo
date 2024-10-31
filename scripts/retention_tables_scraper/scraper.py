@@ -1,15 +1,16 @@
-import os
-from pathlib import Path
-import subprocess  # type: ignore
-import json
 import datetime
+import json
+import os
+import subprocess  # type: ignore
+from pathlib import Path
 
 from saldo.config import RETENTION_TAX_TABLES_PATH, LocationT
+
 from .config import TableMeta, tables
 
 """
 Doutor Finanças has a simulator that allows to calculate the net salary after taxes (https://www.doutorfinancas.pt/simulador-salario-liquido-2024).
-The js source code is here: 
+The js source code is here:
 
     https://www.doutorfinancas.pt/wp-content/themes/drfinancas/vendor/doutorfinancas/simulators/salario_liquido_2024/scripts.js
 
@@ -110,8 +111,8 @@ def scrape_irs_table(table: TableMeta, location: LocationT):
         description: str = table.situation_to_description_map.get(situation, "")
         """
         https://diariodarepublica.pt/dr/detalhe/despacho/9971-a-2024-885806206#:~:text=a)%20Por%20cada%20dependente%20com
-        a) Por cada dependente com grau de incapacidade permanente igual ou superior a 60 %, 
-        é adicionado à parcela a abater o valor de € 84,82, no caso das tabelas ii, iii, v, vii, ii-a, iii-a, v-a e vii-a 
+        a) Por cada dependente com grau de incapacidade permanente igual ou superior a 60 %,
+        é adicionado à parcela a abater o valor de € 84,82, no caso das tabelas ii, iii, v, vii, ii-a, iii-a, v-a e vii-a
         e o valor de € 42,41, no caso das tabelas i, vi, i-a e vi-a;
         """
         dependent_disabled_addition_deduction = None
@@ -138,6 +139,3 @@ def scrape_irs_tables():
     for table in tables:
         for location in LocationT.__args__:
             scrape_irs_table(table, location)
-
-
-

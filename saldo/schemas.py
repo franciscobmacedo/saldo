@@ -1,6 +1,6 @@
-from typing import Literal
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
+from typing import Literal
 
 
 class Twelfths(float, Enum):

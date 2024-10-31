@@ -1,8 +1,10 @@
-from tests.test_married_person_simulator.base import (
-    verify_salary_calculation,
-    SalaryTestCase,
-)
 import pytest
+
+from tests.test_married_person_simulator.base import (
+    SalaryTestCase,
+    verify_salary_calculation,
+)
+
 
 @pytest.mark.parametrize(
     "test_case",
@@ -23,7 +25,6 @@ import pytest
             expected_social_security=165,
             expected_net_salary=1131.66,
         ),
-     
     ],
     ids=[
         "Base salary with one holder",

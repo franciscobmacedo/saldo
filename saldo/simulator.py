@@ -1,10 +1,10 @@
 import datetime
 from typing import Optional
-from saldo.config.schemas import Condition, Situations, LocationT
-from saldo.schemas import Twelfths, LunchAllowance, SimulationResult
+
+from saldo import dependent_worker, validators
+from saldo.config.schemas import LocationT, Situations
+from saldo.schemas import LunchAllowance, SimulationResult, Twelfths
 from saldo.tables.tax_retention import TaxRetentionTable
-from saldo import validators
-from saldo import dependent_worker
 
 
 def simulate_dependent_worker(
@@ -51,12 +51,12 @@ def simulate_dependent_worker(
         number_of_dependents=number_of_dependents,
         disabled=disabled,
     )
-    
+
     # load the corresponding tax retention table
     tax_retention_table = TaxRetentionTable.load(
         date_start, date_end, location, situation.code
     )
-    
+
     # find the tax bracket for the taxable income
     bracket = tax_retention_table.find_bracket(taxable_income)
 
@@ -64,7 +64,7 @@ def simulate_dependent_worker(
     extra_deduction += dependent_worker.get_disabled_dependent_extra_deduction(
         tax_retention_table, number_of_dependents_disabled or 0
     )
-    
+
     # calculate the tax, social security and net salary
     tax = bracket.calculate_tax(
         taxable_income,
