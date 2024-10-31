@@ -20,10 +20,9 @@ def simulate_dependent_worker(
     twelfths: Twelfths = Twelfths.TWO_MONTHS,
     lunch_allowance: LunchAllowance = LunchAllowance(),
 ) -> SimulationResult:
-    
     if number_of_holders is not None and number_of_holders > 2:
         raise ValueError("number_of_holders must be None, 1 or 2")
-    
+
     if married and not number_of_holders:
         raise ValueError("number_of_holders is required for married workers")
 
@@ -39,8 +38,8 @@ def simulate_dependent_worker(
         extra_deduction = 135.71
     else:
         extra_deduction = 0.0
-
-    twelfths_income = get_twelfths_income(income, twelfths)
+    twelfths_coefficient = twelfths / 12
+    twelfths_income = income * twelfths_coefficient
 
     taxable_income = income + lunch_allowance.taxable_monthly_value
     retention_income = taxable_income + twelfths_income
@@ -57,9 +56,15 @@ def simulate_dependent_worker(
     tax_retention_table = TaxRetentionTable.load(
         date_start, date_end, location, situation.code
     )
-    if tax_retention_table.dependent_disabled_addition_deduction is not None and number_of_dependents_disabled is not None:
-        extra_deduction += tax_retention_table.dependent_disabled_addition_deduction * number_of_dependents_disabled
-        
+    if (
+        tax_retention_table.dependent_disabled_addition_deduction is not None
+        and number_of_dependents_disabled is not None
+    ):
+        extra_deduction += (
+            tax_retention_table.dependent_disabled_addition_deduction
+            * number_of_dependents_disabled
+        )
+
     bracket = tax_retention_table.find_bracket(taxable_income)
 
     tax = (
@@ -92,22 +97,3 @@ def simulate_dependent_worker(
         yearly_gross_salary=yearly_gross_salary,
         lunch_allowance=lunch_allowance,
     )
-
-
-def get_twelfths_income(taxable_income: float, twelfths: Twelfths) -> float:
-    """
-    Calculate the extra income for a twelfths option.
-    taxable_income: the base taxable income
-    twelfths: the number of months of salary paid in twelfths
-
-    Example:
-    taxable_income = 1000
-    twelfths = Twelfths.TWO_MONTHS
-
-    this means the worker will receive 2 months of salary split in 12 parts for each month
-
-    1000 * 2 / 12 = 166.67€
-    166.67€ is the extra twelfths income
-    """
-    twelfths_coefficient = twelfths / 12
-    return taxable_income * twelfths_coefficient
