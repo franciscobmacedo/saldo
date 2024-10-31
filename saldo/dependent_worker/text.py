@@ -1,10 +1,10 @@
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from saldo.schemas import SimulationResult
+    from saldo.dependent_worker.schemas import DependentWorkerResult
 
 
-def generate_salary_explanation(result: "SimulationResult") -> str:
+def generate_salary_explanation(result: "DependentWorkerResult") -> str:
     return f"""SALARY BREAKDOWN EXPLANATION
 
 Your annual gross salary is {result.yearly_gross_salary:,.2f}€, which corresponds to a monthly gross income of {result.gross_income:,.2f}€.

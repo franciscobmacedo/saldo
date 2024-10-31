@@ -1,9 +1,14 @@
 import datetime
 from typing import Optional
 
-from saldo import dependent_worker, validators
+from saldo.dependent_worker import validators
 from saldo.config.schemas import LocationT, Situations
-from saldo.schemas import LunchAllowance, SimulationResult, Twelfths
+from saldo.dependent_worker import calculations
+from saldo.dependent_worker.schemas import (
+    LunchAllowance,
+    DependentWorkerResult,
+    Twelfths,
+)
 from saldo.tables.tax_retention import TaxRetentionTable
 
 
@@ -21,19 +26,19 @@ def simulate_dependent_worker(
     social_security_tax: float = 0.11,
     twelfths: Twelfths = Twelfths.TWO_MONTHS,
     lunch_allowance: LunchAllowance = LunchAllowance(),
-) -> SimulationResult:
+) -> DependentWorkerResult:
     # validate input
     validators.validate_number_of_holders(number_of_holders)
     validators.validate_married_and_number_of_holders(married, number_of_holders)
     validators.validate_dependents(number_of_dependents, number_of_dependents_disabled)
 
     # partner with disability results in extra deduction
-    extra_deduction = dependent_worker.get_partner_extra_deduction(
+    extra_deduction = calculations.get_partner_extra_deduction(
         married, number_of_holders, partner_disabled
     )
 
     # holidays and christmas income distributed over the year
-    twelfths_income = dependent_worker.get_twelfths_income(income, twelfths)
+    twelfths_income = calculations.get_twelfths_income(income, twelfths)
 
     # income for tax calculation
     taxable_income = income + lunch_allowance.taxable_monthly_value
@@ -61,7 +66,7 @@ def simulate_dependent_worker(
     bracket = tax_retention_table.find_bracket(taxable_income)
 
     # extra deduction for dependents with disability
-    extra_deduction += dependent_worker.get_disabled_dependent_extra_deduction(
+    extra_deduction += calculations.get_disabled_dependent_extra_deduction(
         tax_retention_table, number_of_dependents_disabled or 0
     )
 
@@ -80,7 +85,7 @@ def simulate_dependent_worker(
     yearly_gross_salary = taxable_income * 14 + yearly_lunch_allowance
     yearly_net_salary = net_salary * (14 - twelfths)
 
-    return SimulationResult(
+    return DependentWorkerResult(
         taxable_income=taxable_income,
         gross_income=gross_income,
         tax=tax,

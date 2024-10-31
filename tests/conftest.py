@@ -3,7 +3,7 @@ from datetime import date
 
 import pytest
 
-from saldo.schemas import LunchAllowance, Twelfths
+from saldo.dependent_worker.schemas import LunchAllowance, Twelfths
 
 
 @pytest.fixture

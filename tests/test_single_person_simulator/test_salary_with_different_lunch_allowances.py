@@ -1,6 +1,6 @@
 import pytest
 
-from saldo.schemas import LunchAllowance
+from saldo.dependent_worker.schemas import LunchAllowance
 from tests.test_single_person_simulator.base import (
     SalaryTestCase,
     verify_salary_calculation,

@@ -1,4 +1,4 @@
-from saldo.schemas import LunchAllowance
+from saldo.dependent_worker.schemas import LunchAllowance
 
 
 def test_lunch_allowance_monthly_value():

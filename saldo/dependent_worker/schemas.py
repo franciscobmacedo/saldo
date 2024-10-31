@@ -57,7 +57,7 @@ class LunchAllowance:
 
 
 @dataclass
-class SimulationResult:
+class DependentWorkerResult:
     taxable_income: float
     gross_income: float
     tax: float
@@ -70,6 +70,6 @@ class SimulationResult:
 
     @property
     def explanation(self) -> str:
-        from saldo.text import generate_salary_explanation
+        from saldo.dependent_worker.text import generate_salary_explanation
 
         return generate_salary_explanation(self)

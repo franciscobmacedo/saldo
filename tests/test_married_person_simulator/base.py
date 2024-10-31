@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from saldo.simulator import simulate_dependent_worker
+from saldo.dependent_worker.simulator import simulate_dependent_worker
 
 # Constants for better readability
 APPROX_FACTOR = 0.00001

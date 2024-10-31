@@ -3,8 +3,8 @@ from typing import Optional
 
 import pytest
 
-from saldo.schemas import LunchAllowance
-from saldo.simulator import simulate_dependent_worker
+from saldo.dependent_worker.schemas import LunchAllowance
+from saldo.dependent_worker.simulator import simulate_dependent_worker
 
 # Constants for better readability
 APPROX_FACTOR = 0.00001
