@@ -1,0 +1,87 @@
+{
+  "situation": "SOLCAS2+DEF",
+  "description": "Pensões - Casado dois titulares - Deficiente",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 1816,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 2032,
+      "max_marginal_rate": 0.25,
+      "deduction": 454,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.02
+    },
+    {
+      "signal": "max",
+      "limit": 2452,
+      "max_marginal_rate": 0.32,
+      "deduction": 596.24,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.07
+    },
+    {
+      "signal": "max",
+      "limit": 3221,
+      "max_marginal_rate": 0.355,
+      "deduction": 682.06,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.14
+    },
+    {
+      "signal": "max",
+      "limit": 4534,
+      "max_marginal_rate": 0.435,
+      "deduction": 939.74,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.22
+    },
+    {
+      "signal": "max",
+      "limit": 6627,
+      "max_marginal_rate": 0.45,
+      "deduction": 1007.75,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.29
+    },
+    {
+      "signal": "max",
+      "limit": 18529,
+      "max_marginal_rate": 0.505,
+      "deduction": 1372.24,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.43
+    },
+    {
+      "signal": "min",
+      "limit": 18529,
+      "max_marginal_rate": 0.53,
+      "deduction": 1835.47,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": -1
+    }
+  ],
+  "dependent_disabled_addition_deduction": 84.82
+}

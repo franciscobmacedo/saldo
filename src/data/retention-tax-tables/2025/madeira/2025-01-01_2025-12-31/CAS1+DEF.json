@@ -1,0 +1,77 @@
+{
+  "situation": "CAS1+DEF",
+  "description": "Pensões - Casado único titular - Deficiente",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 2735,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 3603,
+      "max_marginal_rate": 0.15,
+      "deduction": 410.84,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.03
+    },
+    {
+      "signal": "max",
+      "limit": 4132,
+      "max_marginal_rate": 0.26899999999999996,
+      "deduction": 839.44,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.06
+    },
+    {
+      "signal": "max",
+      "limit": 5489,
+      "max_marginal_rate": 0.306,
+      "deduction": 989.73,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.12
+    },
+    {
+      "signal": "max",
+      "limit": 5575,
+      "max_marginal_rate": 0.38,
+      "deduction": 1396.88,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.12
+    },
+    {
+      "signal": "max",
+      "limit": 17989,
+      "max_marginal_rate": 0.465,
+      "deduction": 1872.04,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.36
+    },
+    {
+      "signal": "min",
+      "limit": 17989,
+      "max_marginal_rate": 0.525,
+      "deduction": 2946.84,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": -1
+    }
+  ],
+  "dependent_disabled_addition_deduction": 84.82
+}

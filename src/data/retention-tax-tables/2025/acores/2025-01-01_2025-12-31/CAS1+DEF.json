@@ -1,0 +1,77 @@
+{
+  "situation": "CAS1+DEF",
+  "description": "Pensões - Casado único titular - Deficiente",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 2257,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 2727,
+      "max_marginal_rate": 0.18600000000000003,
+      "deduction": 419.8,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.03
+    },
+    {
+      "signal": "max",
+      "limit": 3293,
+      "max_marginal_rate": 0.24100000000000002,
+      "deduction": 569.79,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.06
+    },
+    {
+      "signal": "max",
+      "limit": 3994,
+      "max_marginal_rate": 0.305,
+      "deduction": 780.54,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.11
+    },
+    {
+      "signal": "max",
+      "limit": 6266,
+      "max_marginal_rate": 0.36700000000000005,
+      "deduction": 1028.17,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.2
+    },
+    {
+      "signal": "max",
+      "limit": 18169,
+      "max_marginal_rate": 0.47,
+      "deduction": 1673.57,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": 0.37
+    },
+    {
+      "signal": "min",
+      "limit": 18169,
+      "max_marginal_rate": 0.53,
+      "deduction": 2763.71,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 84.82,
+      "effective_mensal_rate": -1
+    }
+  ],
+  "dependent_disabled_addition_deduction": 84.82
+}

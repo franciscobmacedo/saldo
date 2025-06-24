@@ -42,8 +42,8 @@ export function simulateDependentWorker({
     numberOfHolders = null,
     numberOfDependents = null,
     numberOfDependentsDisabled = null,
-    dateStart = new Date(2024, 0, 1), // JS months are 0-indexed
-    dateEnd = new Date(2024, 7, 31),   // JS months are 0-indexed
+    dateStart = new Date(2025, 0, 1), // JS months are 0-indexed
+    dateEnd = new Date(2025, 11, 31),   // JS months are 0-indexed
     socialSecurityTaxRate = 0.11,
     twelfths = Twelfths.TWO_MONTHS,
     lunchAllowance = defaultLunchAllowance, // Use the imported default
