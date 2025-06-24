@@ -26,7 +26,7 @@ function updateManifest() {
   
   // Find regions in 2025 directory
   const regions = fs.readdirSync(basePath, { withFileTypes: true })
-    .filter(dirent => dirent.isDirectory() && dirent.name !== '2025') // Exclude if there's a raw file
+    .filter(dirent => dirent.isDirectory() && dirent.name !== '2025' && dirent.name !== 'raw') // Exclude raw and other non-region directories
     .map(dirent => dirent.name);
   
   let newImports: string[] = [];

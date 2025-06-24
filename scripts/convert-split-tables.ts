@@ -1,7 +1,13 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-// Raw data structure from the 2025/raw.json file
+// Configuration options
+const CONFIG = {
+  // Set to false to skip pensioner tables, true to include them
+  includePensionerTables: false
+};
+
+// Raw data structure from the split files
 interface RawTaxTable {
   index: string;
   title: string;
@@ -11,12 +17,9 @@ interface RawTaxTable {
   marital_status: string;
   dependents: number;
   incapacity: boolean;
-}
-
-interface RawData {
-  portugal_continental: RawTaxTable[];
-  acores: RawTaxTable[];
-  madeira: RawTaxTable[];
+  region: string;
+  originalRegion: string;
+  fileName: string;
 }
 
 // Target structure for the converted JSON files
@@ -82,20 +85,12 @@ function parseDeduction(deductionStr: string): { deduction: number; var1: number
     const multiplier = parseFloat(formulaMatch[2].replace(',', '.'));
     const constant = parseFloat(formulaMatch[3].replace(',', '.'));
     
-    return { deduction: rate, var1: multiplier, var2: constant };
-  }
-
-  // Handle formulas like "16,50% * 1.35 * (1477,67 - R)"
-  const formula2Match = deductionStr.match(/([0-9,]+)%\s*\*\s*([0-9,.]+)\s*\*\s*\(([0-9,]+)\s*-\s*R\)/);
-  if (formula2Match) {
-    const rate = parseFloat(formula2Match[1].replace(',', '.')) / 100;
-    const multiplier = parseFloat(formula2Match[2].replace(',', '.'));
-    const constant = parseFloat(formula2Match[3].replace(',', '.'));
-    
+    console.log(`    Parsed formula: ${deductionStr} -> rate=${rate}, var1=${multiplier}, var2=${constant}`);
     return { deduction: rate, var1: multiplier, var2: constant };
   }
 
   // Fallback: try to parse as monetary value
+  console.log(`    Using fallback for deduction: ${deductionStr}`);
   return { deduction: parseMonetaryValue(deductionStr), var1: 0, var2: 0 };
 }
 
@@ -133,9 +128,12 @@ function generateDescription(table: RawTaxTable): string {
 
 // Function to convert raw table to structured format
 function convertRawTable(rawTable: RawTaxTable): ConvertedTaxTable {
+  console.log(`  Converting ${rawTable.fileName} (${rawTable.index})`);
   const brackets: TaxBracket[] = [];
   
   for (const [rangeStr, rateStr, deductionStr, effectiveRateStr] of rawTable.values) {
+    console.log(`    Processing bracket: ${rangeStr} | ${rateStr} | ${deductionStr} | ${effectiveRateStr}`);
+    
     // Parse the range to get limit and signal
     let limit: number;
     let signal: "max" | "min";
@@ -149,7 +147,7 @@ function convertRawTable(rawTable: RawTaxTable): ConvertedTaxTable {
       limit = parseMonetaryValue(rangeStr.replace("mais de ", ""));
       signal = "min";
     } else {
-      console.warn(`Unknown range format: ${rangeStr}`);
+      console.warn(`    Unknown range format: ${rangeStr}`);
       continue;
     }
 
@@ -161,6 +159,8 @@ function convertRawTable(rawTable: RawTaxTable): ConvertedTaxTable {
     
     // Parse effective monthly rate
     const effectiveMensalRate = effectiveRateStr === "n.a." ? -1 : parsePercentageValue(effectiveRateStr);
+
+    console.log(`    -> signal=${signal}, limit=${limit}, rate=${maxMarginalRate}, deduction=${deduction}, effective=${effectiveMensalRate}`);
 
     brackets.push({
       signal,
@@ -189,14 +189,16 @@ function convertRawTable(rawTable: RawTaxTable): ConvertedTaxTable {
     'CAS2D': 34.29
   };
 
-  const dependentDeduction = dependentDeductions[rawTable.index] || 34.29;
+  // Extract base index (remove _EMP/_PEN suffix if present)
+  const baseIndex = rawTable.index.replace(/_EMP$|_PEN$/, '');
+  const dependentDeduction = dependentDeductions[baseIndex] || 34.29;
   
   // Update all brackets with the dependent deduction
   brackets.forEach(bracket => {
     bracket.dependent_aditional_deduction = dependentDeduction;
   });
 
-  return {
+  const converted = {
     situation: rawTable.index,
     title: rawTable.title,
     table: rawTable.table,
@@ -204,83 +206,81 @@ function convertRawTable(rawTable: RawTaxTable): ConvertedTaxTable {
     brackets,
     dependent_disabled_addition_deduction: rawTable.incapacity ? 84.82 : undefined
   };
+
+  console.log(`  -> Generated ${brackets.length} brackets for ${rawTable.index}`);
+  return converted;
 }
 
 // Main conversion function
-function convertRawData() {
-  const rawDataPath = path.join(__dirname, '../src/data/retention-tax-tables/2025/raw.json');
+function convertSplitTables() {
+  const rawBasePath = path.join(__dirname, '../src/data/retention-tax-tables/2025/raw');
   const outputBasePath = path.join(__dirname, '../src/data/retention-tax-tables/2025');
 
-  // Read the raw data
-  const rawDataContent = fs.readFileSync(rawDataPath, 'utf-8');
-  const rawData: RawData = JSON.parse(rawDataContent);
+  const regions = ['continente', 'acores', 'madeira'];
 
-  // Region mapping
-  const regionMapping: { [key: string]: string } = {
-    'portugal_continental': 'continente',
-    'acores': 'acores',
-    'madeira': 'madeira'
-  };
+  console.log('Converting split table files to final format...');
 
-  // Process each region
-  for (const [rawRegionName, tables] of Object.entries(rawData)) {
-    const regionName = regionMapping[rawRegionName];
-    if (!regionName) {
-      console.warn(`Unknown region: ${rawRegionName}`);
+  for (const region of regions) {
+    console.log(`\nProcessing region: ${region}`);
+    
+    const regionRawPath = path.join(rawBasePath, region);
+    const regionOutputPath = path.join(outputBasePath, region);
+    
+    if (!fs.existsSync(regionRawPath)) {
+      console.warn(`Raw folder for ${region} does not exist: ${regionRawPath}`);
       continue;
     }
 
-    // Filter out pension tables for now
-    const filteredTables = tables.filter(table => table.job_type !== 'pensioner');
-    
-    // Check for duplicate indexes within this region
-    const indexCounts: { [index: string]: { count: number; jobTypes: Set<string> } } = {};
-    for (const table of filteredTables) {
-      if (!indexCounts[table.index]) {
-        indexCounts[table.index] = { count: 0, jobTypes: new Set() };
-      }
-      indexCounts[table.index].count++;
-      indexCounts[table.index].jobTypes.add(table.job_type);
-    }
-
-    // Create region directory
-    const regionPath = path.join(outputBasePath, regionName);
-    if (!fs.existsSync(regionPath)) {
-      fs.mkdirSync(regionPath, { recursive: true });
+    // Create output region directory
+    if (!fs.existsSync(regionOutputPath)) {
+      fs.mkdirSync(regionOutputPath, { recursive: true });
     }
 
     // For 2025, we'll create a single date range covering the entire year
-    const dateRangePath = path.join(regionPath, '2025-01-01_2025-12-31');
+    const dateRangePath = path.join(regionOutputPath, '2025-01-01_2025-12-31');
     if (!fs.existsSync(dateRangePath)) {
       fs.mkdirSync(dateRangePath, { recursive: true });
     }
 
-    // Convert and save each table
-    for (const rawTable of filteredTables) {
-      const convertedTable = convertRawTable(rawTable);
+    // Read all JSON files in the region raw folder
+    const files = fs.readdirSync(regionRawPath).filter(f => f.endsWith('.json'));
+    console.log(`Found ${files.length} table files`);
+
+    for (const file of files) {
+      const filePath = path.join(regionRawPath, file);
       
-      // Generate filename - include job_type suffix if there are duplicates with different job_types
-      let fileName: string;
-      const indexInfo = indexCounts[rawTable.index];
-      if (indexInfo.count > 1 && indexInfo.jobTypes.size > 1) {
-        // There are multiple tables with same index but different job_types
-        const jobTypeSuffix = rawTable.job_type === 'employee' ? '_EMP' : '_PEN';
-        fileName = `${rawTable.index}${jobTypeSuffix}.json`;
-        // Also update the situation field to include the suffix
-        convertedTable.situation = `${rawTable.index}${jobTypeSuffix}`;
-      } else {
-        fileName = `${rawTable.index}.json`;
+      try {
+        // Read the raw table
+        const rawTableContent = fs.readFileSync(filePath, 'utf-8');
+        const rawTable: RawTaxTable = JSON.parse(rawTableContent);
+        
+        // Skip pension tables for now (as in original script)
+        if (rawTable.job_type === 'pensioner' && !CONFIG.includePensionerTables) {
+          console.log(`  Skipping pension table: ${file}`);
+          continue;
+        }
+
+        // Convert the table
+        const convertedTable = convertRawTable(rawTable);
+        
+        // Determine output filename - remove _EMP suffix if we're not including pensioner tables
+        let outputFileName = file;
+        if (!CONFIG.includePensionerTables && file.endsWith('_EMP.json')) {
+          outputFileName = file.replace('_EMP.json', '.json');
+        }
+        const outputFile = path.join(dateRangePath, outputFileName);
+        
+        fs.writeFileSync(outputFile, JSON.stringify(convertedTable, null, 2), 'utf-8');
+        console.log(`  ✓ Created: ${region}/2025-01-01_2025-12-31/${file}`);
+        
+      } catch (error) {
+        console.error(`  ✗ Error processing ${file}:`, error);
       }
-      
-      const filePath = path.join(dateRangePath, fileName);
-      
-      fs.writeFileSync(filePath, JSON.stringify(convertedTable, null, 2), 'utf-8');
-      console.log(`Created: ${filePath}`);
     }
   }
 
-  console.log('Conversion completed!');
+  console.log('\nConversion completed!');
 }
 
 // Run the conversion
-convertRawData(); 
+convertSplitTables(); 
