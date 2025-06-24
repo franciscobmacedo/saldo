@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",              // Required for "paths"
+    "paths": {
+      "@/*": ["src/*"]           // This maps "@/..." to "src/..."
+    },
+    "rootDir": "src",
+    "outDir": "dist",
+    "module": "ESNext",
+    "moduleResolution": "Node",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+  },
+  "include": ["src"]
+}
