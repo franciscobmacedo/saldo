@@ -1,0 +1,271 @@
+# Lunch Allowances
+
+Lunch allowances (subsídio de alimentação) are a common benefit in Portuguese employment. Understanding how they're taxed is crucial for accurate salary calculations.
+
+## Overview
+
+Lunch allowances in Portugal have specific tax treatment:
+- **Tax-free portion**: Up to certain daily limits
+- **Taxable portion**: Amount exceeding the limits
+- **Social security**: May be exempt depending on the type
+
+## Types of Lunch Allowances
+
+### Meal Vouchers (Cupões de Refeição)
+
+Daily tax-free limit: **€9.60**
+
+```typescript
+const mealVouchers: LunchAllowance = {
+  daily_value: 8.50,
+  mode: "cupon",
+  days_count: 22,
+  get monthly_value() { return this.daily_value * this.days_count; },
+  get taxable_monthly_value() {
+    const dailyTaxable = Math.max(0, this.daily_value - 9.6);
+    return dailyTaxable * this.days_count;
+  },
+  get tax_free_monthly_value() {
+    return this.monthly_value - this.taxable_monthly_value;
+  },
+  get yearly_value() { return this.monthly_value * 11; }
+};
+
+const result = simulateDependentWorker({
+  income: 1500,
+  lunchAllowance: mealVouchers
+});
+```
+
+### Cash Allowance (Em Dinheiro)
+
+Daily tax-free limit: **€6.00**
+
+```typescript
+const cashAllowance: LunchAllowance = {
+  daily_value: 7.50,
+  mode: "salary",
+  days_count: 21,
+  get monthly_value() { return this.daily_value * this.days_count; },
+  get taxable_monthly_value() {
+    const dailyTaxable = Math.max(0, this.daily_value - 6.0);
+    return dailyTaxable * this.days_count;
+  },
+  get tax_free_monthly_value() {
+    return this.monthly_value - this.taxable_monthly_value;
+  },
+  get yearly_value() { return this.monthly_value * 11; }
+};
+```
+
+## Creating Custom Lunch Allowances
+
+### Basic Structure
+
+```typescript
+interface LunchAllowance {
+  daily_value: number;              // Daily allowance amount
+  mode: "cupon" | "salary" | null;  // Type of allowance
+  days_count: number;               // Working days per month
+  monthly_value: number;            // Total monthly amount
+  taxable_monthly_value: number;    // Portion subject to tax
+  tax_free_monthly_value: number;   // Tax-free portion
+  yearly_value: number;             // Annual amount (11 months)
+}
+```
+
+### Helper Function
+
+```typescript
+function createLunchAllowance(
+  dailyValue: number,
+  mode: "cupon" | "salary",
+  daysCount: number = 22
+): LunchAllowance {
+  const maxDailyTaxFree = mode === "salary" ? 6.0 : 9.6;
+  
+  return {
+    daily_value: dailyValue,
+    mode,
+    days_count: daysCount,
+    get monthly_value() {
+      return this.daily_value * this.days_count;
+    },
+    get taxable_monthly_value() {
+      const dailyTaxable = Math.max(0, this.daily_value - maxDailyTaxFree);
+      return dailyTaxable * this.days_count;
+    },
+    get tax_free_monthly_value() {
+      return this.monthly_value - this.taxable_monthly_value;
+    },
+    get yearly_value() {
+      return this.monthly_value * 11; // 11 months (excluding August)
+    }
+  };
+}
+
+// Usage
+const myAllowance = createLunchAllowance(8.0, "cupon", 21);
+```
+
+## Common Scenarios
+
+### Standard Meal Vouchers
+
+Most common scenario with meal vouchers below the tax-free limit:
+
+```typescript
+const standardVouchers = {
+  daily_value: 7.50,
+  mode: "cupon" as const,
+  days_count: 22,
+  get monthly_value() { return 7.50 * 22; }, // €165
+  get taxable_monthly_value() { return 0; }, // Fully tax-free
+  get tax_free_monthly_value() { return 165; },
+  get yearly_value() { return 165 * 11; } // €1,815
+};
+
+const result = simulateDependentWorker({
+  income: 1200,
+  lunchAllowance: standardVouchers
+});
+```
+
+### High-Value Meal Vouchers
+
+Meal vouchers exceeding the tax-free limit:
+
+```typescript
+const highValueVouchers = {
+  daily_value: 12.00,
+  mode: "cupon" as const,
+  days_count: 22,
+  get monthly_value() { return 12.00 * 22; }, // €264
+  get taxable_monthly_value() { 
+    return (12.00 - 9.60) * 22; // €52.80 taxable
+  },
+  get tax_free_monthly_value() { return 9.60 * 22; }, // €211.20 tax-free
+  get yearly_value() { return 264 * 11; }
+};
+```
+
+### Cash Lunch Allowance
+
+Cash allowance with lower tax-free limit:
+
+```typescript
+const cashLunch = {
+  daily_value: 8.00,
+  mode: "salary" as const,
+  days_count: 21,
+  get monthly_value() { return 8.00 * 21; }, // €168
+  get taxable_monthly_value() { 
+    return (8.00 - 6.00) * 21; // €42 taxable
+  },
+  get tax_free_monthly_value() { return 6.00 * 21; }, // €126 tax-free
+  get yearly_value() { return 168 * 11; }
+};
+```
+
+### No Lunch Allowance
+
+Using the default (no allowance):
+
+```typescript
+import { defaultLunchAllowance } from 'saldo-ts';
+
+const result = simulateDependentWorker({
+  income: 1500,
+  lunchAllowance: defaultLunchAllowance // All zeros
+});
+```
+
+## Tax Implications
+
+### Income Tax
+
+- **Tax-free portion**: Not included in taxable income
+- **Taxable portion**: Added to monthly taxable income
+- **Impact**: Higher total allowances may push you into higher tax brackets
+
+### Social Security
+
+- **Meal vouchers**: Generally exempt from social security contributions
+- **Cash allowances**: May be subject to social security (implementation dependent)
+
+## Regional Considerations
+
+Lunch allowance tax treatment is generally consistent across:
+- Mainland Portugal (continente)
+- Azores (acores)  
+- Madeira (madeira)
+
+However, always verify current regulations as they may change.
+
+## Best Practices
+
+### For Employees
+
+1. **Understand your allowance type**: Vouchers vs. cash have different limits
+2. **Track daily amounts**: Ensure you're within tax-free limits
+3. **Consider total compensation**: Balance base salary vs. allowances
+
+### For Payroll Systems
+
+1. **Validate daily limits**: Ensure calculations use correct tax-free amounts
+2. **Handle partial months**: Adjust days count for holidays/absences
+3. **Stay updated**: Tax-free limits may change annually
+
+## Example Calculations
+
+### Scenario 1: Standard Employee
+
+```typescript
+const employee = {
+  baseSalary: 1400,
+  lunchVouchers: {
+    daily_value: 7.50,
+    mode: "cupon" as const,
+    days_count: 22,
+    get monthly_value() { return 165; },
+    get taxable_monthly_value() { return 0; },
+    get tax_free_monthly_value() { return 165; },
+    get yearly_value() { return 1815; }
+  }
+};
+
+const result = simulateDependentWorker({
+  income: employee.baseSalary,
+  lunchAllowance: employee.lunchVouchers
+});
+
+console.log(`Taxable Income: €${result.taxable_income}`); // €1,400 (base only)
+console.log(`Gross Income: €${result.gross_income}`);     // €1,565 (base + vouchers)
+console.log(`Net Salary: €${result.net_salary}`);        // Higher due to tax-free vouchers
+```
+
+### Scenario 2: High Earner with Premium Vouchers
+
+```typescript
+const highEarner = {
+  baseSalary: 3000,
+  premiumVouchers: {
+    daily_value: 15.00,
+    mode: "cupon" as const,
+    days_count: 22,
+    get monthly_value() { return 330; },
+    get taxable_monthly_value() { return (15 - 9.6) * 22; }, // €118.80
+    get tax_free_monthly_value() { return 9.6 * 22; },       // €211.20
+    get yearly_value() { return 330 * 11; }
+  }
+};
+
+const result = simulateDependentWorker({
+  income: highEarner.baseSalary,
+  lunchAllowance: highEarner.premiumVouchers
+});
+
+console.log(`Taxable Income: €${result.taxable_income}`); // €3,118.80 (base + taxable vouchers)
+```
+
+Understanding lunch allowances helps optimize total compensation while ensuring compliance with Portuguese tax regulations. 

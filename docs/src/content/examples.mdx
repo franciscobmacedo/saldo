@@ -1,0 +1,368 @@
+# Examples
+
+Real-world examples demonstrating various use cases of the Saldo TS library.
+
+## Basic Examples
+
+### Single Person, Minimum Wage
+
+```typescript
+import { simulateDependentWithKillworker } from 'saldo-ts';
+
+// Portuguese minimum wage 2024: €760
+const minimumWageWorker = simulateDependentWorker({
+  income: 760,
+  location: 'continente'
+});
+
+console.log('=== Minimum Wage Worker ===');
+console.log(`Gross Income: €${minimumWageWorker.gross_income.toFixed(2)}`);
+console.log(`Tax: €${minimumWageWorker.tax.toFixed(2)}`);
+console.log(`Social Security: €${minimumWageWorker.social_security.toFixed(2)}`);
+console.log(`Net Salary: €${minimumWageWorker.net_salary.toFixed(2)}`);
+console.log(`Yearly Net: €${minimumWageWorker.yearly_net_salary.toFixed(2)}`);
+```
+
+### Average Portuguese Salary
+
+```typescript
+// Average salary in Portugal: ~€1,200
+const averageWorker = simulateDependentWorker({
+  income: 1200,
+  location: 'continente',
+  twelfths: Twelfths.TWO_MONTHS
+});
+
+console.log('=== Average Worker ===');
+console.log(`Monthly Net: €${averageWorker.net_salary.toFixed(2)}`);
+console.log(`Yearly Net: €${averageWorker.yearly_net_salary.toFixed(2)}`);
+console.log(`Effective Tax Rate: ${(averageWorker.tax / averageWorker.taxable_income * 100).toFixed(1)}%`);
+```
+
+## Family Scenarios
+
+### Single Parent with Children
+
+```typescript
+const singleParent = simulateDependentWorker({
+  income: 1500,
+  married: false,
+  numberOfDependents: 2,
+  location: 'continente'
+});
+
+console.log('=== Single Parent (2 children) ===');
+console.log(`Tax Situation: SOLD`);
+console.log(`Monthly Net: €${singleParent.net_salary.toFixed(2)}`);
+console.log(`Tax Savings vs Single: €${(
+  simulateDependentWorker({ income: 1500 }).tax - singleParent.tax
+).toFixed(2)}`);
+```
+
+### Married Couple - Single Income
+
+```typescript
+const marriedSingleIncome = simulateDependentWorker({
+  income: 2500,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continente'
+});
+
+console.log('=== Married, Single Income (2 children) ===');
+console.log(`Tax Situation: CAS1`);
+console.log(`Monthly Net: €${marriedSingleIncome.net_salary.toFixed(2)}`);
+console.log(`Yearly Net: €${marriedSingleIncome.yearly_net_salary.toFixed(2)}`);
+```
+
+### Married Couple - Double Income
+
+```typescript
+// Each spouse calculates separately
+const spouse1 = simulateDependentWorker({
+  income: 1800,
+  married: true,
+  numberOfHolders: 2,
+  numberOfDependents: 2, // Usually only one spouse claims dependents
+  location: 'continente'
+});
+
+const spouse2 = simulateDependentWorker({
+  income: 1400,
+  married: true,
+  numberOfHolders: 2,
+  numberOfDependents: 0,
+  location: 'continente'
+});
+
+const totalHouseholdNet = spouse1.net_salary + spouse2.net_salary;
+const totalHouseholdYearly = spouse1.yearly_net_salary + spouse2.yearly_net_salary;
+
+console.log('=== Married Couple, Both Working ===');
+console.log(`Tax Situation: SOLCAS2`);
+console.log(`Combined Monthly Net: €${totalHouseholdNet.toFixed(2)}`);
+console.log(`Combined Yearly Net: €${totalHouseholdYearly.toFixed(2)}`);
+```
+
+## Disability Scenarios
+
+### Worker with Disability
+
+```typescript
+const disabledWorker = simulateDependentWorker({
+  income: 1500,
+  disabled: true,
+  location: 'continente'
+});
+
+const regularWorker = simulateDependentWorker({
+  income: 1500,
+  location: 'continente'
+});
+
+console.log('=== Worker with Disability ===');
+console.log(`Tax Situation: SOLCAS2+DEF`);
+console.log(`Disabled Worker Net: €${disabledWorker.net_salary.toFixed(2)}`);
+console.log(`Regular Worker Net: €${regularWorker.net_salary.toFixed(2)}`);
+console.log(`Monthly Tax Savings: €${(regularWorker.tax - disabledWorker.tax).toFixed(2)}`);
+```
+
+### Spouse with Disability
+
+```typescript
+const spouseDisabled = simulateDependentWorker({
+  income: 2000,
+  married: true,
+  numberOfHolders: 1,
+  partnerDisabled: true,
+  location: 'continente'
+});
+
+console.log('=== Spouse with Disability ===');
+console.log(`Additional Deductions Applied`);
+console.log(`Monthly Net: €${spouseDisabled.net_salary.toFixed(2)}`);
+```
+
+### Family with Disabled Dependent
+
+```typescript
+const disabledDependent = simulateDependentWorker({
+  income: 2200,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 3,
+  numberOfDependentsDisabled: 1,
+  location: 'continente'
+});
+
+console.log('=== Family with Disabled Dependent ===');
+console.log(`Extra Deductions for Disabled Dependent`);
+console.log(`Monthly Net: €${disabledDependent.net_salary.toFixed(2)}`);
+```
+
+## Regional Comparisons
+
+### Same Salary Across Regions
+
+```typescript
+const salary = 1800;
+
+const continente = simulateDependentWorker({
+  income: salary,
+  location: 'continente'
+});
+
+const acores = simulateDependentWorker({
+  income: salary,
+  location: 'acores'
+});
+
+const madeira = simulateDependentWorker({
+  income: salary,
+  location: 'madeira'
+});
+
+console.log('=== Regional Tax Comparison (€1,800 salary) ===');
+console.log(`Continente Net: €${continente.net_salary.toFixed(2)}`);
+console.log(`Açores Net: €${acores.net_salary.toFixed(2)}`);
+console.log(`Madeira Net: €${madeira.net_salary.toFixed(2)}`);
+
+// Calculate which region is most favorable
+const regions = [
+  { name: 'Continente', net: continente.net_salary },
+  { name: 'Açores', net: acores.net_salary },
+  { name: 'Madeira', net: madeira.net_salary }
+];
+const best = regions.reduce((max, region) => 
+  region.net > max.net ? region : max
+);
+console.log(`Best region for this salary: ${best.name}`);
+```
+
+## Lunch Allowance Examples
+
+### With Meal Vouchers
+
+```typescript
+const withVouchers = simulateDependentWorker({
+  income: 1400,
+  lunchAllowance: {
+    daily_value: 8.50,
+    mode: "cupon",
+    days_count: 22,
+    get monthly_value() { return 8.50 * 22; },
+    get taxable_monthly_value() { return 0; }, // Under €9.60 limit
+    get tax_free_monthly_value() { return 8.50 * 22; },
+    get yearly_value() { return 8.50 * 22 * 11; }
+  }
+});
+
+const withoutVouchers = simulateDependentWorker({
+  income: 1400
+});
+
+console.log('=== Impact of Meal Vouchers ===');
+console.log(`With Vouchers - Net: €${withVouchers.net_salary.toFixed(2)}`);
+console.log(`Without Vouchers - Net: €${withoutVouchers.net_salary.toFixed(2)}`);
+console.log(`Benefit: €${(withVouchers.net_salary - withoutVouchers.net_salary).toFixed(2)}`);
+```
+
+### High-Value Cash Allowance
+
+```typescript
+const cashAllowance = simulateDependentWorker({
+  income: 2000,
+  lunchAllowance: {
+    daily_value: 10.00,
+    mode: "salary",
+    days_count: 21,
+    get monthly_value() { return 10.00 * 21; },
+    get taxable_monthly_value() { return (10.00 - 6.00) * 21; }, // €84 taxable
+    get tax_free_monthly_value() { return 6.00 * 21; }, // €126 tax-free
+    get yearly_value() { return 10.00 * 21 * 11; }
+  }
+});
+
+console.log('=== High Cash Lunch Allowance ===');
+console.log(`Total Allowance: €${cashAllowance.lunch_allowance.monthly_value}`);
+console.log(`Taxable Portion: €${cashAllowance.lunch_allowance.taxable_monthly_value}`);
+console.log(`Tax-Free Portion: €${cashAllowance.lunch_allowance.tax_free_monthly_value}`);
+```
+
+## Holiday Allowance Distribution
+
+### Comparing Distribution Methods
+
+```typescript
+const noTwelfths = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.NONE
+});
+
+const oneTwelfth = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.ONE_MONTH
+});
+
+const twoTwelfths = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.TWO_MONTHS
+});
+
+console.log('=== Holiday Allowance Distribution Impact ===');
+console.log(`No Distribution - Monthly Net: €${noTwelfths.net_salary.toFixed(2)}`);
+console.log(`One Month - Monthly Net: €${oneTwelfth.net_salary.toFixed(2)}`);
+console.log(`Two Months - Monthly Net: €${twoTwelfths.net_salary.toFixed(2)}`);
+console.log(`Yearly Net (Two Months): €${twoTwelfths.yearly_net_salary.toFixed(2)}`);
+```
+
+## High Earner Examples
+
+### Executive Salary
+
+```typescript
+const executive = simulateDependentWorker({
+  income: 5000,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continente',
+  lunchAllowance: {
+    daily_value: 15.00,
+    mode: "cupon",
+    days_count: 22,
+    get monthly_value() { return 15.00 * 22; },
+    get taxable_monthly_value() { return (15.00 - 9.60) * 22; },
+    get tax_free_monthly_value() { return 9.60 * 22; },
+    get yearly_value() { return 15.00 * 22 * 11; }
+  }
+});
+
+console.log('=== Executive (€5,000/month) ===');
+console.log(`Taxable Income: €${executive.taxable_income.toFixed(2)}`);
+console.log(`Tax: €${executive.tax.toFixed(2)}`);
+console.log(`Effective Tax Rate: ${(executive.tax / executive.taxable_income * 100).toFixed(1)}%`);
+console.log(`Net Salary: €${executive.net_salary.toFixed(2)}`);
+console.log(`Yearly Net: €${executive.yearly_net_salary.toFixed(2)}`);
+```
+
+## Comparison Functions
+
+### Tax Burden Analysis
+
+```typescript
+function analyzeTaxBurden(income: number, description: string) {
+  const result = simulateDependentWorker({ income });
+  const effectiveTaxRate = (result.tax / result.taxable_income) * 100;
+  const totalDeductions = result.tax + result.social_security;
+  const totalDeductionRate = (totalDeductions / result.gross_income) * 100;
+  
+  console.log(`=== ${description} ===`);
+  console.log(`Gross: €${result.gross_income.toFixed(2)}`);
+  console.log(`Tax: €${result.tax.toFixed(2)} (${effectiveTaxRate.toFixed(1)}%)`);
+  console.log(`Social Security: €${result.social_security.toFixed(2)}`);
+  console.log(`Total Deductions: €${totalDeductions.toFixed(2)} (${totalDeductionRate.toFixed(1)}%)`);
+  console.log(`Net: €${result.net_salary.toFixed(2)}`);
+  console.log('');
+  
+  return result;
+}
+
+// Analyze different income levels
+analyzeTaxBurden(800, "Entry Level");
+analyzeTaxBurden(1200, "Average");
+analyzeTaxBurden(2000, "Above Average");
+analyzeTaxBurden(3500, "High Earner");
+analyzeTaxBurden(6000, "Executive");
+```
+
+### Family vs Single Comparison
+
+```typescript
+function compareScenarios(income: number) {
+  const single = simulateDependentWorker({ income });
+  const singleWithKids = simulateDependentWorker({ 
+    income, 
+    numberOfDependents: 2 
+  });
+  const married = simulateDependentWorker({ 
+    income, 
+    married: true, 
+    numberOfHolders: 1,
+    numberOfDependents: 2 
+  });
+  
+  console.log(`=== Scenario Comparison (€${income}/month) ===`);
+  console.log(`Single: €${single.net_salary.toFixed(2)}`);
+  console.log(`Single + 2 kids: €${singleWithKids.net_salary.toFixed(2)} (+€${(singleWithKids.net_salary - single.net_salary).toFixed(2)})`);
+  console.log(`Married + 2 kids: €${married.net_salary.toFixed(2)} (+€${(married.net_salary - single.net_salary).toFixed(2)})`);
+  console.log('');
+}
+
+compareScenarios(1500);
+compareScenarios(2500);
+compareScenarios(4000);
+```
+
+These examples demonstrate the flexibility and comprehensive nature of the Saldo TS library for various Portuguese tax calculation scenarios. 

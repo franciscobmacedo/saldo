@@ -1,0 +1,240 @@
+# API Reference
+
+Complete reference for all functions, types, and interfaces in Saldo TS.
+
+## Main Function
+
+### `simulateDependentWorker(options)`
+
+The primary function for calculating Portuguese dependent worker taxes and net salary.
+
+#### Parameters
+
+```typescript
+interface SimulateDependentWorkerOptions {
+  income: number;
+  married?: boolean;
+  disabled?: boolean;
+  partnerDisabled?: boolean;
+  location?: LocationT;
+  numberOfHolders?: number | null;
+  numberOfDependents?: number | null;
+  numberOfDependentsDisabled?: number | null;
+  dateStart?: Date;
+  dateEnd?: Date;
+  socialSecurityTaxRate?: number;
+  twelfths?: Twelfths;
+  lunchAllowance?: LunchAllowance;
+}
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `income` | `number` | **Required** | Monthly gross income in euros |
+| `married` | `boolean` | `false` | Whether the person is married |
+| `disabled` | `boolean` | `false` | Whether the person has a disability |
+| `partnerDisabled` | `boolean` | `false` | Whether the spouse has a disability |
+| `location` | `LocationT` | `'continente'` | Tax region: `'continente'`, `'acores'`, or `'madeira'` |
+| `numberOfHolders` | `number \| null` | `null` | Number of income holders in marriage (1 or 2) |
+| `numberOfDependents` | `number \| null` | `null` | Number of dependents |
+| `numberOfDependentsDisabled` | `number \| null` | `null` | Number of dependents with disabilities |
+| `dateStart` | `Date` | `new Date(2024, 0, 1)` | Calculation period start date |
+| `dateEnd` | `Date` | `new Date(2024, 7, 31)` | Calculation period end date |
+| `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
+| `twelfths` | `Twelfths` | `TWO_MONTHS` | Holiday allowance distribution |
+| `lunchAllowance` | `LunchAllowance` | `defaultLunchAllowance` | Lunch allowance configuration |
+
+#### Return Value
+
+```typescript
+interface DependentWorkerResult {
+  taxable_income: number;
+  gross_income: number;
+  tax: number;
+  social_security: number;
+  social_security_tax: number;
+  net_salary: number;
+  yearly_net_salary: number;
+  yearly_gross_salary: number;
+  lunch_allowance: LunchAllowance;
+}
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `taxable_income` | `number` | Monthly income subject to tax |
+| `gross_income` | `number` | Total monthly gross income including allowances |
+| `tax` | `number` | Monthly tax amount |
+| `social_security` | `number` | Monthly social security contribution |
+| `social_security_tax` | `number` | Social security tax rate applied |
+| `net_salary` | `number` | Monthly net salary after deductions |
+| `yearly_net_salary` | `number` | Annual net salary |
+| `yearly_gross_salary` | `number` | Annual gross salary |
+| `lunch_allowance` | `LunchAllowance` | Lunch allowance breakdown |
+
+#### Example
+
+```typescript
+import { simulateDependentWorker } from 'saldo-ts';
+
+const result = simulateDependentWorker({
+  income: 1500,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continente'
+});
+
+console.log(`Net Salary: €${result.net_salary.toFixed(2)}`);
+```
+
+## Types and Enums
+
+### `LocationT`
+
+```typescript
+type LocationT = "continente" | "acores" | "madeira";
+```
+
+Represents the three Portuguese tax regions:
+- `continente`: Mainland Portugal
+- `acores`: Azores region
+- `madeira`: Madeira region
+
+### `Twelfths`
+
+```typescript
+enum Twelfths {
+  NONE = 0,        // No holiday allowances
+  ONE_MONTH = 1,   // Either Christmas OR holiday allowance
+  TWO_MONTHS = 2   // Both Christmas AND holiday allowance
+}
+```
+
+Represents how holiday allowances (13th and 14th month) are distributed throughout the year.
+
+### `LunchAllowance`
+
+```typescript
+interface LunchAllowance {
+  daily_value: number;
+  mode: "cupon" | "salary" | null;
+  days_count: number;
+  monthly_value: number;
+  taxable_monthly_value: number;
+  tax_free_monthly_value: number;
+  yearly_value: number;
+}
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `daily_value` | `number` | Daily lunch allowance amount |
+| `mode` | `"cupon" \| "salary" \| null` | Type of lunch allowance |
+| `days_count` | `number` | Number of working days per month |
+| `monthly_value` | `number` | Total monthly lunch allowance |
+| `taxable_monthly_value` | `number` | Portion subject to tax |
+| `tax_free_monthly_value` | `number` | Tax-free portion |
+| `yearly_value` | `number` | Annual lunch allowance (11 months) |
+
+### `SituationCodesT`
+
+```typescript
+type SituationCodesT =
+  | "SOLCAS2"      // Single or married with 2 holders
+  | "SOLD"         // Single with dependents
+  | "CAS1"         // Married, single holder
+  | "SOLCAS2+DEF"  // Single or married 2 holders + disability
+  | "SOLD+DEF"     // Single with dependents + disability
+  | "CAS2D+DEF"    // Married 2 holders with dependents + disability
+  | "CAS1+DEF";    // Married single holder + disability
+```
+
+Tax table codes used internally by the library to determine the appropriate tax bracket.
+
+## Constants
+
+### `defaultLunchAllowance`
+
+```typescript
+const defaultLunchAllowance: LunchAllowance = {
+  daily_value: 0,
+  mode: null,
+  days_count: 0,
+  monthly_value: 0,
+  taxable_monthly_value: 0,
+  tax_free_monthly_value: 0,
+  yearly_value: 0
+};
+```
+
+Default lunch allowance configuration (no allowance).
+
+## Validation Functions
+
+The library includes internal validation functions that are automatically called:
+
+### `validateNumberOfHolders(numberOfHolders)`
+Validates that the number of holders is valid (1 or 2 for married, null for single).
+
+### `validateMarriedAndNumberOfHolders(married, numberOfHolders)`
+Validates the relationship between marital status and number of holders.
+
+### `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
+Validates that the number of disabled dependents doesn't exceed total dependents.
+
+## Error Handling
+
+The library throws descriptive errors for invalid configurations:
+
+```typescript
+// Invalid situation
+throw new Error(
+  `Could not determine situation for the given parameters: 
+   married=${married}, disabled=${disabled}, 
+   numberOfHolders=${numberOfHolders}, 
+   numberOfDependents=${numberOfDependents}`
+);
+
+// Tax bracket not found
+throw new Error(
+  `Could not find tax bracket for taxable income: ${taxableIncome} 
+   in table ${situation.code} for location ${location}`
+);
+```
+
+## Internal Classes
+
+### `TaxRetentionTable`
+
+```typescript
+class TaxRetentionTable {
+  static load(
+    dateStart: Date,
+    dateEnd: Date,
+    location: LocationT,
+    situationCode: SituationCodesT
+  ): TaxRetentionTable;
+  
+  find_bracket(income: number): TaxBracket | null;
+}
+```
+
+Internal class for loading and managing tax retention tables.
+
+### `SituationUtils`
+
+```typescript
+class SituationUtils {
+  static getSituation(
+    married: boolean,
+    disabled: boolean,
+    numberOfHolders?: number | null,
+    numberOfDependents?: number
+  ): Situation | undefined;
+  
+  static getSituationFromCode(code: string): Situation | undefined;
+}
+```
+
+Utility class for determining tax situations based on parameters. 

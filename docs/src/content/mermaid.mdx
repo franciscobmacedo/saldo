@@ -1,0 +1,206 @@
+# Architecture
+
+System architecture and data flow of the Saldo TS library.
+
+## System Overview
+
+```mermaid
+graph TD;
+  subgraph Input [User Input]
+    A[Income Parameters];
+    B[Personal Situation];
+    C[Location & Dates];
+  end
+  subgraph Processing [Core Processing]
+    D[Input Validation];
+    E[Situation Determination];
+    F[Tax Table Loading];
+    G[Tax Calculation];
+  end
+  subgraph Data [Tax Data]
+    H[Retention Tables];
+    I[Regional Data];
+    J[Disability Benefits];
+  end
+  subgraph Output [Results]
+    K[Tax Amounts];
+    L[Net Salary];
+    M[Yearly Totals];
+  end
+  
+  A --> D;
+  B --> D;
+  C --> D;
+  D --> E;
+  E --> F;
+  F --> H;
+  F --> I;
+  F --> J;
+  H --> G;
+  I --> G;
+  J --> G;
+  G --> K;
+  G --> L;
+  G --> M;
+```
+
+## Data Flow Process
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Validator
+    participant SituationUtils
+    participant TaxRetentionTable
+    participant Calculator
+    
+    User->>Validator: simulateDependentWorker(options)
+    Validator->>Validator: validateNumberOfHolders()
+    Validator->>Validator: validateMarriedAndNumberOfHolders()
+    Validator->>Validator: validateDependents()
+    
+    Validator->>SituationUtils: getSituation(married, disabled, holders, dependents)
+    SituationUtils->>SituationUtils: Determine tax situation code
+    SituationUtils-->>Validator: Return situation
+    
+    Validator->>TaxRetentionTable: load(dates, location, situationCode)
+    TaxRetentionTable->>TaxRetentionTable: Load appropriate tax table
+    TaxRetentionTable-->>Validator: Return tax table
+    
+    Validator->>Calculator: calculate(income, allowances, deductions)
+    Calculator->>TaxRetentionTable: find_bracket(taxableIncome)
+    TaxRetentionTable-->>Calculator: Return tax bracket
+    Calculator->>Calculator: Apply tax calculations
+    Calculate->>Calculator: Apply social security
+    Calculator-->>User: Return DependentWorkerResult
+```
+
+## Tax Situation Determination
+
+```mermaid
+flowchart TD
+    Start([Start]) --> Married{Married?}
+    
+    Married -->|No| SingleDeps{Has Dependents?}
+    Married -->|Yes| Holders{Number of Holders?}
+    
+    SingleDeps -->|No| SOLCAS2[SOLCAS2]
+    SingleDeps -->|Yes| SOLD[SOLD]
+    
+    Holders -->|1| CAS1[CAS1]
+    Holders -->|2| MarriedDeps{Has Dependents?}
+    
+    MarriedDeps -->|No| SOLCAS2
+    MarriedDeps -->|Yes| DisabledCheck{Has Disability?}
+    
+    DisabledCheck -->|No| SOLCAS2
+    DisabledCheck -->|Yes| CAS2D_DEF[CAS2D+DEF]
+    
+    SOLCAS2 --> Disabled{Disabled?}
+    SOLD --> Disabled
+    CAS1 --> Disabled
+    
+    Disabled -->|No| FinalCode[Final Tax Code]
+    Disabled -->|Yes| AddDEF[Add +DEF suffix]
+    AddDEF --> FinalCode
+    CAS2D_DEF --> FinalCode
+    
+    FinalCode --> LoadTable[Load Tax Retention Table]
+```
+
+## Component Architecture
+
+```mermaid
+graph LR;
+  subgraph API [Public API]
+    simulateDependentWorker[simulateDependentWorker];
+  end
+  
+  subgraph Validation [Validation Layer]
+    validateNumberOfHolders;
+    validateMarriedAndNumberOfHolders;
+    validateDependents;
+  end
+  
+  subgraph Core [Core Logic]
+    SituationUtils;
+    TaxRetentionTable;
+    Calculations;
+  end
+  
+  subgraph Data [Data Layer]
+    TaxTables[Tax Tables JSON];
+    Manifest[Table Manifest];
+  end
+  
+  subgraph Types [Type System]
+    Schemas;
+    Interfaces;
+    Enums;
+  end
+  
+  simulateDependentWorker --> Validation;
+  Validation --> Core;
+  Core --> Data;
+  Types --> simulateDependentWorker;
+  Types --> Core;
+```
+
+## Tax Calculation Flow
+
+```mermaid
+graph TD
+    Income[Base Income] --> LunchCalc{Lunch Allowance?}
+    LunchCalc -->|Yes| AddLunch[Add Taxable Portion]
+    LunchCalc -->|No| TaxableIncome[Taxable Income]
+    AddLunch --> TaxableIncome
+    
+    TaxableIncome --> Twelfths{Holiday Allowances?}
+    Twelfths -->|Yes| AddTwelfths[Add Twelfths Income]
+    Twelfths -->|No| RetentionIncome[Retention Income]
+    AddTwelfths --> RetentionIncome
+    
+    RetentionIncome --> TaxBracket[Find Tax Bracket]
+    TaxBracket --> Deductions{Extra Deductions?}
+    
+    Deductions -->|Partner Disabled| PartnerDed[Partner Deduction]
+    Deductions -->|Disabled Dependents| DepDed[Dependent Deduction]
+    Deductions -->|None| CalcTax[Calculate Tax]
+    
+    PartnerDed --> CalcTax
+    DepDed --> CalcTax
+    
+    CalcTax --> SocialSec[Calculate Social Security]
+    SocialSec --> NetSalary[Calculate Net Salary]
+    NetSalary --> YearlyCalc[Calculate Yearly Amounts]
+    YearlyCalc --> Result[Return Result]
+```
+
+## Regional Data Structure
+
+```mermaid
+graph TD
+    Portugal[Portugal] --> Continente[Continente]
+    Portugal --> Acores[Açores]
+    Portugal --> Madeira[Madeira]
+    
+    Continente --> ContTables[Tax Tables 2023-2024]
+    Acores --> AcoresTables[Regional Tax Tables]
+    Madeira --> MadeiraTables[Regional Tax Tables]
+    
+    ContTables --> Situations[Tax Situations]
+    AcoresTables --> Situations
+    MadeiraTables --> Situations
+    
+    Situations --> SOLCAS2_Table[SOLCAS2]
+    Situations --> SOLD_Table[SOLD]
+    Situations --> CAS1_Table[CAS1]
+    Situations --> Disability_Tables[+DEF Variants]
+```
+
+The architecture is designed for:
+- **Modularity**: Clear separation of concerns
+- **Extensibility**: Easy to add new regions or tax rules
+- **Maintainability**: Well-defined interfaces and validation
+- **Performance**: Efficient tax table loading and calculation
+- **Type Safety**: Full TypeScript coverage for all operations

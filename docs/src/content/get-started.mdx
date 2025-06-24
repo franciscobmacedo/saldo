@@ -1,0 +1,176 @@
+import { Steps } from 'nextra/components'
+
+# Getting Started
+
+Welcome to Saldo TS! This guide will help you get started with calculating Portuguese dependent worker taxes and salaries.
+
+## Installation
+
+Choose your preferred package manager:
+
+```bash
+npm install saldo-ts
+```
+
+```bash
+pnpm add saldo-ts
+```
+
+```bash
+yarn add saldo-ts
+```
+
+## Basic Usage
+
+### Simple Tax Calculation
+
+The most basic usage involves calculating taxes for a single person:
+
+```typescript
+import { simulateDependentWorker } from 'saldo-ts';
+
+const result = simulateDependentWorker({
+  income: 1200, // Monthly income in euros
+});
+
+console.log('Calculation Results:');
+console.log(`Gross Income: €${result.gross_income.toFixed(2)}`);
+console.log(`Taxable Income: €${result.taxable_income.toFixed(2)}`);
+console.log(`Tax: €${result.tax.toFixed(2)}`);
+console.log(`Social Security: €${result.social_security.toFixed(2)}`);
+console.log(`Net Salary: €${result.net_salary.toFixed(2)}`);
+console.log(`Yearly Net: €${result.yearly_net_salary.toFixed(2)}`);
+```
+
+### Configuration Options
+
+You can customize the calculation with various options:
+
+```typescript
+const result = simulateDependentWorker({
+  income: 1500,
+  married: true,
+  numberOfHolders: 1, // Single income holder in marriage
+  numberOfDependents: 2, // Two children
+  location: 'continente',
+  dateStart: new Date(2024, 0, 1), // January 1, 2024
+  dateEnd: new Date(2024, 11, 31), // December 31, 2024
+  socialSecurityTaxRate: 0.11, // 11% social security rate
+});
+```
+
+## Understanding the Result
+
+The `simulateDependentWorker` function returns a comprehensive result object:
+
+```typescript
+interface DependentWorkerResult {
+  taxable_income: number;        // Income subject to tax
+  gross_income: number;          // Total monthly gross income
+  tax: number;                   // Monthly tax amount
+  social_security: number;       // Monthly social security contribution
+  social_security_tax: number;   // Social security tax rate applied
+  net_salary: number;            // Monthly net salary
+  yearly_net_salary: number;     // Annual net salary
+  yearly_gross_salary: number;   // Annual gross salary
+  lunch_allowance: LunchAllowance; // Lunch allowance details
+}
+```
+
+## Key Parameters
+
+### Required Parameters
+
+- **`income`**: Monthly gross income in euros
+
+### Optional Parameters
+
+- **`married`**: Whether the person is married (default: `false`)
+- **`disabled`**: Whether the person has a disability (default: `false`)
+- **`partnerDisabled`**: Whether the spouse has a disability (default: `false`)
+- **`location`**: Tax region - `'continente'`, `'acores'`, or `'madeira'` (default: `'continente'`)
+- **`numberOfHolders`**: Number of income holders in marriage - `1` or `2` (default: `null`)
+- **`numberOfDependents`**: Number of dependents (default: `null`)
+- **`numberOfDependentsDisabled`**: Number of dependents with disabilities (default: `null`)
+- **`dateStart`**: Calculation period start date (default: January 1, 2024)
+- **`dateEnd`**: Calculation period end date (default: July 31, 2024)
+- **`socialSecurityTaxRate`**: Social security tax rate (default: `0.11`)
+- **`twelfths`**: Holiday allowance distribution (default: `Twelfths.TWO_MONTHS`)
+- **`lunchAllowance`**: Lunch allowance configuration (default: no allowance)
+
+## Common Scenarios
+
+### Single Person
+
+```typescript
+const single = simulateDependentWorker({
+  income: 1000,
+  location: 'continente'
+});
+```
+
+### Married with Children
+
+```typescript
+const marriedWithKids = simulateDependentWorker({
+  income: 1800,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continente'
+});
+```
+
+### Disabled Worker
+
+```typescript
+const disabledWorker = simulateDependentWorker({
+  income: 1200,
+  disabled: true,
+  location: 'continente'
+});
+```
+
+### With Lunch Allowance
+
+```typescript
+import { LunchAllowance } from 'saldo-ts';
+
+const customLunchAllowance: LunchAllowance = {
+  daily_value: 7.5,
+  mode: "cupon",
+  days_count: 22,
+  // ... other calculated properties
+};
+
+const withLunch = simulateDependentWorker({
+  income: 1400,
+  lunchAllowance: customLunchAllowance,
+  location: 'continente'
+});
+```
+
+## Next Steps
+
+- Learn about [advanced configuration options](/docs/configuration)
+- Explore [tax situations and scenarios](/docs/tax-situations)
+- Check out [examples](/docs/examples) for common use cases
+- Understand [lunch allowances](/docs/lunch-allowances)
+- Review [API reference](/docs/api-reference)
+
+---
+
+<span id="sidebar-and-anchor-links" />
+
+> [!NOTE]
+>
+> Any `.md` or `.mdx` file will turn into a doc page and be displayed in
+> sidebar. You can also create a `_meta.js` file to customize the page order and
+> title. <br /> Check the source code: https://github.com/shuding/nextra for
+> more information.
+
+> [!TIP]
+>
+> You can also use
+> [`<style jsx>`](https://nextjs.org/docs/basic-features/built-in-css-support#css-in-js)
+> to style elements inside `theme.config.js`.
