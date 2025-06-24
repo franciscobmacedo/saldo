@@ -1,5 +1,6 @@
 export default function IndexPage() {
   return (
+    <>
     <h1
       style={{
         textAlign: 'center',
@@ -10,5 +11,6 @@ export default function IndexPage() {
     >
       Index page
     </h1>
+    </>
   )
 }
