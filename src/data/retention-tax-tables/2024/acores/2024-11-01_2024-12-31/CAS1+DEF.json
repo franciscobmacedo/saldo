@@ -1,0 +1,67 @@
+{
+    "situation": "CAS1+DEF",
+    "description": "vii - Trabalho dependente - Casado \u00fanico titular - deficiente",
+    "brackets": [
+        {
+            "signal": "max",
+            "limit": 2868.0,
+            "max_marginal_rate": 0.0,
+            "deduction": 0.0,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 0.0,
+            "effective_mensal_rate": 0.0
+        },
+        {
+            "signal": "max",
+            "limit": 4374.0,
+            "max_marginal_rate": 0.1654,
+            "deduction": 463.31,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 5.9
+        },
+        {
+            "signal": "max",
+            "limit": 6621.0,
+            "max_marginal_rate": 0.1816,
+            "deduction": 518.3,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 10.3
+        },
+        {
+            "signal": "max",
+            "limit": 6717.0,
+            "max_marginal_rate": 0.2151,
+            "deduction": 640.63,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 12.0
+        },
+        {
+            "signal": "max",
+            "limit": 20265.0,
+            "max_marginal_rate": 0.2926,
+            "deduction": 987.78,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 24.4
+        },
+        {
+            "signal": "min",
+            "limit": 20265.0,
+            "max_marginal_rate": 0.32549999999999996,
+            "deduction": 1654.66,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": -1.0
+        }
+    ],
+    "dependent_disabled_addition_deduction": 84.82
+}

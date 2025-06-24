@@ -1,0 +1,57 @@
+{
+    "situation": "CAS1+DEF",
+    "description": "vii - Trabalho dependente - Casado \u00fanico titular - deficiente",
+    "brackets": [
+        {
+            "signal": "max",
+            "limit": 2105.51,
+            "max_marginal_rate": 0.0,
+            "deduction": 0.0,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 0.0,
+            "effective_mensal_rate": 0.0
+        },
+        {
+            "signal": "max",
+            "limit": 3622.95,
+            "max_marginal_rate": 0.256,
+            "deduction": 719.35,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 5.7
+        },
+        {
+            "signal": "max",
+            "limit": 6587.01,
+            "max_marginal_rate": 0.2607,
+            "deduction": 736.38,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 14.9
+        },
+        {
+            "signal": "max",
+            "limit": 20264.85,
+            "max_marginal_rate": 0.2975,
+            "deduction": 978.78,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": 24.9
+        },
+        {
+            "signal": "min",
+            "limit": 20264.85,
+            "max_marginal_rate": 0.33020000000000005,
+            "deduction": 1641.44,
+            "var1_deduction": 0.0,
+            "var2_deduction": 0.0,
+            "dependent_aditional_deduction": 42.86,
+            "effective_mensal_rate": -1.0
+        }
+    ],
+    "dependent_disabled_addition_deduction": 84.82
+}
