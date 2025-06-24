@@ -32,14 +32,8 @@ describe("simulateDependentWorker - End-to-End", () => {
             expect(result.tax).toBeGreaterThanOrEqual(0);
             expect(result.social_security).toBeCloseTo(result.gross_income * 0.11, 2);
             expect(result.net_salary).toBeLessThan(result.gross_income);
-            // Debug: Check what yearly_gross_salary actually is
-            console.log("Debug gross income calculation:", {
-                income: 1000,
-                gross_income: result.gross_income,
-                yearly_gross_salary: result.yearly_gross_salary,
-                expected: result.gross_income * 12
-            });
-            expect(result.yearly_gross_salary).toBeGreaterThanOrEqual(result.gross_income * 12);
+            // Yearly gross should be income * 14 (Portuguese 14-month system)
+            expect(result.yearly_gross_salary).toBe(1000 * 14);
         });
 
         it("should calculate correctly for married couple with dependents", () => {
@@ -186,30 +180,17 @@ describe("simulateDependentWorker - End-to-End", () => {
                 twelfths: Twelfths.TWO_MONTHS,
             });
 
-            // Debug: Log the actual values to understand what's happening
-            console.log("NONE twelfths:", { 
-                tax: noTwelfths.tax, 
-                yearly_net: noTwelfths.yearly_net_salary,
-                net_salary: noTwelfths.net_salary 
-            });
-            console.log("ONE_MONTH twelfths:", { 
-                tax: oneMonth.tax, 
-                yearly_net: oneMonth.yearly_net_salary,
-                net_salary: oneMonth.net_salary 
-            });
-            console.log("TWO_MONTHS twelfths:", { 
-                tax: twoMonths.tax, 
-                yearly_net: twoMonths.yearly_net_salary,
-                net_salary: twoMonths.net_salary 
-            });
-
-            // More twelfths should result in higher tax burden (distributed income)
+            // More twelfths should result in higher monthly tax (distributed bonus income)
             expect(twoMonths.tax).toBeGreaterThan(oneMonth.tax);
             expect(oneMonth.tax).toBeGreaterThan(noTwelfths.tax);
             
-            // Let's just verify they're different for now and understand the pattern
-            expect(twoMonths.yearly_net_salary).not.toBe(oneMonth.yearly_net_salary);
-            expect(oneMonth.yearly_net_salary).not.toBe(noTwelfths.yearly_net_salary);
+            // More twelfths should result in higher monthly net salary (bonus distribution)
+            expect(twoMonths.net_salary).toBeGreaterThan(oneMonth.net_salary);
+            expect(oneMonth.net_salary).toBeGreaterThan(noTwelfths.net_salary);
+            
+            // Fascinating discovery: ONE_MONTH gives the highest yearly net (tax optimization sweet spot)
+            expect(oneMonth.yearly_net_salary).toBeGreaterThan(twoMonths.yearly_net_salary);
+            expect(oneMonth.yearly_net_salary).toBeGreaterThan(noTwelfths.yearly_net_salary);
         });
     });
 
