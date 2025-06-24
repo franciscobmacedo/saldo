@@ -1,17 +1,39 @@
 {
   "name": "saldo-ts",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "vitest"
+  "description": "Portuguese salary calculator library",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
-  "keywords": [],
+  "files": [
+    "src",
+    "dist"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "build": "tsc && tsc-alias",
+    "dev": "tsx src/index.ts",
+    "docs": "pnpm build && cd docs && pnpm install && pnpm dev"
+  },
+  "keywords": [
+    "portugal",
+    "salary",
+    "tax",
+    "calculator"
+  ],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "@types/node": "^22.15.17",
+    "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.4",
     "typescript": "^5.8.3",

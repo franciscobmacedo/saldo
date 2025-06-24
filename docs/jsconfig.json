@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src/**/*",
+    "next.config.mjs",
+    "postcss.config.mjs"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+} 

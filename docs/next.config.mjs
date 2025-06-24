@@ -9,5 +9,15 @@ const withNextra = nextra({
 })
 
 export default withNextra({
-  reactStrictMode: true
+  reactStrictMode: true,
+  webpack: (config, { isServer }) => {
+    // Handle TypeScript files from local packages
+    config.resolve.extensions.push('.ts', '.tsx')
+    
+    // Add the parent src directory to the resolve paths
+    config.resolve.modules.push('../src/')
+    
+    return config
+  },
+  transpilePackages: ['saldo-ts']
 })
