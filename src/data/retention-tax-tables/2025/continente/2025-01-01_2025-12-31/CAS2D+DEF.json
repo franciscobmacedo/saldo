@@ -1,6 +1,8 @@
 {
   "situation": "CAS2D+DEF",
-  "description": "Trabalho dependente - Casado dois titulares com um dependente - Deficiente",
+  "title": "Table VI",
+  "table": "Table VI",
+  "description": "Trabalho dependente, Casado dois titulares, com um dependente - Deficiente",
   "brackets": [
     {
       "signal": "max",

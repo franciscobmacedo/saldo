@@ -1,6 +1,8 @@
 {
   "situation": "SOLD",
-  "description": "Trabalho dependente - Não casado com um dependente",
+  "title": "Table II",
+  "table": "Table II",
+  "description": "Trabalho dependente, Não casado, com um dependente",
   "brackets": [
     {
       "signal": "max",
@@ -9,7 +11,7 @@
       "deduction": 0,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0
     },
     {
@@ -19,7 +21,7 @@
       "deduction": 0.091,
       "var1_deduction": 2.6,
       "var2_deduction": 1264.96,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.026000000000000002
     },
     {
@@ -29,7 +31,7 @@
       "deduction": 0.1155,
       "var1_deduction": 1.35,
       "var2_deduction": 1525.25,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.049
     },
     {
@@ -39,7 +41,7 @@
       "deduction": 70.98,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.053
     },
     {
@@ -49,7 +51,7 @@
       "deduction": 114.72,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.057
     },
     {
@@ -59,7 +61,7 @@
       "deduction": 139.96,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.09699999999999999
     },
     {
@@ -69,7 +71,7 @@
       "deduction": 227.52,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.115
     },
     {
@@ -79,7 +81,7 @@
       "deduction": 278.43,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.134
     },
     {
@@ -89,7 +91,7 @@
       "deduction": 333.15,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.168
     },
     {
@@ -99,7 +101,7 @@
       "deduction": 363.54,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.215
     },
     {
@@ -109,7 +111,7 @@
       "deduction": 553.25,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": 0.287
     },
     {
@@ -119,7 +121,7 @@
       "deduction": 868.7,
       "var1_deduction": 0,
       "var2_deduction": 0,
-      "dependent_aditional_deduction": 34.29,
+      "dependent_aditional_deduction": 31.43,
       "effective_mensal_rate": -1
     }
   ]

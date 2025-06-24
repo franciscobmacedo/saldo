@@ -114,6 +114,32 @@ import cas1_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/202
 import cas1d_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS1D+DEF.json';
 import cas1_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS1+DEF.json';
 
+
+
+
+// 2025 imports
+import cas1_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/CAS1+DEF.json';
+import cas1__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/CAS1.json';
+import cas2d_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/CAS2D+DEF.json';
+import solcas2_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLCAS2+DEF.json';
+import solcas2__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLCAS2.json';
+import sold_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLD+DEF.json';
+import sold__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLD.json';
+import cas1_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/CAS1+DEF.json';
+import cas1__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/CAS1.json';
+import cas2d_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/CAS2D+DEF.json';
+import solcas2_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLCAS2+DEF.json';
+import solcas2__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLCAS2.json';
+import sold_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLD+DEF.json';
+import sold__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLD.json';
+import cas1_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/CAS1+DEF.json';
+import cas1__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/CAS1.json';
+import cas2d_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/CAS2D+DEF.json';
+import solcas2_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLCAS2+DEF.json';
+import solcas2__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLCAS2.json';
+import sold_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLD+DEF.json';
+import sold__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLD.json';
+
 // --- END IMPORTS ---
 
 export const taxTablesData: Record<string, TaxTableJsonData> = {
@@ -203,6 +229,32 @@ export const taxTablesData: Record<string, TaxTableJsonData> = {
   "2024/madeira/2024-11-01_2024-12-31/CAS1": cas1_2024_madeira_1101_1231 as TaxTableJsonData,
   "2024/madeira/2024-11-01_2024-12-31/CAS1D+DEF": cas1d_def_2024_madeira_1101_1231 as TaxTableJsonData,
   "2024/madeira/2024-11-01_2024-12-31/CAS1+DEF": cas1_def_2024_madeira_1101_1231 as TaxTableJsonData,
+
+ 
+
+  // 2025 data
+  "2025/acores/2025-01-01_2025-12-31/CAS1+DEF": cas1_def__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-12-31/CAS1": cas1__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-12-31/CAS2D+DEF": cas2d_def__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-12-31/SOLCAS2+DEF": solcas2_def__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-12-31/SOLCAS2": solcas2__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-12-31/SOLD+DEF": sold_def__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-12-31/SOLD": sold__2025_acores_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/CAS1+DEF": cas1_def__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/CAS1": cas1__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/CAS2D+DEF": cas2d_def__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/SOLCAS2+DEF": solcas2_def__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/SOLCAS2": solcas2__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/SOLD+DEF": sold_def__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-12-31/SOLD": sold__2025_continente_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/CAS1+DEF": cas1_def__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/CAS1": cas1__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/CAS2D+DEF": cas2d_def__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/SOLCAS2+DEF": solcas2_def__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/SOLCAS2": solcas2__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/SOLD+DEF": sold_def__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-12-31/SOLD": sold__2025_madeira_2025010120251231 as TaxTableJsonData,
+
 };
 
 // Helper type for stronger typing if needed elsewhere

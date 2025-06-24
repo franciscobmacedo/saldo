@@ -1,6 +1,8 @@
 {
   "situation": "SOLD+DEF",
-  "description": "Trabalho dependente - Não casado com um dependente - Deficiente",
+  "title": "Table VII",
+  "table": "Table VII",
+  "description": "Trabalho dependente, Não casado, com um dependente - Deficiente",
   "brackets": [
     {
       "signal": "max",

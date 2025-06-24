@@ -30,12 +30,12 @@ export interface DependentWorkerResult {
 export const defaultLunchAllowance: LunchAllowance = {
     daily_value: 0,
     mode: null,
-    days_count: 0,
+    days_count: 22,
     get monthly_value(): number {
         return this.daily_value * this.days_count;
     },
     get taxable_monthly_value(): number {
-        const max_daily_value = this.mode === "salary" ? 6 : 9.6;
+        const max_daily_value = this.mode === "salary" ? 6 : 10.2;
         const free_of_tax_amount = max_daily_value * this.days_count;
         return Math.max(0, this.monthly_value - free_of_tax_amount);
     },
