@@ -57,13 +57,13 @@ export function simulateDependentWorker({
   const twelfthsIncome = getTwelfthsIncome(income, twelfths);
 
   // Income for tax calculation
-  const taxableIncome = income + lunchAllowance.taxable_monthly_value;
+  const taxableIncome = income + lunchAllowance.taxableMonthlyValue;
 
   // Income for gross salary and social security
   const retentionIncome = taxableIncome + twelfthsIncome;
 
   // Gross salary per month
-  const grossIncome = retentionIncome + lunchAllowance.tax_free_monthly_value;
+  const grossIncome = retentionIncome + lunchAllowance.taxFreeMonthlyValue;
 
   // The situation to determine the tax bracket
   const situation = SituationUtils.getSituation(
@@ -111,14 +111,14 @@ export function simulateDependentWorker({
   const socialSecurity = retentionIncome * socialSecurityTaxRate;
   const netSalary = grossIncome - tax - socialSecurity;
 
-  const yearlyLunchAllowance = lunchAllowance.monthly_value * 11;
+  const yearlyLunchAllowance = lunchAllowance.monthlyValue * 11;
 
   const yearlyGrossSalary = income * 14 + yearlyLunchAllowance;
 
   // Calculate yearly net salary correctly by simulating what the base monthly salary would be
   // without twelfths distribution and then multiplying by 14 months
-  const baseMonthlyTaxableIncome = income + lunchAllowance.taxable_monthly_value;
-  const baseMonthlyGrossIncome = baseMonthlyTaxableIncome + lunchAllowance.tax_free_monthly_value;
+  const baseMonthlyTaxableIncome = income + lunchAllowance.taxableMonthlyValue;
+  const baseMonthlyGrossIncome = baseMonthlyTaxableIncome + lunchAllowance.taxFreeMonthlyValue;
   
   // Calculate tax for base monthly income (without twelfths distribution)
   const baseBracket = taxRetentionTable.find_bracket(baseMonthlyTaxableIncome);
@@ -141,14 +141,14 @@ export function simulateDependentWorker({
   const yearlyNetSalary = baseMonthlyNet * 14;
 
   return {
-    taxable_income: taxableIncome,
-    gross_income: grossIncome,
+    taxableIncome: taxableIncome,
+    grossIncome: grossIncome,
     tax,
-    social_security: socialSecurity,
-    social_security_tax: socialSecurityTaxRate,
-    net_salary: netSalary,
-    yearly_net_salary: yearlyNetSalary,
-    yearly_gross_salary: yearlyGrossSalary,
-    lunch_allowance: lunchAllowance,
+    socialSecurity: socialSecurity,
+    socialSecurityTax: socialSecurityTaxRate,
+    netSalary: netSalary,
+    yearlyNetSalary: yearlyNetSalary,
+    yearlyGrossSalary: yearlyGrossSalary,
+    lunchAllowance: lunchAllowance,
   };
 }

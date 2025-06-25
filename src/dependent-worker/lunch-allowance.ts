@@ -1,25 +1,25 @@
 export class LunchAllowance {
   constructor(
-    public daily_value: number,
+    public dailyValue: number,
     public mode: "cupon" | "salary" | null,
-    public days_count: number
+    public daysCount: number
   ) {}
 
-  get monthly_value(): number {
-    return this.daily_value * this.days_count;
+  get monthlyValue(): number {
+    return this.dailyValue * this.daysCount;
   }
 
-  get taxable_monthly_value(): number {
-    const max_daily_value = this.mode === "salary" ? 6 : 10.2;
-    const free_of_tax_amount = max_daily_value * this.days_count;
-    return Math.max(0, this.monthly_value - free_of_tax_amount);
+  get taxableMonthlyValue(): number {
+    const maxDailyValue = this.mode === "salary" ? 6 : 10.2;
+    const freeOfTaxAmount = maxDailyValue * this.daysCount;
+    return Math.max(0, this.monthlyValue - freeOfTaxAmount);
   }
 
-  get tax_free_monthly_value(): number {
-    return this.monthly_value - this.taxable_monthly_value;
+  get taxFreeMonthlyValue(): number {
+    return this.monthlyValue - this.taxableMonthlyValue;
   }
 
-  get yearly_value(): number {
-    return this.monthly_value * 11;
+  get yearlyValue(): number {
+    return this.monthlyValue * 11;
   }
 }

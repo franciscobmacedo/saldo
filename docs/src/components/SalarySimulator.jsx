@@ -336,24 +336,24 @@ export function SalarySimulator() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Gross Income:</span>
-                    <span className="font-medium">{formatCurrency(result.gross_income)}</span>
+                    <span className="font-medium">{formatCurrency(result.grossIncome)}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Taxable Income:</span>
-                    <span className="font-medium">{formatCurrency(result.taxable_income)}</span>
+                    <span className="font-medium">{formatCurrency(result.taxableIncome)}</span>
                   </div>
                   <div className="flex justify-between text-red-600">
                     <span>Income Tax:</span>
                     <span className="font-medium">-{formatCurrency(result.tax)}</span>
                   </div>
                   <div className="flex justify-between text-red-600">
-                    <span>Social Security ({(result.social_security_tax * 100).toFixed(1)}%):</span>
-                    <span className="font-medium">-{formatCurrency(result.social_security)}</span>
+                    <span>Social Security ({(result.socialSecurityTax * 100).toFixed(1)}%):</span>
+                    <span className="font-medium">-{formatCurrency(result.socialSecurity)}</span>
                   </div>
                   <hr className="my-2" />
                   <div className="flex justify-between text-lg font-bold text-green-600">
                     <span>Net Salary:</span>
-                    <span>{formatCurrency(result.net_salary)}</span>
+                    <span>{formatCurrency(result.netSalary)}</span>
                   </div>
                 </div>
               </div>
@@ -363,38 +363,38 @@ export function SalarySimulator() {
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span>Gross Salary:</span>
-                    <span className="font-medium">{formatCurrency(result.yearly_gross_salary)}</span>
+                    <span className="font-medium">{formatCurrency(result.yearlyGrossSalary)}</span>
                   </div>
                   <div className="flex justify-between text-lg font-bold text-green-600">
                     <span>Net Salary:</span>
-                    <span>{formatCurrency(result.yearly_net_salary)}</span>
+                    <span>{formatCurrency(result.yearlyNetSalary)}</span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {result.lunch_allowance && result.lunch_allowance.monthly_value > 0 && (
+            {result.lunchAllowance && result.lunchAllowance.monthlyValue > 0 && (
               <div className="mt-6 pt-4 border-t">
                 <h3 className="text-lg font-semibold mb-3">Lunch Allowance Details</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Monthly Value:</span>
-                      <span className="font-medium">{formatCurrency(result.lunch_allowance.monthly_value)}</span>
+                      <span className="font-medium">{formatCurrency(result.lunchAllowance.monthlyValue)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Tax Free:</span>
-                      <span className="font-medium">{formatCurrency(result.lunch_allowance.tax_free_monthly_value)}</span>
+                      <span className="font-medium">{formatCurrency(result.lunchAllowance.taxFreeMonthlyValue)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Taxable:</span>
-                      <span className="font-medium">{formatCurrency(result.lunch_allowance.taxable_monthly_value)}</span>
+                      <span className="font-medium">{formatCurrency(result.lunchAllowance.taxableMonthlyValue)}</span>
                     </div>
                   </div>
                   <div className="space-y-2">
                     <div className="flex justify-between">
                       <span>Yearly Value:</span>
-                      <span className="font-medium">{formatCurrency(result.lunch_allowance.yearly_value)}</span>
+                      <span className="font-medium">{formatCurrency(result.lunchAllowance.yearlyValue)}</span>
                     </div>
                   </div>
                 </div>

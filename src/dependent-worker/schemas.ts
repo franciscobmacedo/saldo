@@ -28,13 +28,13 @@ export interface SimulateDependentWorkerOptions {
   
 
 export interface DependentWorkerResult {
-  taxable_income: number;
-  gross_income: number;
+  taxableIncome: number;
+  grossIncome: number;
   tax: number;
-  social_security: number;
-  social_security_tax: number;
-  net_salary: number;
-  yearly_net_salary: number;
-  yearly_gross_salary: number;
-  lunch_allowance: LunchAllowance;
+  socialSecurity: number;
+  socialSecurityTax: number;
+  netSalary: number;
+  yearlyNetSalary: number;
+  yearlyGrossSalary: number;
+  lunchAllowance: LunchAllowance;
 }

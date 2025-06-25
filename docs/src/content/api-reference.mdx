@@ -52,29 +52,29 @@ interface SimulateDependentWorkerOptions {
 
 ```typescript
 interface DependentWorkerResult {
-  taxable_income: number;
-  gross_income: number;
+  taxableIncome: number;
+  grossIncome: number;
   tax: number;
-  social_security: number;
-  social_security_tax: number;
-  net_salary: number;
-  yearly_net_salary: number;
-  yearly_gross_salary: number;
-  lunch_allowance: LunchAllowance;
+  socialSecurity: number;
+  socialSecurityTax: number;
+  netSalary: number;
+  yearlyNetSalary: number;
+  yearlyGrossSalary: number;
+  lunchAllowance: LunchAllowance;
 }
 ```
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `taxable_income` | `number` | Monthly income subject to tax |
-| `gross_income` | `number` | Total monthly gross income including allowances |
+| `taxableIncome` | `number` | Monthly income subject to tax |
+| `grossIncome` | `number` | Total monthly gross income including allowances |
 | `tax` | `number` | Monthly tax amount |
-| `social_security` | `number` | Monthly social security contribution |
-| `social_security_tax` | `number` | Social security tax rate applied |
-| `net_salary` | `number` | Monthly net salary after deductions |
-| `yearly_net_salary` | `number` | Annual net salary |
-| `yearly_gross_salary` | `number` | Annual gross salary |
-| `lunch_allowance` | `LunchAllowance` | Lunch allowance breakdown |
+| `socialSecurity` | `number` | Monthly social security contribution |
+| `socialSecurityTax` | `number` | Social security tax rate applied |
+| `netSalary` | `number` | Monthly net salary after deductions |
+| `yearlyNetSalary` | `number` | Annual net salary |
+| `yearlyGrossSalary` | `number` | Annual gross salary |
+| `lunchAllowance` | `LunchAllowance` | Lunch allowance breakdown |
 
 #### Example
 
@@ -92,7 +92,7 @@ const result = simulateDependentWorker({
   lunchAllowanceDaysCount: 22
 });
 
-console.log(`Net Salary: €${result.net_salary.toFixed(2)}`);
+console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
 ```
 
 ## Types and Enums
@@ -124,27 +124,27 @@ Represents how holiday allowances (13th and 14th month) are distributed througho
 
 ```typescript
 interface LunchAllowance {
-  daily_value: number;
+  dailyValue: number;
   mode: "cupon" | "salary" | null;
-  days_count: number;
-  monthly_value: number;
-  taxable_monthly_value: number;
-  tax_free_monthly_value: number;
-  yearly_value: number;
+  daysCount: number;
+  monthlyValue: number;
+  taxableMonthlyValue: number;
+  taxFreeMonthlyValue: number;
+  yearlyValue: number;
 }
 ```
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `daily_value` | `number` | Daily lunch allowance amount |
+| `dailyValue` | `number` | Daily lunch allowance amount |
 | `mode` | `"cupon" \| "salary" \| null` | Type of lunch allowance |
-| `days_count` | `number` | Number of working days per month |
-| `monthly_value` | `number` | Total monthly lunch allowance |
-| `taxable_monthly_value` | `number` | Portion subject to tax |
-| `tax_free_monthly_value` | `number` | Tax-free portion |
-| `yearly_value` | `number` | Annual lunch allowance (11 months) |
+| `daysCount` | `number` | Number of working days per month |
+| `monthlyValue` | `number` | Total monthly lunch allowance |
+| `taxableMonthlyValue` | `number` | Portion subject to tax |
+| `taxFreeMonthlyValue` | `number` | Tax-free portion |
+| `yearlyValue` | `number` | Annual lunch allowance (11 months) |
 
-**Note**: This interface represents the structure of the `lunch_allowance` property in the result object. You don't create this object directly; instead, pass the lunch allowance parameters (`lunchAllowanceDailyValue`, `lunchAllowanceMode`, `lunchAllowanceDaysCount`) to the `simulateDependentWorker` function.
+**Note**: This interface represents the structure of the `lunchAllowance` property in the result object. You don't create this object directly; instead, pass the lunch allowance parameters (`lunchAllowanceDailyValue`, `lunchAllowanceMode`, `lunchAllowanceDaysCount`) to the `simulateDependentWorker` function.
 
 ### `SituationCodesT`
 
@@ -167,13 +167,13 @@ Tax table codes used internally by the library to determine the appropriate tax 
 
 ```typescript
 const defaultLunchAllowance: LunchAllowance = {
-  daily_value: 0,
+  dailyValue: 0,
   mode: null,
-  days_count: 0,
-  monthly_value: 0,
-  taxable_monthly_value: 0,
-  tax_free_monthly_value: 0,
-  yearly_value: 0
+  daysCount: 0,
+  monthlyValue: 0,
+  taxableMonthlyValue: 0,
+  taxFreeMonthlyValue: 0,
+  yearlyValue: 0
 };
 ```
 

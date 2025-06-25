@@ -1,36 +1,43 @@
 # Saldo TS
 
-**Portuguese Tax Calculation Library for TypeScript**
+**Modern TypeScript library for Portuguese tax calculations**
 
-Saldo TS is a comprehensive TypeScript library for calculating Portuguese dependent worker taxes, social security contributions, and net salary calculations. It handles complex tax scenarios including different marital statuses, dependents, disabilities, and regional variations across mainland Portugal, Azores, and Madeira.
-
-## Features
-
-- **Accurate Tax Calculations**: Based on official Portuguese tax retention tables
-- **Regional Support**: Handles tax differences between mainland Portugal, Azores, and Madeira
-- **Complex Scenarios**: Supports married/single status, dependents, disability benefits
-- **Lunch Allowances**: Calculates taxable and tax-free portions of meal allowances
-- **Holiday Allowances**: Handles 13th and 14th month salary distributions
-- **Type Safety**: Full TypeScript support with comprehensive type definitions
-- **Flexible**: Configurable for different calculation periods and parameters
+Accurately calculate dependent worker taxes, social security contributions, and net salaries in Portugal with full TypeScript support.
 
 ## Quick Start
 
 ```typescript
 import { simulateDependentWorker } from 'saldo-ts';
 
-// Basic calculation for single person
 const result = simulateDependentWorker({
-  income: 1500, // Monthly gross income
-  location: 'continente',
-  dateStart: new Date(2024, 0, 1),
-  dateEnd: new Date(2024, 11, 31)
+  income: 1500,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continente'
 });
 
-console.log(`Net Salary: €${result.net_salary.toFixed(2)}`);
+console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
 console.log(`Tax: €${result.tax.toFixed(2)}`);
-console.log(`Social Security: €${result.social_security.toFixed(2)}`);
+console.log(`Social Security: €${result.socialSecurity.toFixed(2)}`);
 ```
+
+## Features
+
+✅ **Complete Tax Calculations** - Portuguese IRS retention tables for 2024-2025  
+✅ **All Regions Supported** - Continente, Açores, and Madeira  
+✅ **Family Situations** - Single, married, dependents, disabilities  
+✅ **Lunch Allowances** - Meal vouchers and cash allowances  
+✅ **Holiday Bonuses** - 13th and 14th month distribution  
+✅ **TypeScript Native** - Full type safety and IntelliSense  
+✅ **Zero Dependencies** - Lightweight and reliable  
+
+## Next Steps
+
+- [Get Started](/docs/get-started) - Installation and basic usage
+- [Examples](/docs/examples) - Real-world scenarios  
+- [API Reference](/docs/api-reference) - Complete function reference
+- [Lunch Allowances](/docs/lunch-allowances) - Meal voucher calculations
 
 ## Installation
 

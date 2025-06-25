@@ -84,11 +84,11 @@ describe("simulateDependentWorker", () => {
   it("should calculate for a basic scenario with defaults", () => {
     const result = simulateDependentWorker({ income: baseIncome });
     expect(result).toBeDefined();
-    expect(result.taxable_income).toBe(
-      baseIncome + defaultLunchAllowance.taxable_monthly_value
+    expect(result.taxableIncome).toBe(
+      baseIncome + defaultLunchAllowance.taxableMonthlyValue
     );
-    expect(result.social_security_tax).toEqual(0.11);
-    expect(result.lunch_allowance).toEqual(
+    expect(result.socialSecurityTax).toEqual(0.11);
+    expect(result.lunchAllowance).toEqual(
       new LunchAllowance(10.2, "cupon", 22)
     );
   });
@@ -104,8 +104,8 @@ describe("simulateDependentWorker", () => {
     });
 
     expect(result).toBeDefined();
-    expect(result.taxable_income).toBe(
-      incomeVal + defaultLunchAllowance.taxable_monthly_value
+    expect(result.taxableIncome).toBe(
+      incomeVal + defaultLunchAllowance.taxableMonthlyValue
     );
   });
 
@@ -120,8 +120,8 @@ describe("simulateDependentWorker", () => {
       lunchAllowanceDaysCount: 22,
     });
     expect(result).toBeDefined();
-    expect(result.lunch_allowance.daily_value).toBe(8);
-    expect(result.taxable_income).toBe(incomeVal + 44);
+    expect(result.lunchAllowance.dailyValue).toBe(8);
+    expect(result.taxableIncome).toBe(incomeVal + 44);
   });
 
   it("should calculate for 'acores' location and no twelfths", () => {
@@ -135,10 +135,10 @@ describe("simulateDependentWorker", () => {
     expect(result).toBeDefined();
     const expectedTwelfthsIncome = (incomeVal * Twelfths.NONE) / 12;
     const expectedTaxable =
-      incomeVal + defaultLunchAllowance.taxable_monthly_value;
+      incomeVal + defaultLunchAllowance.taxableMonthlyValue;
     const expectedRetentionIncome = expectedTaxable + expectedTwelfthsIncome;
-    expect(result.gross_income).toBe(
-      expectedRetentionIncome + defaultLunchAllowance.tax_free_monthly_value
+    expect(result.grossIncome).toBe(
+      expectedRetentionIncome + defaultLunchAllowance.taxFreeMonthlyValue
     );
   });
 
@@ -186,7 +186,7 @@ describe("simulateDependentWorker", () => {
 
     const expectedYearlyNetSalary = 16413.6;
 
-    expect(result.yearly_gross_salary).toBeCloseTo(expectedYearlyGrossSalary);
-    expect(result.yearly_net_salary).toBeCloseTo(expectedYearlyNetSalary);
+    expect(result.yearlyGrossSalary).toBeCloseTo(expectedYearlyGrossSalary);
+    expect(result.yearlyNetSalary).toBeCloseTo(expectedYearlyNetSalary);
   });
 });

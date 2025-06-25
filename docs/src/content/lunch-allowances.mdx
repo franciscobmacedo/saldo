@@ -23,9 +23,9 @@ const result = simulateDependentWorker({
   lunchAllowanceDaysCount: 22
 });
 
-console.log(`Monthly lunch allowance: €${result.lunch_allowance.monthly_value}`);
-console.log(`Tax-free portion: €${result.lunch_allowance.tax_free_monthly_value}`);
-console.log(`Taxable portion: €${result.lunch_allowance.taxable_monthly_value}`);
+console.log(`Monthly lunch allowance: €${result.lunchAllowance.monthlyValue}`);
+console.log(`Tax-free portion: €${result.lunchAllowance.taxFreeMonthlyValue}`);
+console.log(`Taxable portion: €${result.lunchAllowance.taxableMonthlyValue}`);
 ```
 
 ### Cash Allowance (Em Dinheiro)
@@ -40,9 +40,9 @@ const result = simulateDependentWorker({
   lunchAllowanceDaysCount: 21
 });
 
-console.log(`Monthly lunch allowance: €${result.lunch_allowance.monthly_value}`);
-console.log(`Tax-free portion: €${result.lunch_allowance.tax_free_monthly_value}`);
-console.log(`Taxable portion: €${result.lunch_allowance.taxable_monthly_value}`);
+console.log(`Monthly lunch allowance: €${result.lunchAllowance.monthlyValue}`);
+console.log(`Tax-free portion: €${result.lunchAllowance.taxFreeMonthlyValue}`);
+console.log(`Taxable portion: €${result.lunchAllowance.taxableMonthlyValue}`);
 ```
 
 ## Parameters
@@ -70,7 +70,7 @@ const result = simulateDependentWorker({
 // Monthly allowance: €165 (7.50 * 22)
 // Tax-free: €165 (fully tax-free as it's below €10.20/day)
 // Taxable: €0
-console.log(`Net benefit: €${result.lunch_allowance.tax_free_monthly_value}`);
+console.log(`Net benefit: €${result.lunchAllowance.taxFreeMonthlyValue}`);
 ```
 
 ### High-Value Meal Vouchers
@@ -88,8 +88,8 @@ const result = simulateDependentWorker({
 // Monthly allowance: €264 (12.00 * 22)
 // Tax-free: €224.40 (10.20 * 22)
 // Taxable: €39.60 ((12.00 - 10.20) * 22)
-console.log(`Total allowance: €${result.lunch_allowance.monthly_value}`);
-console.log(`Taxable portion: €${result.lunch_allowance.taxable_monthly_value}`);
+console.log(`Total allowance: €${result.lunchAllowance.monthlyValue}`);
+console.log(`Taxable portion: €${result.lunchAllowance.taxableMonthlyValue}`);
 ```
 
 ### Cash Lunch Allowance
@@ -107,8 +107,8 @@ const result = simulateDependentWorker({
 // Monthly allowance: €168 (8.00 * 21)
 // Tax-free: €126 (6.00 * 21)
 // Taxable: €42 ((8.00 - 6.00) * 21)
-console.log(`Tax-free portion: €${result.lunch_allowance.tax_free_monthly_value}`);
-console.log(`Taxable portion: €${result.lunch_allowance.taxable_monthly_value}`);
+console.log(`Tax-free portion: €${result.lunchAllowance.taxFreeMonthlyValue}`);
+console.log(`Taxable portion: €${result.lunchAllowance.taxableMonthlyValue}`);
 ```
 
 ### No Lunch Allowance
@@ -121,7 +121,7 @@ const result = simulateDependentWorker({
   // No lunch allowance parameters specified
 });
 
-console.log(`Lunch allowance: €${result.lunch_allowance.monthly_value}`); // €0
+console.log(`Lunch allowance: €${result.lunchAllowance.monthlyValue}`); // €0
 ```
 
 ## Tax Implications
@@ -172,9 +172,9 @@ const result = simulateDependentWorker({
   lunchAllowanceDaysCount: 22
 });
 
-console.log(`Taxable Income: €${result.taxable_income}`); // €1,400 (base only)
-console.log(`Gross Income: €${result.gross_income}`);     // €1,565 (base + vouchers)
-console.log(`Net Salary: €${result.net_salary}`);        // Higher due to tax-free vouchers
+console.log(`Taxable Income: €${result.taxableIncome}`); // €1,400 (base only)
+console.log(`Gross Income: €${result.grossIncome}`);     // €1,565 (base + vouchers)
+console.log(`Net Salary: €${result.netSalary}`);        // Higher due to tax-free vouchers
 ```
 
 ### Scenario 2: High Earner with Premium Vouchers
@@ -187,10 +187,10 @@ const result = simulateDependentWorker({
   lunchAllowanceDaysCount: 22
 });
 
-console.log(`Taxable Income: €${result.taxable_income}`); // €3,000 + taxable portion
-console.log(`Lunch allowance - Total: €${result.lunch_allowance.monthly_value}`);
-console.log(`Lunch allowance - Taxable: €${result.lunch_allowance.taxable_monthly_value}`);
-console.log(`Lunch allowance - Tax-free: €${result.lunch_allowance.tax_free_monthly_value}`);
+console.log(`Taxable Income: €${result.taxableIncome}`); // €3,000 + taxable portion
+console.log(`Lunch allowance - Total: €${result.lunchAllowance.monthlyValue}`);
+console.log(`Lunch allowance - Taxable: €${result.lunchAllowance.taxableMonthlyValue}`);
+console.log(`Lunch allowance - Tax-free: €${result.lunchAllowance.taxFreeMonthlyValue}`);
 ```
 
 ## Comparison Tool
@@ -220,9 +220,9 @@ const withCash = simulateDependentWorker({
 });
 
 console.log('=== Lunch Allowance Comparison ===');
-console.log(`No allowance - Net: €${noAllowance.net_salary.toFixed(2)}`);
-console.log(`With vouchers - Net: €${withVouchers.net_salary.toFixed(2)}`);
-console.log(`With cash - Net: €${withCash.net_salary.toFixed(2)}`);
+console.log(`No allowance - Net: €${noAllowance.netSalary.toFixed(2)}`);
+console.log(`With vouchers - Net: €${withVouchers.netSalary.toFixed(2)}`);
+console.log(`With cash - Net: €${withCash.netSalary.toFixed(2)}`);
 ```
 
 Understanding lunch allowances helps optimize total compensation while ensuring compliance with Portuguese tax regulations. 

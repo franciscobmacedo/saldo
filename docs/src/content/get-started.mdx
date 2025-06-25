@@ -2,78 +2,50 @@ import { Steps } from 'nextra/components'
 
 # Getting Started
 
-Welcome to Saldo TS! This guide will help you get started with calculating Portuguese dependent worker taxes and salaries.
+Welcome to Saldo TS! This guide will help you quickly integrate Portuguese tax calculations into your application.
 
 ## Installation
 
-Choose your preferred package manager:
-
 ```bash
 npm install saldo-ts
-```
-
-```bash
+# or
 pnpm add saldo-ts
 ```
 
-```bash
-yarn add saldo-ts
-```
-
-## Basic Usage
-
-### Simple Tax Calculation
-
-The most basic usage involves calculating taxes for a single person:
+## Quick Start
 
 ```typescript
 import { simulateDependentWorker } from 'saldo-ts';
 
 const result = simulateDependentWorker({
-  income: 1200, // Monthly income in euros
-});
-
-console.log('Calculation Results:');
-console.log(`Gross Income: €${result.gross_income.toFixed(2)}`);
-console.log(`Taxable Income: €${result.taxable_income.toFixed(2)}`);
-console.log(`Tax: €${result.tax.toFixed(2)}`);
-console.log(`Social Security: €${result.social_security.toFixed(2)}`);
-console.log(`Net Salary: €${result.net_salary.toFixed(2)}`);
-console.log(`Yearly Net: €${result.yearly_net_salary.toFixed(2)}`);
-```
-
-### Configuration Options
-
-You can customize the calculation with various options:
-
-```typescript
-const result = simulateDependentWorker({
-  income: 1500,
-  married: true,
-  numberOfHolders: 1, // Single income holder in marriage
-  numberOfDependents: 2, // Two children
+  income: 1500, // Monthly gross income in euros
   location: 'continente',
-  dateStart: new Date(2024, 0, 1), // January 1, 2024
-  dateEnd: new Date(2024, 11, 31), // December 31, 2024
-  socialSecurityTaxRate: 0.11, // 11% social security rate
+  married: false
 });
+
+console.log(`Gross Income: €${result.grossIncome.toFixed(2)}`);
+console.log(`Taxable Income: €${result.taxableIncome.toFixed(2)}`);
+console.log(`Tax: €${result.tax.toFixed(2)}`);
+console.log(`Social Security: €${result.socialSecurity.toFixed(2)}`);
+console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
+console.log(`Yearly Net: €${result.yearlyNetSalary.toFixed(2)}`);
 ```
 
 ## Understanding the Result
 
-The `simulateDependentWorker` function returns a comprehensive result object:
+The `simulateDependentWorker` function returns a comprehensive breakdown of tax calculations:
 
 ```typescript
 interface DependentWorkerResult {
-  taxable_income: number;        // Income subject to tax
-  gross_income: number;          // Total monthly gross income
+  taxableIncome: number;        // Income subject to tax
+  grossIncome: number;          // Total monthly gross income
   tax: number;                   // Monthly tax amount
-  social_security: number;       // Monthly social security contribution
-  social_security_tax: number;   // Social security tax rate applied
-  net_salary: number;            // Monthly net salary
-  yearly_net_salary: number;     // Annual net salary
-  yearly_gross_salary: number;   // Annual gross salary
-  lunch_allowance: LunchAllowance; // Lunch allowance details
+  socialSecurity: number;       // Monthly social security contribution
+  socialSecurityTax: number;   // Social security tax rate applied
+  netSalary: number;            // Monthly net salary
+  yearlyNetSalary: number;     // Annual net salary
+  yearlyGrossSalary: number;   // Annual gross salary
+  lunchAllowance: LunchAllowance; // Lunch allowance details
 }
 ```
 
