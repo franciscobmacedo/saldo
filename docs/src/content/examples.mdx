@@ -207,15 +207,9 @@ console.log(`Best region for this salary: ${best.name}`);
 ```typescript
 const withVouchers = simulateDependentWorker({
   income: 1400,
-  lunchAllowance: {
-    daily_value: 8.50,
-    mode: "cupon",
-    days_count: 22,
-    get monthly_value() { return 8.50 * 22; },
-    get taxable_monthly_value() { return 0; }, // Under €9.60 limit
-    get tax_free_monthly_value() { return 8.50 * 22; },
-    get yearly_value() { return 8.50 * 22 * 11; }
-  }
+  lunchAllowanceDailyValue: 7.5,
+  lunchAllowanceMode: "cupon",
+  lunchAllowanceDaysCount: 22
 });
 
 const withoutVouchers = simulateDependentWorker({
@@ -233,15 +227,9 @@ console.log(`Benefit: €${(withVouchers.net_salary - withoutVouchers.net_salary
 ```typescript
 const cashAllowance = simulateDependentWorker({
   income: 2000,
-  lunchAllowance: {
-    daily_value: 10.00,
-    mode: "salary",
-    days_count: 21,
-    get monthly_value() { return 10.00 * 21; },
-    get taxable_monthly_value() { return (10.00 - 6.00) * 21; }, // €84 taxable
-    get tax_free_monthly_value() { return 6.00 * 21; }, // €126 tax-free
-    get yearly_value() { return 10.00 * 21 * 11; }
-  }
+  lunchAllowanceDailyValue: 10.00,
+  lunchAllowanceMode: "salary",
+  lunchAllowanceDaysCount: 21
 });
 
 console.log('=== High Cash Lunch Allowance ===');

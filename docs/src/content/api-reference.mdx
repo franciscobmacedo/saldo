@@ -24,7 +24,9 @@ interface SimulateDependentWorkerOptions {
   dateEnd?: Date;
   socialSecurityTaxRate?: number;
   twelfths?: Twelfths;
-  lunchAllowance?: LunchAllowance;
+  lunchAllowanceDailyValue?: number;
+  lunchAllowanceMode?: "cupon" | "salary" | null;
+  lunchAllowanceDaysCount?: number;
 }
 ```
 
@@ -38,11 +40,13 @@ interface SimulateDependentWorkerOptions {
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders in marriage (1 or 2) |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of dependents with disabilities |
-| `dateStart` | `Date` | `new Date(2024, 0, 1)` | Calculation period start date |
-| `dateEnd` | `Date` | `new Date(2024, 7, 31)` | Calculation period end date |
+| `dateStart` | `Date` | `new Date(2025, 0, 1)` | Calculation period start date |
+| `dateEnd` | `Date` | `new Date(2025, 11, 31)` | Calculation period end date |
 | `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
 | `twelfths` | `Twelfths` | `TWO_MONTHS` | Holiday allowance distribution |
-| `lunchAllowance` | `LunchAllowance` | `defaultLunchAllowance` | Lunch allowance configuration |
+| `lunchAllowanceDailyValue` | `number` | `10.2` | Daily lunch allowance amount in euros |
+| `lunchAllowanceMode` | `"cupon" \| "salary" \| null` | `"cupon"` | Type of lunch allowance |
+| `lunchAllowanceDaysCount` | `number` | `22` | Working days per month for lunch allowance |
 
 #### Return Value
 
@@ -82,7 +86,10 @@ const result = simulateDependentWorker({
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 2,
-  location: 'continente'
+  location: 'continente',
+  lunchAllowanceDailyValue: 8.5,
+  lunchAllowanceMode: 'cupon',
+  lunchAllowanceDaysCount: 22
 });
 
 console.log(`Net Salary: €${result.net_salary.toFixed(2)}`);
@@ -136,6 +143,8 @@ interface LunchAllowance {
 | `taxable_monthly_value` | `number` | Portion subject to tax |
 | `tax_free_monthly_value` | `number` | Tax-free portion |
 | `yearly_value` | `number` | Annual lunch allowance (11 months) |
+
+**Note**: This interface represents the structure of the `lunch_allowance` property in the result object. You don't create this object directly; instead, pass the lunch allowance parameters (`lunchAllowanceDailyValue`, `lunchAllowanceMode`, `lunchAllowanceDaysCount`) to the `simulateDependentWorker` function.
 
 ### `SituationCodesT`
 

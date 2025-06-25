@@ -96,7 +96,9 @@ interface DependentWorkerResult {
 - **`dateEnd`**: Calculation period end date (default: July 31, 2024)
 - **`socialSecurityTaxRate`**: Social security tax rate (default: `0.11`)
 - **`twelfths`**: Holiday allowance distribution (default: `Twelfths.TWO_MONTHS`)
-- **`lunchAllowance`**: Lunch allowance configuration (default: no allowance)
+- **`lunchAllowanceDailyValue`**: Daily lunch allowance amount in euros (default: `10.2`)
+- **`lunchAllowanceMode`**: Type of lunch allowance - `"cupon"` or `"salary"` (default: `"cupon"`)
+- **`lunchAllowanceDaysCount`**: Working days per month for lunch allowance (default: `22`)
 
 ## Common Scenarios
 
@@ -134,18 +136,11 @@ const disabledWorker = simulateDependentWorker({
 ### With Lunch Allowance
 
 ```typescript
-import { LunchAllowance } from 'saldo-ts';
-
-const customLunchAllowance: LunchAllowance = {
-  daily_value: 7.5,
-  mode: "cupon",
-  days_count: 22,
-  // ... other calculated properties
-};
-
 const withLunch = simulateDependentWorker({
   income: 1400,
-  lunchAllowance: customLunchAllowance,
+  lunchAllowanceDailyValue: 7.5,
+  lunchAllowanceMode: "cupon",
+  lunchAllowanceDaysCount: 22,
   location: 'continente'
 });
 ```
