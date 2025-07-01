@@ -19,5 +19,5 @@ export default withNextra({
     
     return config
   },
-  transpilePackages: ['saldo-ts']
+  transpilePackages: ['saldo']
 })
