@@ -1,7 +1,9 @@
 {
-  "name": "saldo-ts",
-  "version": "1.0.0",
+  "name": "saldo",
+  "version": "0.0.1",
   "description": "Portuguese salary calculator library",
+  "author": "Francisco Macedo <me@fmacedo.com> (https://fmacedo.com)",
+  "license": "ISC",
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -28,8 +30,7 @@
     "tax",
     "calculator"
   ],
-  "author": "",
-  "license": "ISC",
+  
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "@types/node": "^22.15.17",
