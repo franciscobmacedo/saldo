@@ -15,9 +15,11 @@ export default withNextra({
     config.resolve.extensions.push('.ts', '.tsx')
     
     // Add the parent src directory to the resolve paths
-    config.resolve.modules.push('../src/')
+    if (process.env.NODE_ENV === 'development') {
+      config.resolve.modules.push('../src/')
+    }
     
     return config
   },
-  transpilePackages: ['saldo']
+  ...(process.env.NODE_ENV === 'development' && { transpilePackages: ['saldo'] })
 })
