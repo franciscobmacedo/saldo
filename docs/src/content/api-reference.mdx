@@ -25,7 +25,7 @@ interface SimulateDependentWorkerOptions {
   socialSecurityTaxRate?: number;
   twelfths?: Twelfths;
   lunchAllowanceDailyValue?: number;
-  lunchAllowanceMode?: "cupon" | "salary" | null;
+  lunchAllowanceMode?: "cupon" | "salary";
   lunchAllowanceDaysCount?: number;
 }
 ```
@@ -43,9 +43,9 @@ interface SimulateDependentWorkerOptions {
 | `dateStart` | `Date` | `new Date(2025, 0, 1)` | Calculation period start date |
 | `dateEnd` | `Date` | `new Date(2025, 11, 31)` | Calculation period end date |
 | `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
-| `twelfths` | `Twelfths` | `TWO_MONTHS` | Holiday allowance distribution |
+| `twelfths` | `Twelfths` | `Twelfths.TWO_MONTHS` | Holiday allowance distribution |
 | `lunchAllowanceDailyValue` | `number` | `10.2` | Daily lunch allowance amount in euros |
-| `lunchAllowanceMode` | `"cupon" \| "salary" \| null` | `"cupon"` | Type of lunch allowance |
+| `lunchAllowanceMode` | `"cupon" \| "salary"` | `"cupon"` | Type of lunch allowance |
 | `lunchAllowanceDaysCount` | `number` | `22` | Working days per month for lunch allowance |
 
 #### Return Value
@@ -72,14 +72,14 @@ interface DependentWorkerResult {
 | `socialSecurity` | `number` | Monthly social security contribution |
 | `socialSecurityTax` | `number` | Social security tax rate applied |
 | `netSalary` | `number` | Monthly net salary after deductions |
-| `yearlyNetSalary` | `number` | Annual net salary |
-| `yearlyGrossSalary` | `number` | Annual gross salary |
+| `yearlyNetSalary` | `number` | Annual net salary (14 months) |
+| `yearlyGrossSalary` | `number` | Annual gross salary (14 months) |
 | `lunchAllowance` | `LunchAllowance` | Lunch allowance breakdown |
 
 #### Example
 
 ```typescript
-import { simulateDependentWorker } from 'saldo';
+import { simulateDependentWorker, Twelfths } from 'saldo';
 
 const result = simulateDependentWorker({
   income: 1500,
@@ -89,7 +89,8 @@ const result = simulateDependentWorker({
   location: 'continente',
   lunchAllowanceDailyValue: 8.5,
   lunchAllowanceMode: 'cupon',
-  lunchAllowanceDaysCount: 22
+  lunchAllowanceDaysCount: 22,
+  twelfths: Twelfths.TWO_MONTHS
 });
 
 console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
@@ -123,14 +124,17 @@ Represents how holiday allowances (13th and 14th month) are distributed througho
 ### `LunchAllowance`
 
 ```typescript
-interface LunchAllowance {
-  dailyValue: number;
-  mode: "cupon" | "salary" | null;
-  daysCount: number;
-  monthlyValue: number;
-  taxableMonthlyValue: number;
-  taxFreeMonthlyValue: number;
-  yearlyValue: number;
+class LunchAllowance {
+  constructor(
+    public dailyValue: number,
+    public mode: "cupon" | "salary" | null,
+    public daysCount: number
+  ) {}
+
+  get monthlyValue(): number;
+  get taxableMonthlyValue(): number;
+  get taxFreeMonthlyValue(): number;
+  get yearlyValue(): number;
 }
 ```
 
@@ -144,7 +148,9 @@ interface LunchAllowance {
 | `taxFreeMonthlyValue` | `number` | Tax-free portion |
 | `yearlyValue` | `number` | Annual lunch allowance (11 months) |
 
-**Note**: This interface represents the structure of the `lunchAllowance` property in the result object. You don't create this object directly; instead, pass the lunch allowance parameters (`lunchAllowanceDailyValue`, `lunchAllowanceMode`, `lunchAllowanceDaysCount`) to the `simulateDependentWorker` function.
+**Tax Rules**:
+- **Meal vouchers** (`"cupon"`): Tax-free up to €10.20/day
+- **Cash allowance** (`"salary"`): Tax-free up to €6.00/day
 
 ### `SituationCodesT`
 
@@ -161,23 +167,54 @@ type SituationCodesT =
 
 Tax table codes used internally by the library to determine the appropriate tax bracket.
 
-## Constants
-
-### `defaultLunchAllowance`
+### `Situation`
 
 ```typescript
-const defaultLunchAllowance: LunchAllowance = {
-  dailyValue: 0,
-  mode: null,
-  daysCount: 0,
-  monthlyValue: 0,
-  taxableMonthlyValue: 0,
-  taxFreeMonthlyValue: 0,
-  yearlyValue: 0
-};
+interface Situation {
+  code: SituationCodesT;
+  description: string;
+  conditions: Condition[];
+}
 ```
 
-Default lunch allowance configuration (no allowance).
+Represents a tax situation with its code, description, and applicable conditions.
+
+### `Condition`
+
+```typescript
+interface Condition {
+  married: boolean;
+  dependents: boolean;
+  disabled: boolean;
+  description: string;
+  numberOfHolders?: number | null;
+}
+```
+
+Represents specific conditions that determine which tax situation applies.
+
+## Utility Functions
+
+### `SituationUtils.getSituation()`
+
+```typescript
+SituationUtils.getSituation(
+  married: boolean,
+  disabled: boolean,
+  numberOfHolders?: number | null,
+  numberOfDependents?: number
+): Situation | undefined
+```
+
+Determines the appropriate tax situation based on personal circumstances.
+
+### `SituationUtils.getSituationFromCode()`
+
+```typescript
+SituationUtils.getSituationFromCode(code: string): Situation | undefined
+```
+
+Retrieves a tax situation by its code.
 
 ## Validation Functions
 
@@ -198,52 +235,78 @@ The library throws descriptive errors for invalid configurations:
 
 ```typescript
 // Invalid situation
-throw new Error(
-  `Could not determine situation for the given parameters: 
-   married=${married}, disabled=${disabled}, 
-   numberOfHolders=${numberOfHolders}, 
-   numberOfDependents=${numberOfDependents}`
-);
+try {
+  simulateDependentWorker({
+    income: 1500,
+    married: true,
+    // Missing numberOfHolders - required for married
+  });
+} catch (error) {
+  console.error(error.message); // "'numberOfHolders' is required for married workers"
+}
 
-// Tax bracket not found
-throw new Error(
-  `Could not find tax bracket for taxable income: ${taxableIncome} 
-   in table ${situation.code} for location ${location}`
-);
-```
-
-## Internal Classes
-
-### `TaxRetentionTable`
-
-```typescript
-class TaxRetentionTable {
-  static load(
-    dateStart: Date,
-    dateEnd: Date,
-    location: LocationT,
-    situationCode: SituationCodesT
-  ): TaxRetentionTable;
-  
-  find_bracket(income: number): TaxBracket | null;
+// Invalid bracket
+try {
+  simulateDependentWorker({
+    income: 999999, // Extremely high income
+    location: 'continente'
+  });
+} catch (error) {
+  console.error(error.message); // "No bracket found for salary..."
 }
 ```
 
-Internal class for loading and managing tax retention tables.
+## Advanced Usage
 
-### `SituationUtils`
+### Date Range Calculations
+
+The library supports calculations for specific time periods:
 
 ```typescript
-class SituationUtils {
-  static getSituation(
-    married: boolean,
-    disabled: boolean,
-    numberOfHolders?: number | null,
-    numberOfDependents?: number
-  ): Situation | undefined;
-  
-  static getSituationFromCode(code: string): Situation | undefined;
-}
+const result = simulateDependentWorker({
+  income: 1500,
+  dateStart: new Date(2024, 0, 1),  // January 1, 2024
+  dateEnd: new Date(2024, 11, 31),  // December 31, 2024
+  location: 'continente'
+});
 ```
 
-Utility class for determining tax situations based on parameters. 
+### Custom Social Security Rates
+
+```typescript
+const result = simulateDependentWorker({
+  income: 1500,
+  socialSecurityTaxRate: 0.11, // 11% (default)
+  location: 'continente'
+});
+```
+
+### Disability Benefits
+
+The library handles various disability scenarios:
+
+```typescript
+// Worker with disability
+const workerDisability = simulateDependentWorker({
+  income: 1500,
+  disabled: true,
+  location: 'continente'
+});
+
+// Partner with disability (extra deduction)
+const partnerDisability = simulateDependentWorker({
+  income: 1500,
+  married: true,
+  numberOfHolders: 1,
+  partnerDisabled: true, // €135.71 extra deduction
+  location: 'continente'
+});
+
+// Dependent with disability (extra deduction per dependent)
+const dependentDisability = simulateDependentWorker({
+  income: 1500,
+  numberOfDependents: 2,
+  numberOfDependentsDisabled: 1,
+  location: 'continente'
+});
+``` 

@@ -43,8 +43,8 @@ interface DependentWorkerResult {
   socialSecurity: number;       // Monthly social security contribution
   socialSecurityTax: number;   // Social security tax rate applied
   netSalary: number;            // Monthly net salary
-  yearlyNetSalary: number;     // Annual net salary
-  yearlyGrossSalary: number;   // Annual gross salary
+  yearlyNetSalary: number;     // Annual net salary (14 months)
+  yearlyGrossSalary: number;   // Annual gross salary (14 months)
   lunchAllowance: LunchAllowance; // Lunch allowance details
 }
 ```
@@ -64,8 +64,8 @@ interface DependentWorkerResult {
 - **`numberOfHolders`**: Number of income holders in marriage - `1` or `2` (default: `null`)
 - **`numberOfDependents`**: Number of dependents (default: `null`)
 - **`numberOfDependentsDisabled`**: Number of dependents with disabilities (default: `null`)
-- **`dateStart`**: Calculation period start date (default: January 1, 2024)
-- **`dateEnd`**: Calculation period end date (default: July 31, 2024)
+- **`dateStart`**: Calculation period start date (default: January 1, 2025)
+- **`dateEnd`**: Calculation period end date (default: December 31, 2025)
 - **`socialSecurityTaxRate`**: Social security tax rate (default: `0.11`)
 - **`twelfths`**: Holiday allowance distribution (default: `Twelfths.TWO_MONTHS`)
 - **`lunchAllowanceDailyValue`**: Daily lunch allowance amount in euros (default: `10.2`)
@@ -117,10 +117,102 @@ const withLunch = simulateDependentWorker({
 });
 ```
 
+### Using Twelfths Enum
+
+```typescript
+import { simulateDependentWorker, Twelfths } from 'saldo';
+
+const withoutHolidayAllowance = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.NONE, // No holiday allowance distribution
+  location: 'continente'
+});
+
+const withOneHolidayAllowance = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.ONE_MONTH, // Only Christmas OR holiday allowance
+  location: 'continente'
+});
+
+const withBothHolidayAllowances = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.TWO_MONTHS, // Both Christmas AND holiday allowance
+  location: 'continente'
+});
+```
+
+## Working with Types
+
+The library exports all necessary types for TypeScript users:
+
+```typescript
+import { 
+  simulateDependentWorker, 
+  LocationT, 
+  Twelfths, 
+  DependentWorkerResult,
+  SimulateDependentWorkerOptions,
+  LunchAllowance 
+} from 'saldo';
+
+// Type-safe function
+function calculateTax(options: SimulateDependentWorkerOptions): DependentWorkerResult {
+  return simulateDependentWorker(options);
+}
+
+// Using location type
+const location: LocationT = 'continente';
+
+// Using the result type
+const result: DependentWorkerResult = simulateDependentWorker({
+  income: 1500,
+  location
+});
+```
+
+## Regional Differences
+
+Each Portuguese region has different tax rates:
+
+```typescript
+// Mainland Portugal
+const continente = simulateDependentWorker({
+  income: 1500,
+  location: 'continente'
+});
+
+// Azores
+const acores = simulateDependentWorker({
+  income: 1500,
+  location: 'acores'
+});
+
+// Madeira
+const madeira = simulateDependentWorker({
+  income: 1500,
+  location: 'madeira'
+});
+```
+
+## Error Handling
+
+The library provides clear error messages for invalid configurations:
+
+```typescript
+try {
+  const result = simulateDependentWorker({
+    income: 1500,
+    married: true,
+    // Missing numberOfHolders - required for married
+  });
+} catch (error) {
+  console.error(error.message); // "'numberOfHolders' is required for married workers"
+}
+```
+
 ## Next Steps
 
-- Learn about [advanced configuration options](/docs/configuration)
-- Explore [tax situations and scenarios](/docs/tax-situations)
+- Learn about [tax situations and scenarios](/docs/tax-situations)
 - Check out [examples](/docs/examples) for common use cases
 - Understand [lunch allowances](/docs/lunch-allowances)
 - Review [API reference](/docs/api-reference)
