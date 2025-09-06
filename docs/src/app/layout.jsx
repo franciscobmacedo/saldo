@@ -5,22 +5,22 @@ import { getPageMap } from 'nextra/page-map'
 import './globals.css'
 
 export const metadata = {
-  metadataBase: new URL('https://nextra.site'),
+  metadataBase: new URL('https://saldo-docs.vercel.app'),
   title: {
-    template: '%s - Nextra'
+    template: '%s - Saldo'
   },
-  description: 'Nextra: the Next.js site builder',
-  applicationName: 'Nextra',
+  description: 'Saldo: Portuguese salary calculator library',
+  applicationName: 'Saldo',
   generator: 'Next.js',
   appleWebApp: {
-    title: 'Nextra'
+    title: 'Saldo'
   },
   other: {
     'msapplication-TileImage': '/ms-icon-144x144.png',
     'msapplication-TileColor': '#fff'
   },
   twitter: {
-    site: 'https://nextra.site'
+    site: 'https://saldo-docs.vercel.app'
   }
 }
 
@@ -29,12 +29,12 @@ export default async function RootLayout({ children }) {
     <Navbar
       logo={
         <div>
-          <b>Nextra</b>{' '}
-          <span style={{ opacity: '60%' }}>The Next Docs Builder</span>
+          <b>Saldo</b>{' '}
+          <span style={{ opacity: '60%' }}>Portuguese Salary Calculator</span>
         </div>
       }
-      // Next.js discord server
-      chatLink="https://discord.gg/hEM84NMkRv"
+      // GitHub repository for issues and discussions
+      // chatLink="https://discord.gg/hEM84NMkRv"
     />
   )
   const pageMap = await getPageMap()
@@ -43,11 +43,11 @@ export default async function RootLayout({ children }) {
       <Head faviconGlyph="✦" />
       <body>
         <Layout
-          banner={<Banner storageKey="Nextra 2">Nextra 2 Alpha</Banner>}
+          banner={<Banner storageKey="saldo-docs">📊 Saldo Documentation</Banner>}
           navbar={navbar}
-          footer={<Footer>MIT {new Date().getFullYear()} © Nextra.</Footer>}
+          footer={<Footer>MIT {new Date().getFullYear()} © Saldo.</Footer>}
           editLink="Edit this page on GitHub"
-          docsRepositoryBase="https://github.com/shuding/nextra/blob/main/examples/docs"
+          docsRepositoryBase="https://github.com/franciscomacedo/saldo-ts/blob/main/docs"
           sidebar={{ defaultMenuCollapseLevel: 1 }}
           pageMap={pageMap}
         >
