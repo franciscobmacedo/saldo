@@ -22,7 +22,7 @@
     "test": "vitest",
     "build": "tsc && tsc-alias",
     "dev": "tsx src/index.ts",
-    "docs": "pnpm build && cd docs && pnpm install && pnpm dev"
+    "saldo:docs": "pnpm build && cd docs && pnpm install && pnpm dev"
   },
   "keywords": [
     "portugal",
