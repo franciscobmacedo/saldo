@@ -6,10 +6,7 @@ Accurately calculate dependent worker taxes, social security contributions, and 
 
 ## Quick Start
 
-```typescript
-import { simulateDependentWorker } from 'saldo';
-
-const result = simulateDependentWorker({
+<RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
   married: true,
   numberOfHolders: 1,
@@ -17,10 +14,9 @@ const result = simulateDependentWorker({
   location: 'continente'
 });
 
-console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
-console.log(`Tax: €${result.tax.toFixed(2)}`);
-console.log(`Social Security: €${result.socialSecurity.toFixed(2)}`);
-```
+console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`Tax: €\${result.tax.toFixed(2)}\`);
+console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);`} />
 
 ## Features
 
