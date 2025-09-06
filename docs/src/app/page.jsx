@@ -1,5 +1,3 @@
-import { SalarySimulator } from "@/components/SalarySimulator"
-
 export default function IndexPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -12,7 +10,6 @@ export default function IndexPage() {
             Portuguese Salary Calculator
           </p>
         </div>
-        <SalarySimulator />
       </div>
     </div>
   )
