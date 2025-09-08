@@ -1,0 +1,128 @@
+{
+  "situation": "TABLE3_CASADO_1_TITULAR",
+  "title": "Table III",
+  "table": "Table III",
+  "description": "Trabalho dependente, Casado único titular",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 957,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 0,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 992,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 1070,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 1081,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 1408,
+      "max_marginal_rate": 0.006500000000000001,
+      "deduction": 7.03,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.002
+    },
+    {
+      "signal": "max",
+      "limit": 1931,
+      "max_marginal_rate": 0.016,
+      "deduction": 20.41,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.005
+    },
+    {
+      "signal": "max",
+      "limit": 2200,
+      "max_marginal_rate": 0.0197,
+      "deduction": 27.56,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.006999999999999999
+    },
+    {
+      "signal": "max",
+      "limit": 2698,
+      "max_marginal_rate": 0.0346,
+      "deduction": 60.34,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.012
+    },
+    {
+      "signal": "max",
+      "limit": 3317,
+      "max_marginal_rate": 0.051399999999999994,
+      "deduction": 105.67,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.02
+    },
+    {
+      "signal": "max",
+      "limit": 5965,
+      "max_marginal_rate": 0.1027,
+      "deduction": 275.84,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.055999999999999994
+    },
+    {
+      "signal": "max",
+      "limit": 20265,
+      "max_marginal_rate": 0.3843,
+      "deduction": 1955.59,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.28800000000000003
+    },
+    {
+      "signal": "min",
+      "limit": 20265,
+      "max_marginal_rate": 0.4717,
+      "deduction": 3726.76,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    }
+  ]
+}

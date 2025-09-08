@@ -1,0 +1,68 @@
+{
+  "situation": "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF",
+  "title": "Table VII",
+  "table": "Table VII",
+  "description": "Trabalho dependente, Casado único titular - Pessoa com deficiência",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 2897,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 0,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 4418,
+      "max_marginal_rate": 0.16149999999999998,
+      "deduction": 467.85,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.055999999999999994
+    },
+    {
+      "signal": "max",
+      "limit": 6687,
+      "max_marginal_rate": 0.17989999999999998,
+      "deduction": 549.2,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.098
+    },
+    {
+      "signal": "max",
+      "limit": 6784,
+      "max_marginal_rate": 0.2053,
+      "deduction": 719.14,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.099
+    },
+    {
+      "signal": "max",
+      "limit": 20468,
+      "max_marginal_rate": 0.2926,
+      "deduction": 1311.28,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.22899999999999998
+    },
+    {
+      "signal": "min",
+      "limit": 20468,
+      "max_marginal_rate": 0.32549999999999996,
+      "deduction": 1984.68,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    }
+  ]
+}

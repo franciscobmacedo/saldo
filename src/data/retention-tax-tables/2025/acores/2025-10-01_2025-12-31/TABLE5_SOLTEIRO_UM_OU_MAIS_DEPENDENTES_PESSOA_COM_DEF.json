@@ -1,0 +1,78 @@
+{
+  "situation": "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
+  "title": "Table V",
+  "table": "Table V",
+  "description": "Trabalho dependente, Não casado com um ou mais dependentes - Pessoa com deficiência",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 2304,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 0,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 2452,
+      "max_marginal_rate": 0.2198,
+      "deduction": 516.56,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.009000000000000001
+    },
+    {
+      "signal": "max",
+      "limit": 3428,
+      "max_marginal_rate": 0.2443,
+      "deduction": 576.64,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.076
+    },
+    {
+      "signal": "max",
+      "limit": 3689,
+      "max_marginal_rate": 0.2685,
+      "deduction": 659.65,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.09
+    },
+    {
+      "signal": "max",
+      "limit": 6687,
+      "max_marginal_rate": 0.2779,
+      "deduction": 694.28,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.174
+    },
+    {
+      "signal": "max",
+      "limit": 20468,
+      "max_marginal_rate": 0.3102,
+      "deduction": 910.28,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.266
+    },
+    {
+      "signal": "min",
+      "limit": 20468,
+      "max_marginal_rate": 0.32549999999999996,
+      "deduction": 1223.45,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    }
+  ]
+}
