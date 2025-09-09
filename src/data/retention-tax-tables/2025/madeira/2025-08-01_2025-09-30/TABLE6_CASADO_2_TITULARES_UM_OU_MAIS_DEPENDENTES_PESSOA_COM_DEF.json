@@ -94,5 +94,6 @@
       "dependent_aditional_deduction": 21.43,
       "effective_mensal_rate": 0
     }
-  ]
+  ],
+  "dependent_disabled_addition_deduction": 42.86
 }
