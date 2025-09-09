@@ -1,0 +1,69 @@
+{
+  "situation": "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY",
+  "title": "Table VII",
+  "table": "Table VII",
+  "description": "Dependent work, Married single holder - Person with disability",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 2325,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 0,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 3428,
+      "max_marginal_rate": 0.23070000000000002,
+      "deduction": 536.38,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.07400000000000001
+    },
+    {
+      "signal": "max",
+      "limit": 3689,
+      "max_marginal_rate": 0.257,
+      "deduction": 626.54,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.087
+    },
+    {
+      "signal": "max",
+      "limit": 6687,
+      "max_marginal_rate": 0.2933,
+      "deduction": 760.46,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.18
+    },
+    {
+      "signal": "max",
+      "limit": 20468,
+      "max_marginal_rate": 0.4244,
+      "deduction": 1637.13,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.344
+    },
+    {
+      "signal": "min",
+      "limit": 20468,
+      "max_marginal_rate": 0.4717,
+      "deduction": 2605.27,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    }
+  ],
+  "dependent_disabled_addition_deduction": 42.86
+}

@@ -30,140 +30,143 @@ interface TaxTableJsonData {
 
 
 
+
 // 2025 imports
-import table1_solteiro_ou_casado_2_titulares__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
-import table1_solteiro_ou_casado_2_titulares__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
-import table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
-import table3_casado_1_titular__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR.json';
-import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
-import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
-import table7_casado_1_titular_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_single_or_married_2_holders__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
 
 // --- END IMPORTS ---
 
 export const taxTablesData: Record<string, TaxTableJsonData> = {
   
 
+  
+
   // 2025 data
-  "2025/acores/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/acores/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/continente/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_madeira_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_madeira_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
-  "2025/madeira/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
 
 };
 

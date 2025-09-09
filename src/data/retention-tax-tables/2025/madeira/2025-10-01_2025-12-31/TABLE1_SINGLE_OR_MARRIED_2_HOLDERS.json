@@ -1,0 +1,129 @@
+{
+  "situation": "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS",
+  "title": "Table I",
+  "table": "Table I",
+  "description": "Dependent work, Single without dependents or married 2 holders",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 915,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 0,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 993,
+      "max_marginal_rate": 0.0893,
+      "deduction": 0.0893,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.025
+    },
+    {
+      "signal": "max",
+      "limit": 1062,
+      "max_marginal_rate": 0.1225,
+      "deduction": 0.1225,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.043
+    },
+    {
+      "signal": "max",
+      "limit": 1177,
+      "max_marginal_rate": 0.1225,
+      "deduction": 84.86,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.05
+    },
+    {
+      "signal": "max",
+      "limit": 1591,
+      "max_marginal_rate": 0.1784,
+      "deduction": 150.66,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.084
+    },
+    {
+      "signal": "max",
+      "limit": 2286,
+      "max_marginal_rate": 0.2251,
+      "deduction": 224.96,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.127
+    },
+    {
+      "signal": "max",
+      "limit": 3140,
+      "max_marginal_rate": 0.2263,
+      "deduction": 227.71,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.154
+    },
+    {
+      "signal": "max",
+      "limit": 3543,
+      "max_marginal_rate": 0.2748,
+      "deduction": 380,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.168
+    },
+    {
+      "signal": "max",
+      "limit": 6456,
+      "max_marginal_rate": 0.359,
+      "deduction": 678.33,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.254
+    },
+    {
+      "signal": "max",
+      "limit": 6818,
+      "max_marginal_rate": 0.4048,
+      "deduction": 974.02,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.262
+    },
+    {
+      "signal": "max",
+      "limit": 20991,
+      "max_marginal_rate": 0.422,
+      "deduction": 1091.29,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0.37
+    },
+    {
+      "signal": "min",
+      "limit": 20991,
+      "max_marginal_rate": 0.4574,
+      "deduction": 1834.38,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 21.43,
+      "effective_mensal_rate": 0
+    }
+  ],
+  "dependent_disabled_addition_deduction": 42.86
+}

@@ -1,11 +1,11 @@
 export type SituationCodesT =
-  | "TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES"
-  | "TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES"
-  | "TABLE3_CASADO_1_TITULAR"
-  | "TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF"
-  | "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"
-  | "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"
-  | "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF"
+  | "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"
+  | "TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS"
+  | "TABLE3_MARRIED_1_HOLDER"
+  | "TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY"
+  | "TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"
+  | "TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"
+  | "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY"
 
 export type LocationT = "continente" | "acores" | "madeira";
 
@@ -28,20 +28,20 @@ export interface Situation {
 }
 
 export const Situations: { [key: string]: Situation } = {
-  TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES: {
-    code: "TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES",
+  TABLE1_SINGLE_OR_MARRIED_2_HOLDERS: {
+    code: "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS",
     description:
-      "Trabalho dependente - Não casado sem dependentes ou casado dois titulares",
+      "Dependent work - Single without dependents or married two holders",
     conditions: [
       {
-        description: "Não Casado sem dependentes",
+        description: "Single without dependents",
         married: false,
         dependents: false,
         disabled: false,
         partnerDisabled: false,
       },
       {
-        description: "Casado, 2 titulares, sem dependentes",
+        description: "Married, 2 holders, without dependents",
         married: true,
         numberOfHolders: 2,
         dependents: false,
@@ -49,7 +49,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: false,
       },
       {
-        description: "Casado, 2 titulares, com dependentes",
+        description: "Married, 2 holders, with dependents",
         married: true,
         numberOfHolders: 2,
         dependents: true,
@@ -57,7 +57,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: false,
       },
       {
-        description: "Casado, 2 titulares, sem dependentes, parceiro com deficiência",
+        description: "Married, 2 holders, without dependents, parceiro com deficiência",
         married: true,
         numberOfHolders: 2,
         dependents: false,
@@ -65,7 +65,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: true,
       },
       {
-        description: "Casado, 2 titulares, com dependentes, parceiro com deficiência",
+        description: "Married, 2 holders, with dependents, parceiro com deficiência",
         married: true,
         numberOfHolders: 2,
         dependents: true,
@@ -74,12 +74,12 @@ export const Situations: { [key: string]: Situation } = {
       },
     ],
   },
-  TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES: {
-    code: "TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES",
-    description: "Trabalho dependente - Não casado com um ou mais dependentes",
+  TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS: {
+    code: "TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS",
+    description: "Dependent work - Single with one or more dependents",
     conditions: [
       {
-        description: "Não casado com um ou mais dependentes",
+        description: "Single with one or more dependents",
         married: false,
         dependents: true,
         disabled: false,
@@ -87,12 +87,12 @@ export const Situations: { [key: string]: Situation } = {
       },
     ],
   },
-  TABLE3_CASADO_1_TITULAR: {
-    code: "TABLE3_CASADO_1_TITULAR",
-    description: "Trabalho dependente - Casado único titular",
+  TABLE3_MARRIED_1_HOLDER: {
+    code: "TABLE3_MARRIED_1_HOLDER",
+    description: "Dependent work - Married single holder",
     conditions: [
       {
-        description: "Casado único titular sem dependentes",
+        description: "Married single holder without dependents",
         married: true,
         numberOfHolders: 1,
         dependents: false,
@@ -100,7 +100,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: false,
       },
       {
-        description: "Casado único titular com dependentes",
+        description: "Married single holder with dependents",
         married: true,
         numberOfHolders: 1,
         dependents: true,
@@ -109,20 +109,20 @@ export const Situations: { [key: string]: Situation } = {
       },
     ],
   },
-  TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF: {
-    code: "TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF",
+  TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY: {
+    code: "TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY",
     description:
-      "Trabalho dependente - Não casado ou casado dois titulares sem dependentes - deficiente",
+      "Dependent work - Single or married two holders without dependents - disabled",
     conditions: [
       {
-        description: "Não Casado sem dependentes - deficiente",
+        description: "Single without dependents - deficiente",
         married: false,
         dependents: false,
         disabled: true,
         partnerDisabled: false,
       },
       {
-        description: "Casado, 2 titulares, sem dependentes - deficiente",
+        description: "Married, 2 holders, without dependents - deficiente",
         married: true,
         numberOfHolders: 2,
         dependents: false,
@@ -131,13 +131,13 @@ export const Situations: { [key: string]: Situation } = {
       },
     ],
   },
-  TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF: {
-    code: "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
+  TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY: {
+    code: "TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY",
     description:
-      "Trabalho dependente - Não casado, com um ou mais dependentes - deficiente",
+      "Dependent work - Single with one or more dependents - disabled",
     conditions: [
       {
-        description: "Não casado com um ou mais dependentes - deficiente",
+        description: "Single with one or more dependents - deficiente",
         married: false,
         dependents: true,
         disabled: true,
@@ -145,13 +145,13 @@ export const Situations: { [key: string]: Situation } = {
       },
     ],
   },
-  TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF: {
-    code: "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
+  TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY: {
+    code: "TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY",
     description:
-      "Trabalho dependente - Casado dois titulares, com um ou mais dependentes - deficiente",
+      "Dependent work - Married two holders with one or more dependents - disabled",
     conditions: [
       {
-        description: "Casado, 2 titulares, com dependentes - deficiente",
+        description: "Married, 2 holders, with dependents - deficiente",
         married: true,
         numberOfHolders: 2,
         dependents: true,
@@ -159,7 +159,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: false,
       },
       {
-        description: "Casado, 2 titulares, com dependentes - deficiente, parceiro com deficiência",
+        description: "Married, 2 holders, with dependents - deficiente, parceiro com deficiência",
         married: true,
         numberOfHolders: 2,
         dependents: true,
@@ -168,12 +168,12 @@ export const Situations: { [key: string]: Situation } = {
       },
     ],
   },
-  TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF: {
-    code: "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF",
-    description: "Trabalho dependente - Casado único titular - deficiente",
+  TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY: {
+    code: "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY",
+    description: "Dependent work - Married single holder - deficiente",
     conditions: [
       {
-        description: "Casado único titular sem dependentes - deficiente",
+        description: "Married single holder without dependents - deficiente",
         married: true,
         numberOfHolders: 1,
         dependents: false,
@@ -181,7 +181,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: false,
       },
       {
-        description: "Casado único titular com dependentes - deficiente",
+        description: "Married single holder with dependents - deficiente",
         married: true,
         numberOfHolders: 1,
         dependents: true,
@@ -189,7 +189,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: false,
       },
       {
-        description: "Casado único titular sem dependentes - parceiro com deficiência",
+        description: "Married single holder without dependents - parceiro com deficiência",
         married: true,
         numberOfHolders: 1,
         dependents: false,
@@ -197,7 +197,7 @@ export const Situations: { [key: string]: Situation } = {
         partnerDisabled: true,
       },
       {
-        description: "Casado único titular com dependentes - parceiro com deficiência",
+        description: "Married single holder with dependents - parceiro com deficiência",
         married: true,
         numberOfHolders: 1,
         dependents: true,
