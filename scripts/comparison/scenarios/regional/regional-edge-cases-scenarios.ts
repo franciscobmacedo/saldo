@@ -7,7 +7,7 @@ export const azoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
   {
     name: "Single person with disability and 1 dependent in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -50,7 +50,7 @@ export const azoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
   {
     name: "Single person with disability and 1 dependent in Azores with average salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -93,7 +93,7 @@ export const azoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
   {
     name: "Single person with disability and 1 dependent in Azores with high salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -138,7 +138,7 @@ export const azoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
   {
     name: "Single person with disability and 1 disabled dependent in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -181,7 +181,7 @@ export const azoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
   {
     name: "Single person with disability and 1 disabled dependent in Azores with average salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -451,7 +451,7 @@ export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with disability in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -494,7 +494,7 @@ export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with disability in Azores with average salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -537,7 +537,7 @@ export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with disability in Azores with high salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -582,7 +582,7 @@ export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with disability in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -625,7 +625,7 @@ export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with disability in Azores with average salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -668,7 +668,7 @@ export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with disability in Azores with high salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -981,7 +981,7 @@ export const regionalEdgeCasesFailingScenarios: TestScenario[] = [
   {
     name: "Single person with disability and 1 disabled dependent in Azores with high salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,

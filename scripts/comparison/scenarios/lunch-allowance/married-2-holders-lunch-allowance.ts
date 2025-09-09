@@ -6,7 +6,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with cupon lunch allowance at standard value in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -49,7 +49,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with cupon lunch allowance above tax-free limit in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -94,7 +94,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance at minimum daily value (0€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -137,7 +137,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance at standard daily value (6€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -180,7 +180,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance at maximum tax-free value (6€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -223,7 +223,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance above tax-free limit (10€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -266,7 +266,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance at high value (15€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -309,7 +309,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance for 20 working days in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -352,7 +352,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance for 22 working days in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -395,7 +395,7 @@ export const married2HoldersLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Single person with salary lunch allowance for 25 working days in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,

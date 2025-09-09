@@ -1,7 +1,7 @@
 import { simulateDependentWorker } from "../../src/dependent-worker/simulator";
 
 export interface DoutorFinancasRequest {
-  location: "continent" | "azores" | "madeira";
+  location: "continente" | "acores" | "madeira";
   marital_status: "SOL" | "CAS1" | "CAS2";
   number_of_dependents: number;
   disability_above_60: boolean;

@@ -6,7 +6,7 @@ export const married1HolderDisabilitySpouse2Dependents1DisabledScenarios: TestSc
   {
     name: "Married 1 holder with disability and disabled spouse and 2 dependents where 1 is disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -49,7 +49,7 @@ export const married1HolderDisabilitySpouse2Dependents1DisabledScenarios: TestSc
   {
     name: "Married 1 holder with disability and disabled spouse and 2 dependents where 1 is disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -92,7 +92,7 @@ export const married1HolderDisabilitySpouse2Dependents1DisabledScenarios: TestSc
   {
     name: "Married 1 holder with disability and disabled spouse and 2 dependents where 1 is disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,

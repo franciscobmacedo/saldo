@@ -6,7 +6,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
   {
     name: "Single person with very high income (5000€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -49,7 +49,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
   {
     name: "Single person with income at highest tax bracket (8000€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -93,7 +93,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with very high income (5000€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -136,7 +136,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with income at highest tax bracket (8000€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -180,7 +180,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with very high income (5000€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -223,7 +223,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with income at highest tax bracket (8000€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,

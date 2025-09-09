@@ -6,7 +6,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person spanning Jan-Jul 2025 (early period) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -49,7 +49,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 1 holder spanning Aug-Sep 2025 in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -94,7 +94,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person at exact period boundary Jul 31 - Aug 1 2025 in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -139,7 +139,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person Jan-Jul 2025 in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -182,7 +182,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 1 holder Jan-Jul 2025 in Azores with average salary",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -268,7 +268,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person Aug-Sep 2025 in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -311,7 +311,7 @@ export const dateRangeEdgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person Oct-Dec 2025 in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -359,7 +359,7 @@ export const dateRangeEdgeCasesFailingScenarios: TestScenario[] = [
     name: "Married 2 holders spanning Oct-Dec 2025 (late period) in Azores",
     observations: "DR Financas is not using the updated table here - using the Jan one",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -447,7 +447,7 @@ export const dateRangeEdgeCasesFailingScenarios: TestScenario[] = [
     name: "Married 1 holder Aug-Sep 2025 in Azores",
     observations: "DR Financas is not using the updated table here - using the Jan one",
     doutorFinancasRequest: {
-      location: "azores",
+      location: "acores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,

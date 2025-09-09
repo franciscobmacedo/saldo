@@ -7,7 +7,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Single person with disability and 1 disabled dependent in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -52,7 +52,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Single person with disability and 2 dependents where 1 is disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -97,7 +97,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Single person with disability and 2 dependents where both are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -142,7 +142,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Single person with disability and 3+ dependents where 1 is disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -187,7 +187,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Single person with disability and 3+ dependents where 2 are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -232,7 +232,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Single person with disability and 3+ dependents where all are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -277,7 +277,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Married 1 holder with disability and 1 disabled dependent in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -322,7 +322,7 @@ export const personDisabilityDependentsDisabilityScenariosFAILING: TestScenario[
   {
     name: "Married 1 holder with disability and 2 dependents where 1 is disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,

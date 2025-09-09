@@ -6,7 +6,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Single person with 9% social security rate in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -49,7 +49,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Single person with 11% social security rate in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -92,7 +92,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Single person with 9% social security rate in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -135,7 +135,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Single person with 11% social security rate in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -178,7 +178,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Single person with 9% social security rate in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -221,7 +221,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Single person with 11% social security rate in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -265,7 +265,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with 9% social security rate in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -308,7 +308,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with 11% social security rate in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -351,7 +351,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with 9% social security rate in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -394,7 +394,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with 11% social security rate in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -437,7 +437,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with 9% social security rate in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -480,7 +480,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with 11% social security rate in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -524,7 +524,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 9% social security rate in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -567,7 +567,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 11% social security rate in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -610,7 +610,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 9% social security rate in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -653,7 +653,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 11% social security rate in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -696,7 +696,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 9% social security rate in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -739,7 +739,7 @@ export const socialSecurityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 11% social security rate in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,

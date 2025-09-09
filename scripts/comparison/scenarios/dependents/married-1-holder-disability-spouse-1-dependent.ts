@@ -6,7 +6,7 @@ export const married1HolderDisabilitySpouse1DependentScenarios: TestScenario[] =
   {
     name: "Married 1 holder with disability and disabled spouse and 1 disabled dependent in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -49,7 +49,7 @@ export const married1HolderDisabilitySpouse1DependentScenarios: TestScenario[] =
   {
     name: "Married 1 holder with disability and disabled spouse and 1 disabled dependent in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -92,7 +92,7 @@ export const married1HolderDisabilitySpouse1DependentScenarios: TestScenario[] =
   {
     name: "Married 1 holder with disability and disabled spouse and 1 disabled dependent in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 1,
       disability_above_60: true,

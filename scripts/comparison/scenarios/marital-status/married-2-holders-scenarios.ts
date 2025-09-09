@@ -6,7 +6,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with no dependents in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -49,7 +49,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with no dependents in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -92,7 +92,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with no dependents in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -135,7 +135,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 1 dependent in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 1,
       disability_above_60: false,
@@ -178,7 +178,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 1 dependent in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 1,
       disability_above_60: false,
@@ -221,7 +221,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 1 dependent in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 1,
       disability_above_60: false,
@@ -264,7 +264,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 2 dependents in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: false,
@@ -307,7 +307,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 2 dependents in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: false,
@@ -350,7 +350,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 2 dependents in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: false,
@@ -393,7 +393,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 3+ dependents in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: false,
@@ -436,7 +436,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 3+ dependents in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: false,
@@ -479,7 +479,7 @@ export const married2HoldersScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with 3+ dependents in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: false,

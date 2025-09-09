@@ -6,7 +6,7 @@ export const disabilityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with disabled spouse and 2 dependents in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: false,
@@ -54,7 +54,7 @@ export const disabilityScenarios: TestScenario[] = [
       If the person was the only holder, then they would pay less
     `,
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: false,
@@ -97,7 +97,7 @@ export const disabilityScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with disabled spouse and 2 dependents in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: false,

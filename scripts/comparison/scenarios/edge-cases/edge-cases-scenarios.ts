@@ -6,7 +6,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person with exactly minimum wage (870€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -51,7 +51,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person with income just below first tax bracket (869€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -96,7 +96,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person with income at first tax bracket threshold (870€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -141,7 +141,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Single person with income just above first tax bracket threshold (871€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -186,7 +186,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with exactly minimum wage threshold (957€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -231,7 +231,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with income just below first tax bracket (956€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -276,7 +276,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with income just above first tax bracket threshold (958€) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -321,7 +321,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with exactly minimum wage threshold (870€ each) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -366,7 +366,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with income just below first tax bracket (869€ each) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -411,7 +411,7 @@ export const edgeCasesScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with income just above first tax bracket threshold (871€ each) in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,

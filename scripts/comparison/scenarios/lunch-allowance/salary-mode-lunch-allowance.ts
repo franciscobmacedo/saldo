@@ -6,7 +6,7 @@ export const salaryModeLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with salary lunch allowance at standard value in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -49,7 +49,7 @@ export const salaryModeLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Married 1 holder with salary lunch allowance above tax-free limit in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -94,7 +94,7 @@ export const salaryModeLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with salary lunch allowance at standard value in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -137,7 +137,7 @@ export const salaryModeLunchAllowanceScenarios: TestScenario[] = [
   {
     name: "Married 2 holders with salary lunch allowance above tax-free limit in Continent",
     doutorFinancasRequest: {
-      location: "continent",
+      location: "continente",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
