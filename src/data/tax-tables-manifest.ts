@@ -27,233 +27,142 @@ interface TaxTableJsonData {
 
 // --- START IMPORTS ---
 
-// 2024/acores/2024-01-01_2024-08-31
-import sold_def_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/SOLD+DEF.json';
-import sold_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/SOLD.json';
-import solcas2_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/SOLCAS2.json';
-import cas2d_def_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/CAS2D+DEF.json';
-import solcas2_def_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/SOLCAS2+DEF.json';
-import cas1_def_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/CAS1+DEF.json';
-import cas1_2024_acores_0101_0831 from './retention-tax-tables/2024/acores/2024-01-01_2024-08-31/CAS1.json';
-
-// 2024/acores/2024-09-01_2024-10-31
-import sold_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/SOLD.json';
-import solcas2_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/SOLCAS2.json';
-import sold_def_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/SOLD+DEF.json';
-import cas2d_def_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/CAS2D+DEF.json';
-import solcas2_def_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/SOLCAS2+DEF.json';
-import cas1_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/CAS1.json';
-import cas1_def_2024_acores_0901_1031 from './retention-tax-tables/2024/acores/2024-09-01_2024-10-31/CAS1+DEF.json';
-
-// 2024/acores/2024-11-01_2024-12-31
-import sold_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/SOLD.json';
-import solcas2_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/SOLCAS2.json';
-import sold_def_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/SOLD+DEF.json';
-import cas2d_def_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/CAS2D+DEF.json';
-import solcas2_def_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/SOLCAS2+DEF.json';
-import cas1_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/CAS1.json';
-import cas1_def_2024_acores_1101_1231 from './retention-tax-tables/2024/acores/2024-11-01_2024-12-31/CAS1+DEF.json';
-
-// 2024/continente/2024-01-01_2024-08-31
-import sold_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/SOLD.json';
-import sold_def_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/SOLD+DEF.json';
-import solcas2_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/SOLCAS2.json';
-import cas2d_def_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/CAS2D+DEF.json';
-import solcas2_def_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/SOLCAS2+DEF.json';
-import cas1_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/CAS1.json';
-import cas1_def_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/CAS1+DEF.json';
-
-// 2024/continente/2024-09-01_2024-10-31
-import sold_def_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/SOLD+DEF.json';
-import sold_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/SOLD.json';
-import solcas2_def_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/SOLCAS2+DEF.json';
-import solcas2_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/SOLCAS2.json';
-import cas1_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/CAS1.json';
-import cas2d_def_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/CAS2D+DEF.json';
-import cas1_def_2024_continente_0901_1031 from './retention-tax-tables/2024/continente/2024-09-01_2024-10-31/CAS1+DEF.json';
-
-// 2024/continente/2024-11-01_2024-12-31
-import sold_def_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/SOLD+DEF.json';
-import sold_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/SOLD.json';
-import cas2d_def_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/CAS2D+DEF.json';
-import solcas2_def_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/SOLCAS2+DEF.json';
-import solcas2_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/SOLCAS2.json';
-import cas1_def_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/CAS1+DEF.json';
-import cas1_2024_continente_1101_1231 from './retention-tax-tables/2024/continente/2024-11-01_2024-12-31/CAS1.json';
-
-// 2024/madeira/2024-01-01_2024-08-31
-import solcas2_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/SOLCAS2.json';
-import sold_def_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/SOLD+DEF.json';
-import sold_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/SOLD.json';
-import solcas2_def_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/SOLCAS2+DEF.json';
-import cas2d_def_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/CAS2D+DEF.json';
-import cas2d_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/CAS2D.json';
-import cas1d_def_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/CAS1D+DEF.json';
-import cas1d_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/CAS1D.json';
-import cas1_def_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/CAS1+DEF.json';
-import cas1_2024_madeira_0101_0831 from './retention-tax-tables/2024/madeira/2024-01-01_2024-08-31/CAS1.json';
-
-// 2024/madeira/2024-09-01_2024-10-31
-import sold_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/SOLD.json';
-import solcas2_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/SOLCAS2.json';
-import sold_def_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/SOLD+DEF.json';
-import cas1_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/CAS1.json';
-import cas2d_def_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/CAS2D+DEF.json';
-import solcas2_def_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/SOLCAS2+DEF.json';
-import cas1_def_2024_madeira_0901_1031 from './retention-tax-tables/2024/madeira/2024-09-01_2024-10-31/CAS1+DEF.json';
-
-// 2024/madeira/2024-11-01_2024-12-31
-import sold_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/SOLD+DEF.json';
-import sold_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/SOLD.json';
-import solcas2_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/SOLCAS2+DEF.json';
-import solcas2_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/SOLCAS2.json';
-import cas2d_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS2D.json';
-import cas1d_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS1D.json';
-import cas2d_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS2D+DEF.json';
-import cas1_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS1.json';
-import cas1d_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS1D+DEF.json';
-import cas1_def_2024_madeira_1101_1231 from './retention-tax-tables/2024/madeira/2024-11-01_2024-12-31/CAS1+DEF.json';
-
-
 
 
 // 2025 imports
-import cas1_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/CAS1+DEF.json';
-import cas1__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/CAS1.json';
-import cas2d_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/CAS2D+DEF.json';
-import solcas2_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLCAS2+DEF.json';
-import solcas2__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLCAS2.json';
-import sold_def__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLD+DEF.json';
-import sold__2025_acores_2025010120251231 from './retention-tax-tables/2025/acores/2025-01-01_2025-12-31/SOLD.json';
-import cas1_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/CAS1+DEF.json';
-import cas1__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/CAS1.json';
-import cas2d_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/CAS2D+DEF.json';
-import solcas2_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLCAS2+DEF.json';
-import solcas2__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLCAS2.json';
-import sold_def__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLD+DEF.json';
-import sold__2025_continente_2025010120251231 from './retention-tax-tables/2025/continente/2025-01-01_2025-12-31/SOLD.json';
-import cas1_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/CAS1+DEF.json';
-import cas1__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/CAS1.json';
-import cas2d_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/CAS2D+DEF.json';
-import solcas2_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLCAS2+DEF.json';
-import solcas2__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLCAS2.json';
-import sold_def__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLD+DEF.json';
-import sold__2025_madeira_2025010120251231 from './retention-tax-tables/2025/madeira/2025-01-01_2025-12-31/SOLD.json';
+import table1_solteiro_ou_casado_2_titulares__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_acores_2025010120250731 from './retention-tax-tables/2025/acores/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_acores_2025080120250930 from './retention-tax-tables/2025/acores/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_acores_2025100120251231 from './retention-tax-tables/2025/acores/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_continente_2025010120250731 from './retention-tax-tables/2025/continente/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_continente_2025080120250930 from './retention-tax-tables/2025/continente/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_continente_2025100120251231 from './retention-tax-tables/2025/continente/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_madeira_2025010120250731 from './retention-tax-tables/2025/madeira/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_madeira_2025080120250930 from './retention-tax-tables/2025/madeira/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
+import table1_solteiro_ou_casado_2_titulares__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES.json';
+import table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES.json';
+import table3_casado_1_titular__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR.json';
+import table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF.json';
+import table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF.json';
+import table7_casado_1_titular_pessoa_com_def__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF.json';
 
 // --- END IMPORTS ---
 
 export const taxTablesData: Record<string, TaxTableJsonData> = {
-  // 2024/acores/2024-01-01_2024-08-31
-  "2024/acores/2024-01-01_2024-08-31/SOLD+DEF": sold_def_2024_acores_0101_0831 as TaxTableJsonData,
-  "2024/acores/2024-01-01_2024-08-31/SOLD": sold_2024_acores_0101_0831 as TaxTableJsonData,
-  "2024/acores/2024-01-01_2024-08-31/SOLCAS2": solcas2_2024_acores_0101_0831 as TaxTableJsonData,
-  "2024/acores/2024-01-01_2024-08-31/CAS2D+DEF": cas2d_def_2024_acores_0101_0831 as TaxTableJsonData,
-  "2024/acores/2024-01-01_2024-08-31/SOLCAS2+DEF": solcas2_def_2024_acores_0101_0831 as TaxTableJsonData,
-  "2024/acores/2024-01-01_2024-08-31/CAS1+DEF": cas1_def_2024_acores_0101_0831 as TaxTableJsonData,
-  "2024/acores/2024-01-01_2024-08-31/CAS1": cas1_2024_acores_0101_0831 as TaxTableJsonData,
-
-  // 2024/acores/2024-09-01_2024-10-31
-  "2024/acores/2024-09-01_2024-10-31/SOLD": sold_2024_acores_0901_1031 as TaxTableJsonData,
-  "2024/acores/2024-09-01_2024-10-31/SOLCAS2": solcas2_2024_acores_0901_1031 as TaxTableJsonData,
-  "2024/acores/2024-09-01_2024-10-31/SOLD+DEF": sold_def_2024_acores_0901_1031 as TaxTableJsonData,
-  "2024/acores/2024-09-01_2024-10-31/CAS2D+DEF": cas2d_def_2024_acores_0901_1031 as TaxTableJsonData,
-  "2024/acores/2024-09-01_2024-10-31/SOLCAS2+DEF": solcas2_def_2024_acores_0901_1031 as TaxTableJsonData,
-  "2024/acores/2024-09-01_2024-10-31/CAS1": cas1_2024_acores_0901_1031 as TaxTableJsonData,
-  "2024/acores/2024-09-01_2024-10-31/CAS1+DEF": cas1_def_2024_acores_0901_1031 as TaxTableJsonData,
-
-  // 2024/acores/2024-11-01_2024-12-31
-  "2024/acores/2024-11-01_2024-12-31/SOLD": sold_2024_acores_1101_1231 as TaxTableJsonData,
-  "2024/acores/2024-11-01_2024-12-31/SOLCAS2": solcas2_2024_acores_1101_1231 as TaxTableJsonData,
-  "2024/acores/2024-11-01_2024-12-31/SOLD+DEF": sold_def_2024_acores_1101_1231 as TaxTableJsonData,
-  "2024/acores/2024-11-01_2024-12-31/CAS2D+DEF": cas2d_def_2024_acores_1101_1231 as TaxTableJsonData,
-  "2024/acores/2024-11-01_2024-12-31/SOLCAS2+DEF": solcas2_def_2024_acores_1101_1231 as TaxTableJsonData,
-  "2024/acores/2024-11-01_2024-12-31/CAS1": cas1_2024_acores_1101_1231 as TaxTableJsonData,
-  "2024/acores/2024-11-01_2024-12-31/CAS1+DEF": cas1_def_2024_acores_1101_1231 as TaxTableJsonData,
-
-  // 2024/continente/2024-01-01_2024-08-31
-  "2024/continente/2024-01-01_2024-08-31/SOLD": sold_2024_continente_0101_0831 as TaxTableJsonData,
-  "2024/continente/2024-01-01_2024-08-31/SOLD+DEF": sold_def_2024_continente_0101_0831 as TaxTableJsonData,
-  "2024/continente/2024-01-01_2024-08-31/SOLCAS2": solcas2_2024_continente_0101_0831 as TaxTableJsonData,
-  "2024/continente/2024-01-01_2024-08-31/CAS2D+DEF": cas2d_def_2024_continente_0101_0831 as TaxTableJsonData,
-  "2024/continente/2024-01-01_2024-08-31/SOLCAS2+DEF": solcas2_def_2024_continente_0101_0831 as TaxTableJsonData,
-  "2024/continente/2024-01-01_2024-08-31/CAS1": cas1_2024_continente_0101_0831 as TaxTableJsonData,
-  "2024/continente/2024-01-01_2024-08-31/CAS1+DEF": cas1_def_2024_continente_0101_0831 as TaxTableJsonData,
-
-  // 2024/continente/2024-09-01_2024-10-31
-  "2024/continente/2024-09-01_2024-10-31/SOLD+DEF": sold_def_2024_continente_0901_1031 as TaxTableJsonData,
-  "2024/continente/2024-09-01_2024-10-31/SOLD": sold_2024_continente_0901_1031 as TaxTableJsonData,
-  "2024/continente/2024-09-01_2024-10-31/SOLCAS2+DEF": solcas2_def_2024_continente_0901_1031 as TaxTableJsonData,
-  "2024/continente/2024-09-01_2024-10-31/SOLCAS2": solcas2_2024_continente_0901_1031 as TaxTableJsonData,
-  "2024/continente/2024-09-01_2024-10-31/CAS1": cas1_2024_continente_0901_1031 as TaxTableJsonData,
-  "2024/continente/2024-09-01_2024-10-31/CAS2D+DEF": cas2d_def_2024_continente_0901_1031 as TaxTableJsonData,
-  "2024/continente/2024-09-01_2024-10-31/CAS1+DEF": cas1_def_2024_continente_0901_1031 as TaxTableJsonData,
-
-  // 2024/continente/2024-11-01_2024-12-31
-  "2024/continente/2024-11-01_2024-12-31/SOLD+DEF": sold_def_2024_continente_1101_1231 as TaxTableJsonData,
-  "2024/continente/2024-11-01_2024-12-31/SOLD": sold_2024_continente_1101_1231 as TaxTableJsonData,
-  "2024/continente/2024-11-01_2024-12-31/CAS2D+DEF": cas2d_def_2024_continente_1101_1231 as TaxTableJsonData,
-  "2024/continente/2024-11-01_2024-12-31/SOLCAS2+DEF": solcas2_def_2024_continente_1101_1231 as TaxTableJsonData,
-  "2024/continente/2024-11-01_2024-12-31/SOLCAS2": solcas2_2024_continente_1101_1231 as TaxTableJsonData,
-  "2024/continente/2024-11-01_2024-12-31/CAS1+DEF": cas1_def_2024_continente_1101_1231 as TaxTableJsonData,
-  "2024/continente/2024-11-01_2024-12-31/CAS1": cas1_2024_continente_1101_1231 as TaxTableJsonData,
-
-  // 2024/madeira/2024-01-01_2024-08-31
-  "2024/madeira/2024-01-01_2024-08-31/SOLCAS2": solcas2_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/SOLD+DEF": sold_def_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/SOLD": sold_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/SOLCAS2+DEF": solcas2_def_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/CAS2D+DEF": cas2d_def_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/CAS2D": cas2d_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/CAS1D+DEF": cas1d_def_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/CAS1D": cas1d_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/CAS1+DEF": cas1_def_2024_madeira_0101_0831 as TaxTableJsonData,
-  "2024/madeira/2024-01-01_2024-08-31/CAS1": cas1_2024_madeira_0101_0831 as TaxTableJsonData,
-
-  // 2024/madeira/2024-09-01_2024-10-31
-  "2024/madeira/2024-09-01_2024-10-31/SOLD": sold_2024_madeira_0901_1031 as TaxTableJsonData,
-  "2024/madeira/2024-09-01_2024-10-31/SOLCAS2": solcas2_2024_madeira_0901_1031 as TaxTableJsonData,
-  "2024/madeira/2024-09-01_2024-10-31/SOLD+DEF": sold_def_2024_madeira_0901_1031 as TaxTableJsonData,
-  "2024/madeira/2024-09-01_2024-10-31/CAS1": cas1_2024_madeira_0901_1031 as TaxTableJsonData,
-  "2024/madeira/2024-09-01_2024-10-31/CAS2D+DEF": cas2d_def_2024_madeira_0901_1031 as TaxTableJsonData,
-  "2024/madeira/2024-09-01_2024-10-31/SOLCAS2+DEF": solcas2_def_2024_madeira_0901_1031 as TaxTableJsonData,
-  "2024/madeira/2024-09-01_2024-10-31/CAS1+DEF": cas1_def_2024_madeira_0901_1031 as TaxTableJsonData,
-
-  // 2024/madeira/2024-11-01_2024-12-31
-  "2024/madeira/2024-11-01_2024-12-31/SOLD+DEF": sold_def_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/SOLD": sold_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/SOLCAS2+DEF": solcas2_def_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/SOLCAS2": solcas2_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/CAS2D": cas2d_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/CAS1D": cas1d_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/CAS2D+DEF": cas2d_def_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/CAS1": cas1_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/CAS1D+DEF": cas1d_def_2024_madeira_1101_1231 as TaxTableJsonData,
-  "2024/madeira/2024-11-01_2024-12-31/CAS1+DEF": cas1_def_2024_madeira_1101_1231 as TaxTableJsonData,
-
- 
+  
 
   // 2025 data
-  "2025/acores/2025-01-01_2025-12-31/CAS1+DEF": cas1_def__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-12-31/CAS1": cas1__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-12-31/CAS2D+DEF": cas2d_def__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-12-31/SOLCAS2+DEF": solcas2_def__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-12-31/SOLCAS2": solcas2__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-12-31/SOLD+DEF": sold_def__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/acores/2025-01-01_2025-12-31/SOLD": sold__2025_acores_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/CAS1+DEF": cas1_def__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/CAS1": cas1__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/CAS2D+DEF": cas2d_def__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/SOLCAS2+DEF": solcas2_def__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/SOLCAS2": solcas2__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/SOLD+DEF": sold_def__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/continente/2025-01-01_2025-12-31/SOLD": sold__2025_continente_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/CAS1+DEF": cas1_def__2025_madeira_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/CAS1": cas1__2025_madeira_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/CAS2D+DEF": cas2d_def__2025_madeira_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/SOLCAS2+DEF": solcas2_def__2025_madeira_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/SOLCAS2": solcas2__2025_madeira_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/SOLD+DEF": sold_def__2025_madeira_2025010120251231 as TaxTableJsonData,
-  "2025/madeira/2025-01-01_2025-12-31/SOLD": sold__2025_madeira_2025010120251231 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_acores_2025010120250731 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_acores_2025080120250930 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/acores/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_acores_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_continente_2025010120250731 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_continente_2025080120250930 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/continente/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_continente_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-01-01_2025-07-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_madeira_2025010120250731 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-08-01_2025-09-30/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_madeira_2025080120250930 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES": table1_solteiro_ou_casado_2_titulares__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES": table2_solteiro_um_ou_mais_dependentes__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE3_CASADO_1_TITULAR": table3_casado_1_titular__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF": table4_solteiro_ou_casado_2_titulares_sem_dependentes_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table5_solteiro_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF": table6_casado_2_titulares_um_ou_mais_dependentes_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2025/madeira/2025-10-01_2025-12-31/TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF": table7_casado_1_titular_pessoa_com_def__2025_madeira_2025100120251231 as TaxTableJsonData,
 
 };
 

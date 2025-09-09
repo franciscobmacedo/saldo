@@ -1,11 +1,11 @@
 export type SituationCodesT =
-  | "SOLCAS2"
-  | "SOLD"
-  | "CAS1"
-  | "SOLCAS2+DEF"
-  | "SOLD+DEF"
-  | "CAS2D+DEF"
-  | "CAS1+DEF";
+  | "TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES"
+  | "TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES"
+  | "TABLE3_CASADO_1_TITULAR"
+  | "TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF"
+  | "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"
+  | "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"
+  | "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF"
 
 export type LocationT = "continente" | "acores" | "madeira";
 
@@ -13,6 +13,7 @@ export interface Condition {
   married: boolean;
   dependents: boolean; // True if has dependents False if not
   disabled: boolean;
+  partnerDisabled: boolean;
   description: string;
   numberOfHolders?: number | null; // Number of holders, null if it's not applicable (e.g. not married)
   // Note: The Python __init__ logic for dependents based on numberOfDependents is handled differently in TS.
@@ -27,8 +28,8 @@ export interface Situation {
 }
 
 export const Situations: { [key: string]: Situation } = {
-  SOLCAS2: {
-    code: "SOLCAS2",
+  TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES: {
+    code: "TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES",
     description:
       "Trabalho dependente - Não casado sem dependentes ou casado dois titulares",
     conditions: [
@@ -37,6 +38,7 @@ export const Situations: { [key: string]: Situation } = {
         married: false,
         dependents: false,
         disabled: false,
+        partnerDisabled: false,
       },
       {
         description: "Casado, 2 titulares, sem dependentes",
@@ -44,6 +46,7 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 2,
         dependents: false,
         disabled: false,
+        partnerDisabled: false,
       },
       {
         description: "Casado, 2 titulares, com dependentes",
@@ -51,11 +54,28 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 2,
         dependents: true,
         disabled: false,
+        partnerDisabled: false,
+      },
+      {
+        description: "Casado, 2 titulares, sem dependentes, parceiro com deficiência",
+        married: true,
+        numberOfHolders: 2,
+        dependents: false,
+        disabled: false,
+        partnerDisabled: true,
+      },
+      {
+        description: "Casado, 2 titulares, com dependentes, parceiro com deficiência",
+        married: true,
+        numberOfHolders: 2,
+        dependents: true,
+        disabled: false,
+        partnerDisabled: true,
       },
     ],
   },
-  SOLD: {
-    code: "SOLD",
+  TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES: {
+    code: "TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES",
     description: "Trabalho dependente - Não casado com um ou mais dependentes",
     conditions: [
       {
@@ -63,11 +83,12 @@ export const Situations: { [key: string]: Situation } = {
         married: false,
         dependents: true,
         disabled: false,
+        partnerDisabled: false,
       },
     ],
   },
-  CAS1: {
-    code: "CAS1",
+  TABLE3_CASADO_1_TITULAR: {
+    code: "TABLE3_CASADO_1_TITULAR",
     description: "Trabalho dependente - Casado único titular",
     conditions: [
       {
@@ -76,6 +97,7 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 1,
         dependents: false,
         disabled: false,
+        partnerDisabled: false,
       },
       {
         description: "Casado único titular com dependentes",
@@ -83,11 +105,12 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 1,
         dependents: true,
         disabled: false,
+        partnerDisabled: false,
       },
     ],
   },
-  SOLCAS2_DEF: {
-    code: "SOLCAS2+DEF",
+  TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF: {
+    code: "TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF",
     description:
       "Trabalho dependente - Não casado ou casado dois titulares sem dependentes - deficiente",
     conditions: [
@@ -96,6 +119,7 @@ export const Situations: { [key: string]: Situation } = {
         married: false,
         dependents: false,
         disabled: true,
+        partnerDisabled: false,
       },
       {
         description: "Casado, 2 titulares, sem dependentes - deficiente",
@@ -103,11 +127,12 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 2,
         dependents: false,
         disabled: true,
+        partnerDisabled: false,
       },
     ],
   },
-  SOLD_DEF: {
-    code: "SOLD+DEF",
+  TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF: {
+    code: "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
     description:
       "Trabalho dependente - Não casado, com um ou mais dependentes - deficiente",
     conditions: [
@@ -116,11 +141,12 @@ export const Situations: { [key: string]: Situation } = {
         married: false,
         dependents: true,
         disabled: true,
+        partnerDisabled: false,
       },
     ],
   },
-  CAS2D_DEF: {
-    code: "CAS2D+DEF",
+  TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF: {
+    code: "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
     description:
       "Trabalho dependente - Casado dois titulares, com um ou mais dependentes - deficiente",
     conditions: [
@@ -130,19 +156,29 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 2,
         dependents: true,
         disabled: true,
+        partnerDisabled: false,
+      },
+      {
+        description: "Casado, 2 titulares, com dependentes - deficiente, parceiro com deficiência",
+        married: true,
+        numberOfHolders: 2,
+        dependents: true,
+        disabled: true,
+        partnerDisabled: true,
       },
     ],
   },
-  CAS1_DEF: {
-    code: "CAS1+DEF",
+  TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF: {
+    code: "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF",
     description: "Trabalho dependente - Casado único titular - deficiente",
     conditions: [
       {
         description: "Casado único titular sem dependentes - deficiente",
         married: true,
         numberOfHolders: 1,
-        dependents: false, // Python had None, translated to false based on Condition.__init__
+        dependents: false,
         disabled: true,
+        partnerDisabled: false,
       },
       {
         description: "Casado único titular com dependentes - deficiente",
@@ -150,6 +186,23 @@ export const Situations: { [key: string]: Situation } = {
         numberOfHolders: 1,
         dependents: true,
         disabled: true,
+        partnerDisabled: false,
+      },
+      {
+        description: "Casado único titular sem dependentes - parceiro com deficiência",
+        married: true,
+        numberOfHolders: 1,
+        dependents: false,
+        disabled: false,
+        partnerDisabled: true,
+      },
+      {
+        description: "Casado único titular com dependentes - parceiro com deficiência",
+        married: true,
+        numberOfHolders: 1,
+        dependents: true,
+        disabled: false,
+        partnerDisabled: true,
       },
     ],
   },
@@ -168,12 +221,14 @@ export class SituationUtils {
   public static getSituation(
     married: boolean,
     disabled: boolean,
+    partnerDisabled: boolean,
     numberOfHolders?: number | null,
     numberOfDependents?: number
   ): Situation | undefined {
     const inputCondition: Partial<Condition> & {
       married: boolean;
       disabled: boolean;
+      partnerDisabled: boolean;
       dependents: boolean;
     } = {
       married,
@@ -181,6 +236,7 @@ export class SituationUtils {
       dependents:
         numberOfDependents !== undefined ? numberOfDependents > 0 : false,
       disabled,
+      partnerDisabled,
     };
     return SituationUtils.getSituationFromCondition(
       inputCondition as Condition
@@ -272,7 +328,7 @@ export class RetentionPathsSchema {
   }
 
   public get path(): string { // Keep 'path' getter name for compatibility if it's widely used,
-                            // but it now returns the identifier.
+    // but it now returns the identifier.
     return this.identifier;
   }
 }

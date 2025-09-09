@@ -79,6 +79,19 @@ class TaxBracket {
 
         return Math.max(0, tax);
     }
+
+    toJSON(): TaxBracketData {
+        return {
+            signal: this.signal,
+            limit: this.limit,
+            max_marginal_rate: this.max_marginal_rate,
+            deduction: this.deduction,
+            var1_deduction: this.var1_deduction,
+            var2_deduction: this.var2_deduction,
+            dependent_aditional_deduction: this.dependent_aditional_deduction,
+            effective_mensal_rate: this.effective_mensal_rate
+        };
+    }
 }
 
 // Interface for the raw JSON structure when loading from file
@@ -164,6 +177,15 @@ class TaxRetentionTable {
         // The original load_from_file hardcoded "continente". 
         // We use the 'location' parameter now, which seems more correct.
         return TaxRetentionTable.from_data(location, tableData as TaxRetentionTableJsonData);
+    }
+
+    toJSON(): TaxRetentionTableJsonData {
+        return {
+            situation: this.situation,
+            description: this.description,
+            brackets: this.tax_brackets.map(bracket => bracket.toJSON()),
+            dependent_disabled_addition_deduction: this.dependent_disabled_addition_deduction
+        };
     }
 }
 

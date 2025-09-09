@@ -4,6 +4,8 @@ import {
   validateNumberOfHolders,
   validateMarriedAndNumberOfHolders,
   validateDependents,
+  validatePartnerDisabled,
+  validateLunchAllowanceMode,
 } from "@/dependent-worker/validators";
 import {
   Twelfths,
@@ -44,7 +46,10 @@ export function simulateDependentWorker({
   // Validate input
   validateNumberOfHolders(numberOfHolders);
   validateMarriedAndNumberOfHolders(married, numberOfHolders);
+  validatePartnerDisabled(married, partnerDisabled);
   validateDependents(numberOfDependents, numberOfDependentsDisabled);
+  validateLunchAllowanceMode(lunchAllowanceMode);
+  
 
   // Partner with disability results in extra deduction
   let extraDeduction = getPartnerExtraDeduction(
@@ -66,9 +71,11 @@ export function simulateDependentWorker({
   const grossIncome = retentionIncome + lunchAllowance.taxFreeMonthlyValue;
 
   // The situation to determine the tax bracket
+  // Use disability tables if either the worker or their partner is disabled
   const situation = SituationUtils.getSituation(
     married,
     disabled,
+    partnerDisabled,
     numberOfHolders,
     numberOfDependents === null ? undefined : numberOfDependents // Python None is undefined here
   );
@@ -86,9 +93,11 @@ export function simulateDependentWorker({
     location,
     situation.code
   );
+  // console.log('taxRetentionTable', taxRetentionTable);
 
   // Find the tax bracket for the taxable income
   const bracket = taxRetentionTable.find_bracket(taxableIncome);
+  // console.log('bracket', bracket);
   if (!bracket) {
     throw new Error(
       `Could not find tax bracket for taxable income: ${taxableIncome} in table ${situation.code} for location ${location}`
@@ -150,5 +159,7 @@ export function simulateDependentWorker({
     yearlyNetSalary: yearlyNetSalary,
     yearlyGrossSalary: yearlyGrossSalary,
     lunchAllowance: lunchAllowance,
+    bracket: bracket.toJSON(),
+    taxRetentionTable: taxRetentionTable.toJSON(),
   };
 }

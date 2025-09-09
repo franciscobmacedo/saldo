@@ -3,8 +3,9 @@ import { LocationT } from "@/config/schemas";
 
 export enum Twelfths {
   NONE = 0, // No twelfths
-  ONE_MONTH = 1, // Christmas OR Holiday allowance in twelfths
-  TWO_MONTHS = 2, // Christmas AND Holiday allowance in twelfths
+  ONE_HALF_MONTH = 0.5, // 1x50% - One allowance at 50% (half month)
+  ONE_MONTH = 1, // 2x50% - Two allowances at 50% each (one month total)
+  TWO_MONTHS = 2, // 2x100% - Two allowances at 100% each (two months total)
 }
 
 
@@ -37,4 +38,29 @@ export interface DependentWorkerResult {
   yearlyNetSalary: number;
   yearlyGrossSalary: number;
   lunchAllowance: LunchAllowance;
+  bracket: {
+    signal: "max" | "min";
+    limit: number;
+    max_marginal_rate: number;
+    deduction: number;
+    var1_deduction: number;
+    var2_deduction: number;
+    dependent_aditional_deduction: number;
+    effective_mensal_rate: number;
+  };
+  taxRetentionTable: {
+    situation: string;
+    description: string;
+    brackets: {
+      signal: "max" | "min";
+      limit: number;
+      max_marginal_rate: number;
+      deduction: number;
+      var1_deduction: number;
+      var2_deduction: number;
+      dependent_aditional_deduction: number;
+      effective_mensal_rate: number;
+    }[];
+    dependent_disabled_addition_deduction?: number;
+  };
 }
