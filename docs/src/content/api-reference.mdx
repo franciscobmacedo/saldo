@@ -61,6 +61,31 @@ interface DependentWorkerResult {
   yearlyNetSalary: number;
   yearlyGrossSalary: number;
   lunchAllowance: LunchAllowance;
+  bracket: {
+    signal: "max" | "min";
+    limit: number;
+    max_marginal_rate: number;
+    deduction: number;
+    var1_deduction: number;
+    var2_deduction: number;
+    dependent_aditional_deduction: number;
+    effective_mensal_rate: number;
+  };
+  taxRetentionTable: {
+    situation: string;
+    description: string;
+    brackets: {
+      signal: "max" | "min";
+      limit: number;
+      max_marginal_rate: number;
+      deduction: number;
+      var1_deduction: number;
+      var2_deduction: number;
+      dependent_aditional_deduction: number;
+      effective_mensal_rate: number;
+    }[];
+    dependent_disabled_addition_deduction?: number;
+  };
 }
 ```
 
@@ -75,11 +100,12 @@ interface DependentWorkerResult {
 | `yearlyNetSalary` | `number` | Annual net salary (14 months) |
 | `yearlyGrossSalary` | `number` | Annual gross salary (14 months) |
 | `lunchAllowance` | `LunchAllowance` | Lunch allowance breakdown |
+| `bracket` | `object` | Tax bracket information with rates and deductions |
+| `taxRetentionTable` | `object` | Complete tax retention table data |
 
 #### Example
 
-```typescript
-import { simulateDependentWorker, Twelfths } from 'saldo';
+<RunCode defaultCode={`import { simulateDependentWorker, Twelfths } from 'saldo';
 
 const result = simulateDependentWorker({
   income: 1500,
@@ -93,8 +119,10 @@ const result = simulateDependentWorker({
   twelfths: Twelfths.TWO_MONTHS
 });
 
-console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
-```
+console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`Tax: €\${result.tax.toFixed(2)}\`);
+console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Lunch Allowance: €\${result.lunchAllowance.monthlyValue.toFixed(2)}\`);`} />
 
 ## Types and Enums
 
@@ -157,13 +185,13 @@ class LunchAllowance {
 
 ```typescript
 type SituationCodesT =
-  | "SOLCAS2"      // Single or married with 2 holders
-  | "SOLD"         // Single with dependents
-  | "CAS1"         // Married, single holder
-  | "SOLCAS2+DEF"  // Single or married 2 holders + disability
-  | "SOLD+DEF"     // Single with dependents + disability
-  | "CAS2D+DEF"    // Married 2 holders with dependents + disability
-  | "CAS1+DEF";    // Married single holder + disability
+  | "TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES"      // Single or married with 2 holders
+  | "TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES"     // Single with dependents
+  | "TABLE3_CASADO_1_TITULAR"                    // Married, single holder
+  | "TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF"  // Single or married 2 holders + disability
+  | "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"     // Single with dependents + disability
+  | "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"    // Married 2 holders with dependents + disability
+  | "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF";    // Married single holder + disability
 ```
 
 Tax table codes used internally by the library to determine the appropriate tax bracket.
@@ -187,6 +215,7 @@ interface Condition {
   married: boolean;
   dependents: boolean;
   disabled: boolean;
+  partnerDisabled: boolean;
   description: string;
   numberOfHolders?: number | null;
 }
@@ -202,6 +231,7 @@ Represents specific conditions that determine which tax situation applies.
 SituationUtils.getSituation(
   married: boolean,
   disabled: boolean,
+  partnerDisabled: boolean,
   numberOfHolders?: number | null,
   numberOfDependents?: number
 ): Situation | undefined
@@ -216,6 +246,58 @@ SituationUtils.getSituationFromCode(code: string): Situation | undefined
 ```
 
 Retrieves a tax situation by its code.
+
+### `Bracket` Object
+
+The `bracket` object contains detailed information about the tax bracket applied to the worker's income:
+
+```typescript
+interface Bracket {
+  signal: "max" | "min";                    // Whether this is a maximum or minimum bracket
+  limit: number;                            // Income limit for this bracket
+  max_marginal_rate: number;                // Maximum marginal tax rate
+  deduction: number;                        // Standard deduction amount
+  var1_deduction: number;                   // Variable deduction 1
+  var2_deduction: number;                   // Variable deduction 2
+  dependent_aditional_deduction: number;   // Additional deduction per dependent
+  effective_mensal_rate: number;            // Effective monthly tax rate
+}
+```
+
+### `TaxRetentionTable` Object
+
+The `taxRetentionTable` object contains the complete tax retention table data:
+
+```typescript
+interface TaxRetentionTable {
+  situation: string;                       // Situation code
+  description: string;                     // Human-readable description
+  brackets: Bracket[];                      // Array of all tax brackets
+  dependent_disabled_addition_deduction?: number; // Additional deduction for disabled dependents
+}
+```
+
+### `RetentionPathsSchema` Class
+
+The `RetentionPathsSchema` class handles complex date/location/situation path construction for tax table loading:
+
+```typescript
+class RetentionPathsSchema {
+  public identifier: string;
+
+  constructor(
+    dateStart: Date,
+    dateEnd: Date,
+    location: LocationT,
+    situationCode: SituationCodesT,
+    year: number | string
+  );
+
+  get path(): string; // Returns the identifier
+}
+```
+
+This class constructs identifiers in the format: `"2025/continente/2025-01-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES"`
 
 ## Validation Functions
 
@@ -234,8 +316,7 @@ Validates that the number of disabled dependents doesn't exceed total dependents
 
 The library throws descriptive errors for invalid configurations:
 
-```typescript
-// Invalid situation
+<RunCode defaultCode={`// Invalid situation
 try {
   simulateDependentWorker({
     income: 1500,
@@ -243,7 +324,7 @@ try {
     // Missing numberOfHolders - required for married
   });
 } catch (error) {
-  console.error(error.message); // "'numberOfHolders' is required for married workers"
+  console.error('Error:', error.message); // "'numberOfHolders' is required for married workers"
 }
 
 // Invalid bracket
@@ -253,9 +334,8 @@ try {
     location: 'continente'
   });
 } catch (error) {
-  console.error(error.message); // "No bracket found for salary..."
-}
-```
+  console.error('Error:', error.message); // "No bracket found for salary..."
+}`} />
 
 ## Advanced Usage
 
@@ -263,31 +343,34 @@ try {
 
 The library supports calculations for specific time periods:
 
-```typescript
-const result = simulateDependentWorker({
+<RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
   dateStart: new Date(2024, 0, 1),  // January 1, 2024
   dateEnd: new Date(2024, 11, 31),  // December 31, 2024
   location: 'continente'
 });
-```
+
+console.log('=== Date Range Calculation ===');
+console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ### Custom Social Security Rates
 
-```typescript
-const result = simulateDependentWorker({
+<RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
   socialSecurityTaxRate: 0.11, // 11% (default)
   location: 'continente'
 });
-```
+
+console.log('=== Custom Social Security Rate ===');
+console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Rate Applied: \${(result.socialSecurityTax * 100).toFixed(1)}%\`);`} />
 
 ### Disability Benefits
 
 The library handles various disability scenarios:
 
-```typescript
-// Worker with disability
+<RunCode defaultCode={`// Worker with disability
 const workerDisability = simulateDependentWorker({
   income: 1500,
   disabled: true,
@@ -310,4 +393,8 @@ const dependentDisability = simulateDependentWorker({
   numberOfDependentsDisabled: 1,
   location: 'continente'
 });
-``` 
+
+console.log('=== Disability Benefits Comparison ===');
+console.log(\`Worker Disability - Net: €\${workerDisability.netSalary.toFixed(2)}\`);
+console.log(\`Partner Disability - Net: €\${partnerDisability.netSalary.toFixed(2)}\`);
+console.log(\`Dependent Disability - Net: €\${dependentDisability.netSalary.toFixed(2)}\`);`} /> 

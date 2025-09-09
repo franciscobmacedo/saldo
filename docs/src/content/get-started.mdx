@@ -14,8 +14,7 @@ pnpm add saldo
 
 ## Quick Start
 
-```typescript
-import { simulateDependentWorker } from 'saldo';
+<RunCode defaultCode={`import { simulateDependentWorker } from 'saldo';
 
 const result = simulateDependentWorker({
   income: 1500, // Monthly gross income in euros
@@ -23,13 +22,12 @@ const result = simulateDependentWorker({
   married: false
 });
 
-console.log(`Gross Income: €${result.grossIncome.toFixed(2)}`);
-console.log(`Taxable Income: €${result.taxableIncome.toFixed(2)}`);
-console.log(`Tax: €${result.tax.toFixed(2)}`);
-console.log(`Social Security: €${result.socialSecurity.toFixed(2)}`);
-console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
-console.log(`Yearly Net: €${result.yearlyNetSalary.toFixed(2)}`);
-```
+console.log(\`Gross Income: €\${result.grossIncome.toFixed(2)}\`);
+console.log(\`Taxable Income: €\${result.taxableIncome.toFixed(2)}\`);
+console.log(\`Tax: €\${result.tax.toFixed(2)}\`);
+console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ## Understanding the Result
 
@@ -46,6 +44,31 @@ interface DependentWorkerResult {
   yearlyNetSalary: number;     // Annual net salary (14 months)
   yearlyGrossSalary: number;   // Annual gross salary (14 months)
   lunchAllowance: LunchAllowance; // Lunch allowance details
+  bracket: {
+    signal: "max" | "min";
+    limit: number;
+    max_marginal_rate: number;
+    deduction: number;
+    var1_deduction: number;
+    var2_deduction: number;
+    dependent_aditional_deduction: number;
+    effective_mensal_rate: number;
+  };
+  taxRetentionTable: {
+    situation: string;
+    description: string;
+    brackets: {
+      signal: "max" | "min";
+      limit: number;
+      max_marginal_rate: number;
+      deduction: number;
+      var1_deduction: number;
+      var2_deduction: number;
+      dependent_aditional_deduction: number;
+      effective_mensal_rate: number;
+    }[];
+    dependent_disabled_addition_deduction?: number;
+  };
 }
 ```
 
@@ -76,51 +99,59 @@ interface DependentWorkerResult {
 
 ### Single Person
 
-```typescript
-const single = simulateDependentWorker({
+<RunCode defaultCode={`const single = simulateDependentWorker({
   income: 1000,
   location: 'continente'
 });
-```
+
+console.log('=== Single Person ===');
+console.log(\`Net Salary: €\${single.netSalary.toFixed(2)}\`);
+console.log(\`Yearly Net: €\${single.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ### Married with Children
 
-```typescript
-const marriedWithKids = simulateDependentWorker({
+<RunCode defaultCode={`const marriedWithKids = simulateDependentWorker({
   income: 1800,
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 2,
   location: 'continente'
 });
-```
+
+console.log('=== Married with Children ===');
+console.log(\`Net Salary: €\${marriedWithKids.netSalary.toFixed(2)}\`);
+console.log(\`Tax Benefits: €\${marriedWithKids.bracket.deduction.toFixed(2)}\`);`} />
 
 ### Disabled Worker
 
-```typescript
-const disabledWorker = simulateDependentWorker({
+<RunCode defaultCode={`const disabledWorker = simulateDependentWorker({
   income: 1200,
   disabled: true,
   location: 'continente'
 });
-```
+
+console.log('=== Disabled Worker ===');
+console.log(\`Net Salary: €\${disabledWorker.netSalary.toFixed(2)}\`);
+console.log(\`Additional Deduction: €\${disabledWorker.bracket.var1_deduction.toFixed(2)}\`);`} />
 
 ### With Lunch Allowance
 
-```typescript
-const withLunch = simulateDependentWorker({
+<RunCode defaultCode={`const withLunch = simulateDependentWorker({
   income: 1400,
   lunchAllowanceDailyValue: 7.5,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22,
   location: 'continente'
 });
-```
+
+console.log('=== With Lunch Allowance ===');
+console.log(\`Net Salary: €\${withLunch.netSalary.toFixed(2)}\`);
+console.log(\`Lunch Allowance: €\${withLunch.lunchAllowance.monthlyValue.toFixed(2)}\`);
+console.log(\`Tax-free Lunch: €\${withLunch.lunchAllowance.taxFreeMonthlyValue.toFixed(2)}\`);`} />
 
 ### Using Twelfths Enum
 
-```typescript
-import { simulateDependentWorker, Twelfths } from 'saldo';
+<RunCode defaultCode={`import { simulateDependentWorker, Twelfths } from 'saldo';
 
 const withoutHolidayAllowance = simulateDependentWorker({
   income: 1500,
@@ -139,7 +170,12 @@ const withBothHolidayAllowances = simulateDependentWorker({
   twelfths: Twelfths.TWO_MONTHS, // Both Christmas AND holiday allowance
   location: 'continente'
 });
-```
+
+console.log('=== Twelfths Comparison ===');
+console.log(\`No Distribution - Monthly Net: €\${withoutHolidayAllowance.netSalary.toFixed(2)}\`);
+console.log(\`One Month - Monthly Net: €\${withOneHolidayAllowance.netSalary.toFixed(2)}\`);
+console.log(\`Two Months - Monthly Net: €\${withBothHolidayAllowances.netSalary.toFixed(2)}\`);
+console.log(\`Two Months - Yearly Net: €\${withBothHolidayAllowances.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ## Working with Types
 
@@ -174,8 +210,7 @@ const result: DependentWorkerResult = simulateDependentWorker({
 
 Each Portuguese region has different tax rates:
 
-```typescript
-// Mainland Portugal
+<RunCode defaultCode={`// Mainland Portugal
 const continente = simulateDependentWorker({
   income: 1500,
   location: 'continente'
@@ -192,23 +227,25 @@ const madeira = simulateDependentWorker({
   income: 1500,
   location: 'madeira'
 });
-```
+
+console.log('=== Regional Comparison (€1500 income) ===');
+console.log(\`Continente - Net: €\${continente.netSalary.toFixed(2)}\`);
+console.log(\`Açores - Net: €\${acores.netSalary.toFixed(2)}\`);
+console.log(\`Madeira - Net: €\${madeira.netSalary.toFixed(2)}\`);`} />
 
 ## Error Handling
 
 The library provides clear error messages for invalid configurations:
 
-```typescript
-try {
+<RunCode defaultCode={`try {
   const result = simulateDependentWorker({
     income: 1500,
     married: true,
     // Missing numberOfHolders - required for married
   });
 } catch (error) {
-  console.error(error.message); // "'numberOfHolders' is required for married workers"
-}
-```
+  console.error('Error:', error.message); // "'numberOfHolders' is required for married workers"
+}`} />
 
 ## Next Steps
 

@@ -12,25 +12,24 @@ The library automatically determines the appropriate tax situation based on:
 
 ## Tax Situation Codes
 
-### SOLCAS2 - Single or Married with Two Holders
+### TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES - Single or Married with Two Holders
 
-**Code**: `SOLCAS2`  
+**Code**: `TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES`  
 **Description**: Single without dependents OR married with two income holders
 
 **Applies to**:
 - Single person without dependents
 - Married couple with 2 income holders, with or without dependents
 
-```typescript
-// Single person, no dependents
-simulateDependentWorker({
+<RunCode defaultCode={`// Single person, no dependents
+const single = simulateDependentWorker({
   income: 1200,
   married: false,
   numberOfDependents: 0
 });
 
 // Married, both working, no dependents
-simulateDependentWorker({
+const marriedTwoHolders = simulateDependentWorker({
   income: 1500,
   married: true,
   numberOfHolders: 2,
@@ -38,44 +37,49 @@ simulateDependentWorker({
 });
 
 // Married, both working, with children
-simulateDependentWorker({
+const marriedWithKids = simulateDependentWorker({
   income: 1800,
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 2
 });
-```
 
-### SOLD - Single with Dependents
+console.log('=== TABLE1 Examples ===');
+console.log(\`Single - Net: €\${single.netSalary.toFixed(2)}\`);
+console.log(\`Married 2 holders - Net: €\${marriedTwoHolders.netSalary.toFixed(2)}\`);
+console.log(\`Married with kids - Net: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
 
-**Code**: `SOLD`  
+### TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES - Single with Dependents
+
+**Code**: `TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES`  
 **Description**: Single person with one or more dependents
 
 **Applies to**:
 - Single parent with children
 - Single person caring for dependents
 
-```typescript
-// Single parent with 2 children
-simulateDependentWorker({
+<RunCode defaultCode={`// Single parent with 2 children
+const singleParent = simulateDependentWorker({
   income: 1400,
   married: false,
   numberOfDependents: 2
 });
-```
 
-### CAS1 - Married, Single Holder
+console.log('=== TABLE2 Example ===');
+console.log(\`Single Parent - Net: €\${singleParent.netSalary.toFixed(2)}\`);
+console.log(\`Tax Benefits: €\${singleParent.bracket.deduction.toFixed(2)}\`);`} />
 
-**Code**: `CAS1`  
+### TABLE3_CASADO_1_TITULAR - Married, Single Holder
+
+**Code**: `TABLE3_CASADO_1_TITULAR`  
 **Description**: Married with only one income holder
 
 **Applies to**:
 - Married couple where only one person works
 - Can be with or without dependents
 
-```typescript
-// Married, single income, no children
-simulateDependentWorker({
+<RunCode defaultCode={`// Married, single income, no children
+const marriedSingleIncome = simulateDependentWorker({
   income: 2000,
   married: true,
   numberOfHolders: 1,
@@ -83,85 +87,93 @@ simulateDependentWorker({
 });
 
 // Married, single income, with children
-simulateDependentWorker({
+const marriedWithKids = simulateDependentWorker({
   income: 2200,
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 3
 });
-```
+
+console.log('=== TABLE3 Examples ===');
+console.log(\`Married Single Income - Net: €\${marriedSingleIncome.netSalary.toFixed(2)}\`);
+console.log(\`Married with Kids - Net: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
 
 ## Disability Situations
 
 All base situations have corresponding disability variants with lower tax rates:
 
-### SOLCAS2+DEF - Single/Two Holders with Disability
+### TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF - Single/Two Holders with Disability
 
-**Code**: `SOLCAS2+DEF`  
-**Description**: Same as SOLCAS2 but with disability benefits
+**Code**: `TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF`  
+**Description**: Same as TABLE1 but with disability benefits
 
-```typescript
-// Single person with disability
-simulateDependentWorker({
+<RunCode defaultCode={`// Single person with disability
+const singleDisabled = simulateDependentWorker({
   income: 1200,
   married: false,
   disabled: true
 });
 
 // Married, both working, one with disability
-simulateDependentWorker({
+const marriedDisabled = simulateDependentWorker({
   income: 1500,
   married: true,
   numberOfHolders: 2,
   disabled: true
 });
-```
 
-### SOLD+DEF - Single with Dependents and Disability
+console.log('=== TABLE4 Examples ===');
+console.log(\`Single Disabled - Net: €\${singleDisabled.netSalary.toFixed(2)}\`);
+console.log(\`Married Disabled - Net: €\${marriedDisabled.netSalary.toFixed(2)}\`);`} />
 
-**Code**: `SOLD+DEF`  
+### TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF - Single with Dependents and Disability
+
+**Code**: `TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF`  
 **Description**: Single with dependents and disability
 
-```typescript
-// Single parent with disability and children
-simulateDependentWorker({
+<RunCode defaultCode={`// Single parent with disability and children
+const singleParentDisabled = simulateDependentWorker({
   income: 1400,
   married: false,
   disabled: true,
   numberOfDependents: 2
 });
-```
 
-### CAS1+DEF - Married Single Holder with Disability
+console.log('=== TABLE5 Example ===');
+console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.netSalary.toFixed(2)}\`);`} />
 
-**Code**: `CAS1+DEF`  
-**Description**: Married single holder with disability
+### TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF - Married Two Holders with Dependents and Disability
 
-```typescript
-// Married, single income, with disability
-simulateDependentWorker({
-  income: 2000,
-  married: true,
-  numberOfHolders: 1,
-  disabled: true
-});
-```
-
-### CAS2D+DEF - Married Two Holders with Dependents and Disability
-
-**Code**: `CAS2D+DEF`  
+**Code**: `TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF`  
 **Description**: Married with two holders, dependents, and disability
 
-```typescript
-// Married, both working, children, one with disability
-simulateDependentWorker({
+<RunCode defaultCode={`// Married, both working, children, one with disability
+const marriedTwoHoldersDisabled = simulateDependentWorker({
   income: 1800,
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 2,
   disabled: true
 });
-```
+
+console.log('=== TABLE6 Example ===');
+console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisabled.netSalary.toFixed(2)}\`);`} />
+
+### TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF - Married Single Holder with Disability
+
+**Code**: `TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF`  
+**Description**: Married single holder with disability
+
+<RunCode defaultCode={`// Married, single income, with disability
+const marriedSingleIncomeDisabled = simulateDependentWorker({
+  income: 2000,
+  married: true,
+  numberOfHolders: 1,
+  disabled: true
+});
+
+console.log('=== TABLE7 Example ===');
+console.log(\`Married Single Income Disabled - Net: €\${marriedSingleIncomeDisabled.netSalary.toFixed(2)}\`);`} />
 
 ## Situation Determination Logic
 
@@ -170,57 +182,68 @@ The library uses the following logic to determine the tax situation:
 ```mermaid
 graph TD
     A[Start] --> B{Disabled?}
-    B -->|Yes| C[Add +DEF suffix]
-    B -->|No| D[Base situation]
+    B -->|Yes| C[Use disability table]
+    B -->|No| D[Use standard table]
     
     D --> E{Married?}
     E -->|No| F{Has Dependents?}
     E -->|Yes| G{Number of Holders?}
     
-    F -->|No| H[SOLCAS2]
-    F -->|Yes| I[SOLD]
+    F -->|No| H[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
+    F -->|Yes| I[TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES]
     
     G -->|1| J{Has Dependents?}
     G -->|2| K{Has Dependents?}
     
-    J -->|No/Yes| L[CAS1]
-    K -->|No| M[SOLCAS2]
-    K -->|Yes| N{Disabled?}
+    J -->|No/Yes| L[TABLE3_CASADO_1_TITULAR]
+    K -->|No| M[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
+    K -->|Yes| N[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
     
-    N -->|No| M
-    N -->|Yes| O[CAS2D+DEF]
+    C --> O{Married?}
+    O -->|No| P{Has Dependents?}
+    O -->|Yes| Q{Number of Holders?}
     
-    C --> P[Apply disability suffix to determined situation]
+    P -->|No| R[TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF]
+    P -->|Yes| S[TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF]
+    
+    Q -->|1| T[TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF]
+    Q -->|2| U{Has Dependents?}
+    U -->|Yes| V[TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF]
+    U -->|No| W[TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF]
 ```
 
 ## Partner Disability Benefits
 
 If your spouse has a disability (but you don't), you may qualify for additional deductions:
 
-```typescript
-// Partner has disability
-simulateDependentWorker({
+<RunCode defaultCode={`// Partner has disability
+const partnerDisabled = simulateDependentWorker({
   income: 1600,
   married: true,
   numberOfHolders: 1,
   partnerDisabled: true // Additional deductions apply
 });
-```
+
+console.log('=== Partner Disability Benefits ===');
+console.log(\`Net Salary: €\${partnerDisabled.netSalary.toFixed(2)}\`);
+console.log(\`Additional Deduction: €\${partnerDisabled.bracket.var2_deduction.toFixed(2)}\`);`} />
 
 ## Dependent Disability Benefits
 
 Dependents with disabilities provide additional tax deductions:
 
-```typescript
-// Family with disabled dependents
-simulateDependentWorker({
+<RunCode defaultCode={`// Family with disabled dependents
+const familyWithDisabledDependent = simulateDependentWorker({
   income: 2000,
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 3,
   numberOfDependentsDisabled: 1 // Extra deduction for disabled dependent
 });
-```
+
+console.log('=== Dependent Disability Benefits ===');
+console.log(\`Net Salary: €\${familyWithDisabledDependent.netSalary.toFixed(2)}\`);
+console.log(\`Dependent Deduction: €\${familyWithDisabledDependent.bracket.dependent_aditional_deduction.toFixed(2)}\`);`} />
 
 ## Important Notes
 
@@ -240,21 +263,27 @@ simulateDependentWorker({
 
 The library automatically validates your input and will throw descriptive errors for invalid combinations:
 
-```typescript
-// This will throw an error
-simulateDependentWorker({
-  income: 1500,
-  married: false,
-  numberOfHolders: 2 // Invalid: single person cannot have 2 holders
-});
+<RunCode defaultCode={`// This will throw an error
+try {
+  simulateDependentWorker({
+    income: 1500,
+    married: false,
+    numberOfHolders: 2 // Invalid: single person cannot have 2 holders
+  });
+} catch (error) {
+  console.error('Error:', error.message);
+}
 
 // This will also throw an error
-simulateDependentWorker({
-  income: 1500,
-  numberOfDependents: 2,
-  numberOfDependentsDisabled: 3 // Invalid: more disabled than total dependents
-});
-```
+try {
+  simulateDependentWorker({
+    income: 1500,
+    numberOfDependents: 2,
+    numberOfDependentsDisabled: 3 // Invalid: more disabled than total dependents
+  });
+} catch (error) {
+  console.error('Error:', error.message);
+}`} />
 
 ## Tax Benefits Summary
 
@@ -262,9 +291,9 @@ Different situations provide different levels of tax benefits:
 
 | Situation | Tax Level | Benefits |
 |-----------|-----------|----------|
-| SOLCAS2 | Standard | Base tax rates |
-| SOLD | Lower | Single parent benefits |
-| CAS1 | Lower | Single income household benefits |
-| +DEF variants | Lowest | Disability tax reductions |
+| TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES | Standard | Base tax rates |
+| TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES | Lower | Single parent benefits |
+| TABLE3_CASADO_1_TITULAR | Lower | Single income household benefits |
+| TABLE4-7 (Disability variants) | Lowest | Disability tax reductions |
 
 Understanding your tax situation helps ensure you're using the correct calculation parameters and receiving all applicable benefits. 

@@ -84,26 +84,26 @@ flowchart TD
     Married -->|No| SingleDeps{Has Dependents?}
     Married -->|Yes| Holders{Number of Holders?}
     
-    SingleDeps -->|No| SOLCAS2[SOLCAS2]
-    SingleDeps -->|Yes| SOLD[SOLD]
+    SingleDeps -->|No| TABLE1[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
+    SingleDeps -->|Yes| TABLE2[TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES]
     
-    Holders -->|1| CAS1[CAS1]
+    Holders -->|1| TABLE3[TABLE3_CASADO_1_TITULAR]
     Holders -->|2| MarriedDeps{Has Dependents?}
     
-    MarriedDeps -->|No| SOLCAS2
+    MarriedDeps -->|No| TABLE1
     MarriedDeps -->|Yes| DisabledCheck{Has Disability?}
     
-    DisabledCheck -->|No| SOLCAS2
-    DisabledCheck -->|Yes| CAS2D_DEF[CAS2D+DEF]
+    DisabledCheck -->|No| TABLE1
+    DisabledCheck -->|Yes| TABLE6[TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF]
     
-    SOLCAS2 --> Disabled{Disabled?}
-    SOLD --> Disabled
-    CAS1 --> Disabled
+    TABLE1 --> Disabled{Disabled?}
+    TABLE2 --> Disabled
+    TABLE3 --> Disabled
     
     Disabled -->|No| FinalCode[Final Tax Code]
     Disabled -->|Yes| AddDEF[Add +DEF suffix]
     AddDEF --> FinalCode
-    CAS2D_DEF --> FinalCode
+    TABLE6 --> FinalCode
     
     FinalCode --> LoadTable[Load Tax Retention Table]
 ```
@@ -192,9 +192,9 @@ graph TD
     AcoresTables --> Situations
     MadeiraTables --> Situations
     
-    Situations --> SOLCAS2_Table[SOLCAS2]
-    Situations --> SOLD_Table[SOLD]
-    Situations --> CAS1_Table[CAS1]
+    Situations --> TABLE1_Table[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
+    Situations --> TABLE2_Table[TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES]
+    Situations --> TABLE3_Table[TABLE3_CASADO_1_TITULAR]
     Situations --> Disability_Tables[+DEF Variants]
 ```
 
