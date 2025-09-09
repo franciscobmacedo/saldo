@@ -174,7 +174,7 @@ class TaxRetentionTable {
         }
         
         // Assuming 'location' can be used as the region directly.
-        // The original load_from_file hardcoded "continente". 
+        // The original load_from_file hardcoded "continent". 
         // We use the 'location' parameter now, which seems more correct.
         return TaxRetentionTable.from_data(location, tableData as TaxRetentionTableJsonData);
     }

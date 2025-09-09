@@ -12,9 +12,9 @@ The library automatically determines the appropriate tax situation based on:
 
 ## Tax Situation Codes
 
-### TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES - Single or Married with Two Holders
+### TABLE1_SINGLE_OR_MARRIED_2_HOLDERS - Single or Married with Two Holders
 
-**Code**: `TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES`  
+**Code**: `TABLE1_SINGLE_OR_MARRIED_2_HOLDERS`  
 **Description**: Single without dependents OR married with two income holders
 
 **Applies to**:
@@ -49,9 +49,9 @@ console.log(\`Single - Net: €\${single.netSalary.toFixed(2)}\`);
 console.log(\`Married 2 holders - Net: €\${marriedTwoHolders.netSalary.toFixed(2)}\`);
 console.log(\`Married with kids - Net: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
 
-### TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES - Single with Dependents
+### TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS - Single with Dependents
 
-**Code**: `TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES`  
+**Code**: `TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS`  
 **Description**: Single person with one or more dependents
 
 **Applies to**:
@@ -69,9 +69,9 @@ console.log('=== TABLE2 Example ===');
 console.log(\`Single Parent - Net: €\${singleParent.netSalary.toFixed(2)}\`);
 console.log(\`Tax Benefits: €\${singleParent.bracket.deduction.toFixed(2)}\`);`} />
 
-### TABLE3_CASADO_1_TITULAR - Married, Single Holder
+### TABLE3_MARRIED_1_HOLDER - Married, Single Holder
 
-**Code**: `TABLE3_CASADO_1_TITULAR`  
+**Code**: `TABLE3_MARRIED_1_HOLDER`  
 **Description**: Married with only one income holder
 
 **Applies to**:
@@ -102,9 +102,9 @@ console.log(\`Married with Kids - Net: €\${marriedWithKids.netSalary.toFixed(2
 
 All base situations have corresponding disability variants with lower tax rates:
 
-### TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF - Single/Two Holders with Disability
+### TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY - Single/Two Holders with Disability
 
-**Code**: `TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF`  
+**Code**: `TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY`  
 **Description**: Same as TABLE1 but with disability benefits
 
 <RunCode defaultCode={`// Single person with disability
@@ -126,9 +126,9 @@ console.log('=== TABLE4 Examples ===');
 console.log(\`Single Disabled - Net: €\${singleDisabled.netSalary.toFixed(2)}\`);
 console.log(\`Married Disabled - Net: €\${marriedDisabled.netSalary.toFixed(2)}\`);`} />
 
-### TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF - Single with Dependents and Disability
+### TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Single with Dependents and Disability
 
-**Code**: `TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF`  
+**Code**: `TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY`  
 **Description**: Single with dependents and disability
 
 <RunCode defaultCode={`// Single parent with disability and children
@@ -142,9 +142,9 @@ const singleParentDisabled = simulateDependentWorker({
 console.log('=== TABLE5 Example ===');
 console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.netSalary.toFixed(2)}\`);`} />
 
-### TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF - Married Two Holders with Dependents and Disability
+### TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Married Two Holders with Dependents and Disability
 
-**Code**: `TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF`  
+**Code**: `TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY`  
 **Description**: Married with two holders, dependents, and disability
 
 <RunCode defaultCode={`// Married, both working, children, one with disability
@@ -159,9 +159,9 @@ const marriedTwoHoldersDisabled = simulateDependentWorker({
 console.log('=== TABLE6 Example ===');
 console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisabled.netSalary.toFixed(2)}\`);`} />
 
-### TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF - Married Single Holder with Disability
+### TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY - Married Single Holder with Disability
 
-**Code**: `TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF`  
+**Code**: `TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY`  
 **Description**: Married single holder with disability
 
 <RunCode defaultCode={`// Married, single income, with disability
@@ -189,27 +189,27 @@ graph TD
     E -->|No| F{Has Dependents?}
     E -->|Yes| G{Number of Holders?}
     
-    F -->|No| H[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
-    F -->|Yes| I[TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES]
+    F -->|No| H[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
+    F -->|Yes| I[TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS]
     
     G -->|1| J{Has Dependents?}
     G -->|2| K{Has Dependents?}
     
-    J -->|No/Yes| L[TABLE3_CASADO_1_TITULAR]
-    K -->|No| M[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
-    K -->|Yes| N[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
+    J -->|No/Yes| L[TABLE3_MARRIED_1_HOLDER]
+    K -->|No| M[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
+    K -->|Yes| N[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
     
     C --> O{Married?}
     O -->|No| P{Has Dependents?}
     O -->|Yes| Q{Number of Holders?}
     
-    P -->|No| R[TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF]
-    P -->|Yes| S[TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF]
+    P -->|No| R[TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY]
+    P -->|Yes| S[TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY]
     
-    Q -->|1| T[TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF]
+    Q -->|1| T[TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY]
     Q -->|2| U{Has Dependents?}
-    U -->|Yes| V[TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF]
-    U -->|No| W[TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF]
+    U -->|Yes| V[TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY]
+    U -->|No| W[TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY]
 ```
 
 ## Partner Disability Benefits
@@ -291,9 +291,9 @@ Different situations provide different levels of tax benefits:
 
 | Situation | Tax Level | Benefits |
 |-----------|-----------|----------|
-| TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES | Standard | Base tax rates |
-| TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES | Lower | Single parent benefits |
-| TABLE3_CASADO_1_TITULAR | Lower | Single income household benefits |
+| TABLE1_SINGLE_OR_MARRIED_2_HOLDERS | Standard | Base tax rates |
+| TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS | Lower | Single parent benefits |
+| TABLE3_MARRIED_1_HOLDER | Lower | Single income household benefits |
 | TABLE4-7 (Disability variants) | Lowest | Disability tax reductions |
 
 Understanding your tax situation helps ensure you're using the correct calculation parameters and receiving all applicable benefits. 

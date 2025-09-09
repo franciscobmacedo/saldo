@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const married1HolderLunchAllowanceScenarios: TestScenario[] = [
   // Married 1 holder scenarios
   {
-    name: "Married 1 holder with cupon lunch allowance at standard value in Continente",
+    name: "Married 1 holder with cupon lunch allowance at standard value in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const married1HolderLunchAllowanceScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const married1HolderLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with cupon lunch allowance above tax-free limit in Continente",
+    name: "Married 1 holder with cupon lunch allowance above tax-free limit in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const married1HolderLunchAllowanceScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,

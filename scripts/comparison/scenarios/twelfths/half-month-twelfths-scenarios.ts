@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const halfMonthTwelfthsScenarios: TestScenario[] = [
   // Single person with 0.5 month twelfths distribution scenarios
   {
-    name: "Single person with 0.5 month twelfths distribution in Continente with minimum wage",
+    name: "Single person with 0.5 month twelfths distribution in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with 0.5 month twelfths distribution in Continente with average salary",
+    name: "Single person with 0.5 month twelfths distribution in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -90,9 +90,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with 0.5 month twelfths distribution in Continente with high salary",
+    name: "Single person with 0.5 month twelfths distribution in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -119,7 +119,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -135,9 +135,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
 
   // Married 1 holder with 0.5 month twelfths distribution scenarios
   {
-    name: "Married 1 holder with 0.5 month twelfths distribution in Continente with minimum wage",
+    name: "Married 1 holder with 0.5 month twelfths distribution in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -164,7 +164,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -178,9 +178,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with 0.5 month twelfths distribution in Continente with average salary",
+    name: "Married 1 holder with 0.5 month twelfths distribution in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -207,7 +207,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -221,9 +221,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with 0.5 month twelfths distribution in Continente with high salary",
+    name: "Married 1 holder with 0.5 month twelfths distribution in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -250,7 +250,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -266,9 +266,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
 
   // Married 2 holders with 0.5 month twelfths distribution scenarios
   {
-    name: "Married 2 holders with 0.5 month twelfths distribution in Continente with minimum wage",
+    name: "Married 2 holders with 0.5 month twelfths distribution in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -295,7 +295,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -309,9 +309,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with 0.5 month twelfths distribution in Continente with average salary",
+    name: "Married 2 holders with 0.5 month twelfths distribution in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -338,7 +338,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -352,9 +352,9 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with 0.5 month twelfths distribution in Continente with high salary",
+    name: "Married 2 holders with 0.5 month twelfths distribution in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -381,7 +381,7 @@ export const halfMonthTwelfthsScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,

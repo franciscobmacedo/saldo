@@ -6,13 +6,13 @@ import { LunchAllowance } from "@/dependent-worker/lunch-allowance";
 // NO MOCKS - Testing the full integration
 describe("simulateDependentWorker - End-to-End", () => {
   describe("Real tax calculations with actual data", () => {
-    it("should calculate correctly for single person in continente with €900 income", () => {
+    it("should calculate correctly for single person in continent with €900 income", () => {
       const result = simulateDependentWorker({
         income: 900,
         married: false,
         disabled: false,
         partnerDisabled: false,
-        location: "continente",
+        location: "continent",
         numberOfHolders: 1,
         numberOfDependents: 0,
         numberOfDependentsDisabled: 0,
@@ -57,7 +57,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         numberOfDependents: 2,
         disabled: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -67,7 +67,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         income: 2000,
         married: false,
         disabled: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -83,7 +83,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         numberOfDependents: 2,
         numberOfDependentsDisabled: 1,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -94,7 +94,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         numberOfDependents: 2,
         numberOfDependentsDisabled: 0,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -114,7 +114,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: true,
         numberOfHolders: 1,
         partnerDisabled: true,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -124,7 +124,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: true,
         numberOfHolders: 1,
         partnerDisabled: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -152,14 +152,14 @@ describe("simulateDependentWorker - End-to-End", () => {
     };
 
     it("should produce different results for different regions", () => {
-      const continente = simulateDependentWorker({
+      const continent = simulateDependentWorker({
         ...baseParams,
-        location: "continente" as const,
+        location: "continent" as const,
       });
 
-      const acores = simulateDependentWorker({
+      const azores = simulateDependentWorker({
         ...baseParams,
-        location: "acores" as const,
+        location: "azores" as const,
       });
 
       const madeira = simulateDependentWorker({
@@ -168,9 +168,9 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Tax rates should be different between regions
-      expect([continente.tax, acores.tax, madeira.tax]).toHaveLength(3);
+      expect([continent.tax, azores.tax, madeira.tax]).toHaveLength(3);
       // At least one should be different
-      const uniqueTaxes = new Set([continente.tax, acores.tax, madeira.tax]);
+      const uniqueTaxes = new Set([continent.tax, azores.tax, madeira.tax]);
       expect(uniqueTaxes.size).toBeGreaterThan(1);
     });
   });
@@ -180,7 +180,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       income: 1800,
       married: false,
       disabled: false,
-      location: "continente" as const,
+      location: "continent" as const,
       dateStart: new Date(2025, 0, 1),
       dateEnd: new Date(2025, 11, 31),
     };
@@ -230,14 +230,14 @@ describe("simulateDependentWorker - End-to-End", () => {
         lunchAllowanceDailyValue: 12,
         lunchAllowanceMode: "cupon",
         lunchAllowanceDaysCount: 20,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
 
       const withDefaultLunch = simulateDependentWorker({
         income: 1200,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -255,7 +255,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       const earlyYear = simulateDependentWorker({
         income: 1500,
         married: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1), // January
         dateEnd: new Date(2024, 7, 31), // August
       });
@@ -263,7 +263,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       const lateYear = simulateDependentWorker({
         income: 1500,
         married: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 8, 1), // September
         dateEnd: new Date(2024, 9, 31), // October
       });
@@ -281,7 +281,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         income: 10000,
         married: false,
         disabled: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -298,7 +298,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         income: 500,
         married: false,
         disabled: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });
@@ -314,7 +314,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: true,
         numberOfHolders: 1,
         disabled: false,
-        location: "continente",
+        location: "continent",
         dateStart: new Date(2024, 0, 1),
         dateEnd: new Date(2024, 7, 31),
       });

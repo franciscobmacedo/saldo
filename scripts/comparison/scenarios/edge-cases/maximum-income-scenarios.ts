@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const maximumIncomeScenarios: TestScenario[] = [
   // Single person with very high income scenarios
   {
-    name: "Single person with very high income (5000€) in Continente",
+    name: "Single person with very high income (5000€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const maximumIncomeScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with income at highest tax bracket (8000€) in Continente",
+    name: "Single person with income at highest tax bracket (8000€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -91,9 +91,9 @@ export const maximumIncomeScenarios: TestScenario[] = [
   },
   // Married 1 holder with very high income scenarios
   {
-    name: "Married 1 holder with very high income (5000€) in Continente",
+    name: "Married 1 holder with very high income (5000€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -120,7 +120,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -134,9 +134,9 @@ export const maximumIncomeScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with income at highest tax bracket (8000€) in Continente",
+    name: "Married 1 holder with income at highest tax bracket (8000€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -163,7 +163,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -178,9 +178,9 @@ export const maximumIncomeScenarios: TestScenario[] = [
   },
   // Married 2 holders with very high income scenarios
   {
-    name: "Married 2 holders with very high income (5000€) in Continente",
+    name: "Married 2 holders with very high income (5000€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -207,7 +207,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -221,9 +221,9 @@ export const maximumIncomeScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with income at highest tax bracket (8000€) in Continente",
+    name: "Married 2 holders with income at highest tax bracket (8000€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -250,7 +250,7 @@ export const maximumIncomeScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,

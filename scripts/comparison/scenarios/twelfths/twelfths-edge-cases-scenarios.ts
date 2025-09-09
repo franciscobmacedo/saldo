@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const twelfthsEdgeCasesScenarios: TestScenario[] = [
   // No twelfths with high income scenarios
   {
-    name: "Single person with no twelfths distribution in Continente with very high salary",
+    name: "Single person with no twelfths distribution in Continent with very high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with no twelfths distribution in Continente with extremely high salary",
+    name: "Single person with no twelfths distribution in Continent with extremely high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -92,9 +92,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
 
   // Maximum twelfths with low income scenarios
   {
-    name: "Single person with maximum twelfths distribution in Continente with minimum wage",
+    name: "Single person with maximum twelfths distribution in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -121,7 +121,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -135,9 +135,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with maximum twelfths distribution in Continente with very low salary",
+    name: "Single person with maximum twelfths distribution in Continent with very low salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -164,7 +164,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -180,9 +180,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
 
   // Twelfths distribution with disability scenarios
   {
-    name: "Single person with disability and 2 months twelfths distribution in Continente",
+    name: "Single person with disability and 2 months twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -209,7 +209,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -223,9 +223,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and no twelfths distribution in Continente",
+    name: "Single person with disability and no twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -252,7 +252,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -266,9 +266,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with disability and 1 month twelfths distribution in Continente",
+    name: "Married 1 holder with disability and 1 month twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -295,7 +295,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -311,9 +311,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
 
   // Twelfths distribution with dependents scenarios
   {
-    name: "Single person with 1 dependent and 2 months twelfths distribution in Continente",
+    name: "Single person with 1 dependent and 2 months twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: false,
@@ -340,7 +340,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: null,
@@ -354,9 +354,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with 2 dependents and no twelfths distribution in Continente",
+    name: "Single person with 2 dependents and no twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: false,
@@ -383,7 +383,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 2,
       numberOfDependentsDisabled: null,
@@ -397,9 +397,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with 1 dependent and 1 month twelfths distribution in Continente",
+    name: "Married 2 holders with 1 dependent and 1 month twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 1,
       disability_above_60: false,
@@ -426,7 +426,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 1,
       numberOfDependentsDisabled: null,
@@ -440,9 +440,9 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with 1 dependent with disability and half month twelfths distribution in Continente",
+    name: "Single person with 1 dependent with disability and half month twelfths distribution in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: false,
@@ -469,7 +469,7 @@ export const twelfthsEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,

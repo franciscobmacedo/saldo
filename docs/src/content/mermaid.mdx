@@ -84,17 +84,17 @@ flowchart TD
     Married -->|No| SingleDeps{Has Dependents?}
     Married -->|Yes| Holders{Number of Holders?}
     
-    SingleDeps -->|No| TABLE1[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
-    SingleDeps -->|Yes| TABLE2[TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES]
+    SingleDeps -->|No| TABLE1[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
+    SingleDeps -->|Yes| TABLE2[TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS]
     
-    Holders -->|1| TABLE3[TABLE3_CASADO_1_TITULAR]
+    Holders -->|1| TABLE3[TABLE3_MARRIED_1_HOLDER]
     Holders -->|2| MarriedDeps{Has Dependents?}
     
     MarriedDeps -->|No| TABLE1
     MarriedDeps -->|Yes| DisabledCheck{Has Disability?}
     
     DisabledCheck -->|No| TABLE1
-    DisabledCheck -->|Yes| TABLE6[TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF]
+    DisabledCheck -->|Yes| TABLE6[TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY]
     
     TABLE1 --> Disabled{Disabled?}
     TABLE2 --> Disabled
@@ -180,11 +180,11 @@ graph TD
 
 ```mermaid
 graph TD
-    Portugal[Portugal] --> Continente[Continente]
-    Portugal --> Acores[Açores]
+    Portugal[Portugal] --> Continent[Continent]
+    Portugal --> Acores[Azores]
     Portugal --> Madeira[Madeira]
     
-    Continente --> ContTables[Tax Tables 2023-2024]
+    Continent --> ContTables[Tax Tables 2023-2024]
     Acores --> AcoresTables[Regional Tax Tables]
     Madeira --> MadeiraTables[Regional Tax Tables]
     
@@ -192,9 +192,9 @@ graph TD
     AcoresTables --> Situations
     MadeiraTables --> Situations
     
-    Situations --> TABLE1_Table[TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES]
-    Situations --> TABLE2_Table[TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES]
-    Situations --> TABLE3_Table[TABLE3_CASADO_1_TITULAR]
+    Situations --> TABLE1_Table[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
+    Situations --> TABLE2_Table[TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS]
+    Situations --> TABLE3_Table[TABLE3_MARRIED_1_HOLDER]
     Situations --> Disability_Tables[+DEF Variants]
 ```
 

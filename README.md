@@ -4,12 +4,12 @@ A comprehensive TypeScript library for calculating Portuguese salary taxes, soci
 
 ## 🇵🇹 About
 
-`saldo` provides accurate salary calculations based on official Portuguese tax retention tables. It supports different Portuguese locations (Continente, Açores, Madeira), various tax situations, and includes features like lunch allowances and holiday bonus distributions.
+`saldo` provides accurate salary calculations based on official Portuguese tax retention tables. It supports different Portuguese locations (Continent, Azores, Madeira), various tax situations, and includes features like lunch allowances and holiday bonus distributions.
 
 ## ✨ Features
 
 - 📊 **Accurate Tax Calculations**: Uses official Portuguese tax retention tables (2024-2025)
-- 🗺️ **Multi-location Support**: Continente, Açores, and Madeira tax tables
+- 🗺️ **Multi-location Support**: Continent, Azores, and Madeira tax tables
 - 👥 **Complex Tax Situations**: Married/single, disabled workers, dependents
 - 🍽️ **Lunch Allowances**: Supports both coupon and salary-based allowances  
 - 🎁 **Holiday Bonuses**: Handles Christmas and holiday allowance distributions
@@ -49,7 +49,7 @@ console.log(`Social Security: €${result.socialSecurity.toFixed(2)}`);
 ```typescript
 const basicResult = simulateDependentWorker({
   income: 2000,
-  location: "continente"
+  location: "continent"
 });
 ```
 
@@ -61,7 +61,7 @@ const marriedResult = simulateDependentWorker({
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 2,
-  location: "continente"
+  location: "continent"
 });
 ```
 
@@ -80,12 +80,12 @@ const disabledResult = simulateDependentWorker({
 });
 ```
 
-### Açores Location with Holiday Bonuses
+### Azores Location with Holiday Bonuses
 
 ```typescript
-const acoresResult = simulateDependentWorker({
+const azoresResult = simulateDependentWorker({
   income: 1600,
-  location: "acores",
+  location: "azores",
   twelfths: Twelfths.TWO_MONTHS, // Christmas + Holiday allowance
   dateStart: new Date(2025, 0, 1),
   dateEnd: new Date(2025, 11, 31)
@@ -104,7 +104,7 @@ const acoresResult = simulateDependentWorker({
 | `married` | `boolean` | `false` | Marital status |
 | `disabled` | `boolean` | `false` | Worker disability status |
 | `partnerDisabled` | `boolean` | `false` | Partner disability status |
-| `location` | `"continente" \| "acores" \| "madeira"` | `"continente"` | Tax location |
+| `location` | `"continent" \| "azores" \| "madeira"` | `"continent"` | Tax location |
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of disabled dependents |

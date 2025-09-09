@@ -25,8 +25,8 @@ The test suite includes **hundreds of scenarios** organized into comprehensive c
 - **Married (2 Holders)** - Dual income households
 
 ### 🌍 Regional Scenarios
-- **Continente** - Mainland Portugal scenarios
-- **Açores** - Azores-specific tax calculations
+- **Continent** - Mainland Portugal scenarios
+- **Azores** - Azores-specific tax calculations
 - **Madeira** - Madeira-specific tax calculations
 - **Regional Edge Cases** - Boundary conditions and special cases
 
@@ -102,7 +102,7 @@ The script provides:
 - **Default Meal Cards**: Voucher type, €10.20 daily value, 22 days
 - **Social Security**: 11% standard rate
 - **Salary Ranges**: €500 - €5000+ (comprehensive coverage)
-- **Regional Coverage**: Continente, Açores, Madeira
+- **Regional Coverage**: Continent, Azores, Madeira
 
 ## Known Issues
 

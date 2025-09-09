@@ -7,7 +7,7 @@ export type SituationCodesT =
   | "TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"
   | "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY"
 
-export type LocationT = "continente" | "acores" | "madeira";
+export type LocationT = "continent" | "azores" | "madeira";
 
 export interface Condition {
   married: boolean;
@@ -322,7 +322,7 @@ export class RetentionPathsSchema {
     };
 
     // Construct the identifier string matching the keys in taxTablesData
-    // e.g., "2024/continente/2024-01-01_2024-12-31/SOLD"
+    // e.g., "2024/continent/2024-01-01_2024-12-31/SOLD"
     // Note: situationCode already comes without .json
     this.identifier = `${yearStr}/${location}/${formatDate(dateStart)}_${formatDate(dateEnd)}/${situationCode}`;
   }

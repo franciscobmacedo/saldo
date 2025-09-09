@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const midYearPeriodScenarios: TestScenario[] = [
   // Single person scenarios for mid-year period (Aug-Sep 2025)
   {
-    name: "Single person in mid year period (Aug-Sep) in Continente with minimum wage",
+    name: "Single person in mid year period (Aug-Sep) in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person in mid year period (Aug-Sep) in Continente with average salary",
+    name: "Single person in mid year period (Aug-Sep) in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -90,9 +90,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person in mid year period (Aug-Sep) in Continente with high salary",
+    name: "Single person in mid year period (Aug-Sep) in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -119,7 +119,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -135,9 +135,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
 
   // Married 1 holder scenarios for mid-year period (Aug-Sep 2025)
   {
-    name: "Married 1 holder in mid year period (Aug-Sep) in Continente with minimum wage",
+    name: "Married 1 holder in mid year period (Aug-Sep) in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -164,7 +164,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -178,9 +178,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder in mid year period (Aug-Sep) in Continente with average salary",
+    name: "Married 1 holder in mid year period (Aug-Sep) in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -207,7 +207,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -221,9 +221,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder in mid year period (Aug-Sep) in Continente with high salary",
+    name: "Married 1 holder in mid year period (Aug-Sep) in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -250,7 +250,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -266,9 +266,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
 
   // Married 2 holders scenarios for mid-year period (Aug-Sep 2025)
   {
-    name: "Married 2 holders in mid year period (Aug-Sep) in Continente with minimum wage",
+    name: "Married 2 holders in mid year period (Aug-Sep) in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -295,7 +295,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -309,9 +309,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders in mid year period (Aug-Sep) in Continente with average salary",
+    name: "Married 2 holders in mid year period (Aug-Sep) in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -338,7 +338,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -352,9 +352,9 @@ export const midYearPeriodScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders in mid year period (Aug-Sep) in Continente with high salary",
+    name: "Married 2 holders in mid year period (Aug-Sep) in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -381,7 +381,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,

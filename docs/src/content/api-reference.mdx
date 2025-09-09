@@ -36,7 +36,7 @@ interface SimulateDependentWorkerOptions {
 | `married` | `boolean` | `false` | Whether the person is married |
 | `disabled` | `boolean` | `false` | Whether the person has a disability |
 | `partnerDisabled` | `boolean` | `false` | Whether the spouse has a disability |
-| `location` | `LocationT` | `'continente'` | Tax region: `'continente'`, `'acores'`, or `'madeira'` |
+| `location` | `LocationT` | `'continent'` | Tax region: `'continent'`, `'azores'`, or `'madeira'` |
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders in marriage (1 or 2) |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of dependents with disabilities |
@@ -112,7 +112,7 @@ const result = simulateDependentWorker({
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 2,
-  location: 'continente',
+  location: 'continent',
   lunchAllowanceDailyValue: 8.5,
   lunchAllowanceMode: 'cupon',
   lunchAllowanceDaysCount: 22,
@@ -129,12 +129,12 @@ console.log(\`Lunch Allowance: €\${result.lunchAllowance.monthlyValue.toFixed(
 ### `LocationT`
 
 ```typescript
-type LocationT = "continente" | "acores" | "madeira";
+type LocationT = "continent" | "azores" | "madeira";
 ```
 
 Represents the three Portuguese tax regions:
-- `continente`: Mainland Portugal
-- `acores`: Azores region
+- `continent`: Mainland Portugal
+- `azores`: Azores region
 - `madeira`: Madeira region
 
 ### `Twelfths`
@@ -185,13 +185,13 @@ class LunchAllowance {
 
 ```typescript
 type SituationCodesT =
-  | "TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES"      // Single or married with 2 holders
-  | "TABLE2_SOLTEIRO_UM_OU_MAIS_DEPENDENTES"     // Single with dependents
-  | "TABLE3_CASADO_1_TITULAR"                    // Married, single holder
-  | "TABLE4_SOLTEIRO_OU_CASADO_2_TITULARES_SEM_DEPENDENTES_PESSOA_COM_DEF"  // Single or married 2 holders + disability
-  | "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"     // Single with dependents + disability
-  | "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF"    // Married 2 holders with dependents + disability
-  | "TABLE7_CASADO_1_TITULAR_PESSOA_COM_DEF";    // Married single holder + disability
+  | "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"      // Single or married with 2 holders
+  | "TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS"     // Single with dependents
+  | "TABLE3_MARRIED_1_HOLDER"                    // Married, single holder
+  | "TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY"  // Single or married 2 holders + disability
+  | "TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"     // Single with dependents + disability
+  | "TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"    // Married 2 holders with dependents + disability
+  | "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY";    // Married single holder + disability
 ```
 
 Tax table codes used internally by the library to determine the appropriate tax bracket.
@@ -297,7 +297,7 @@ class RetentionPathsSchema {
 }
 ```
 
-This class constructs identifiers in the format: `"2025/continente/2025-01-01_2025-12-31/TABLE1_SOLTEIRO_OU_CASADO_2_TITULARES"`
+This class constructs identifiers in the format: `"2025/continent/2025-01-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`
 
 ## Validation Functions
 
@@ -331,7 +331,7 @@ try {
 try {
   simulateDependentWorker({
     income: 999999, // Extremely high income
-    location: 'continente'
+    location: 'continent'
   });
 } catch (error) {
   console.error('Error:', error.message); // "No bracket found for salary..."
@@ -347,7 +347,7 @@ The library supports calculations for specific time periods:
   income: 1500,
   dateStart: new Date(2024, 0, 1),  // January 1, 2024
   dateEnd: new Date(2024, 11, 31),  // December 31, 2024
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Date Range Calculation ===');
@@ -359,7 +359,7 @@ console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
 <RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
   socialSecurityTaxRate: 0.11, // 11% (default)
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Custom Social Security Rate ===');
@@ -374,7 +374,7 @@ The library handles various disability scenarios:
 const workerDisability = simulateDependentWorker({
   income: 1500,
   disabled: true,
-  location: 'continente'
+  location: 'continent'
 });
 
 // Partner with disability (extra deduction)
@@ -383,7 +383,7 @@ const partnerDisability = simulateDependentWorker({
   married: true,
   numberOfHolders: 1,
   partnerDisabled: true, // €135.71 extra deduction
-  location: 'continente'
+  location: 'continent'
 });
 
 // Dependent with disability (extra deduction per dependent)
@@ -391,7 +391,7 @@ const dependentDisability = simulateDependentWorker({
   income: 1500,
   numberOfDependents: 2,
   numberOfDependentsDisabled: 1,
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Disability Benefits Comparison ===');

@@ -1,13 +1,13 @@
 import { Twelfths } from "../../../../src/dependent-worker/schemas";
 import { TestScenario } from "../../types";
 
-// Single person in Açores with disability and dependents scenarios
-export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
+// Single person in Azores with disability and dependents scenarios
+export const azoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
   // Single person with disability and 1 dependent scenarios
   {
-    name: "Single person with disability and 1 dependent in Açores with minimum wage",
+    name: "Single person with disability and 1 dependent in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -34,7 +34,7 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: null,
@@ -48,9 +48,9 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 1 dependent in Açores with average salary",
+    name: "Single person with disability and 1 dependent in Azores with average salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -77,7 +77,7 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: null,
@@ -91,9 +91,9 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 1 dependent in Açores with high salary",
+    name: "Single person with disability and 1 dependent in Azores with high salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -120,7 +120,7 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: null,
@@ -136,9 +136,9 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
 
   // Single person with disability and 1 disabled dependent scenarios
   {
-    name: "Single person with disability and 1 disabled dependent in Açores with minimum wage",
+    name: "Single person with disability and 1 disabled dependent in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -165,7 +165,7 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,
@@ -179,9 +179,9 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 1 disabled dependent in Açores with average salary",
+    name: "Single person with disability and 1 disabled dependent in Azores with average salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -208,7 +208,7 @@ export const acoresSinglePersonDisabilityDependentsScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,
@@ -445,13 +445,13 @@ export const madeiraSinglePersonDisabilityDependentsScenarios: TestScenario[] = 
   },
 ];
 
-// Married scenarios in Açores with various disability combinations
-export const acoresMarriedDisabilityScenarios: TestScenario[] = [
+// Married scenarios in Azores with various disability combinations
+export const azoresMarriedDisabilityScenarios: TestScenario[] = [
   // Married 1 holder with disability scenarios
   {
-    name: "Married 1 holder with disability in Açores with minimum wage",
+    name: "Married 1 holder with disability in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -478,7 +478,7 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -492,9 +492,9 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with disability in Açores with average salary",
+    name: "Married 1 holder with disability in Azores with average salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -521,7 +521,7 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -535,9 +535,9 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with disability in Açores with high salary",
+    name: "Married 1 holder with disability in Azores with high salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -564,7 +564,7 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -580,9 +580,9 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
 
   // Married 2 holders with disability scenarios
   {
-    name: "Married 2 holders with disability in Açores with minimum wage",
+    name: "Married 2 holders with disability in Azores with minimum wage",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -609,7 +609,7 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "acores",
+      location: "azores",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -623,9 +623,9 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with disability in Açores with average salary",
+    name: "Married 2 holders with disability in Azores with average salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -652,7 +652,7 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "acores",
+      location: "azores",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -666,9 +666,9 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with disability in Açores with high salary",
+    name: "Married 2 holders with disability in Azores with high salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: true,
@@ -695,7 +695,7 @@ export const acoresMarriedDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "acores",
+      location: "azores",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -979,9 +979,9 @@ export const madeiraMarriedDisabilityScenarios: TestScenario[] = [
 export const regionalEdgeCasesFailingScenarios: TestScenario[] = [
   // Failing - using the wrong table when person is disabled and has kids that are disabled
   {
-    name: "Single person with disability and 1 disabled dependent in Açores with high salary",
+    name: "Single person with disability and 1 disabled dependent in Azores with high salary",
     doutorFinancasRequest: {
-      location: "acores",
+      location: "azores",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -1008,7 +1008,7 @@ export const regionalEdgeCasesFailingScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "acores",
+      location: "azores",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,

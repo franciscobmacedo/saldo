@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
   // Cupon Mode Edge Cases - Single Person
   {
-    name: "Single person with cupon lunch allowance exactly at tax-free limit (10.20€) in Continente",
+    name: "Single person with cupon lunch allowance exactly at tax-free limit (10.20€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance just above tax-free limit (10.21€) in Continente",
+    name: "Single person with cupon lunch allowance just above tax-free limit (10.21€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -90,9 +90,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with zero cupon lunch allowance in Continente",
+    name: "Single person with zero cupon lunch allowance in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -119,7 +119,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -133,9 +133,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance at maximum working days (31 days) in Continente",
+    name: "Single person with cupon lunch allowance at maximum working days (31 days) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -162,7 +162,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -178,9 +178,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
 
   // Salary Mode Edge Cases - Single Person
   {
-    name: "Single person with salary lunch allowance exactly at tax-free limit (6€) in Continente",
+    name: "Single person with salary lunch allowance exactly at tax-free limit (6€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -207,7 +207,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -221,9 +221,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with salary lunch allowance just above tax-free limit (6.01€) in Continente",
+    name: "Single person with salary lunch allowance just above tax-free limit (6.01€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -250,7 +250,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -264,9 +264,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with zero salary lunch allowance in Continente",
+    name: "Single person with zero salary lunch allowance in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -293,7 +293,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -307,9 +307,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with salary lunch allowance at maximum working days (31 days) in Continente",
+    name: "Single person with salary lunch allowance at maximum working days (31 days) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -336,7 +336,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -352,9 +352,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
 
   // Married 1 holder scenarios - Cupon Mode Edge Cases
   {
-    name: "Married 1 holder with cupon lunch allowance exactly at tax-free limit (10.20€) in Continente",
+    name: "Married 1 holder with cupon lunch allowance exactly at tax-free limit (10.20€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -381,7 +381,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -395,9 +395,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with cupon lunch allowance just above tax-free limit (10.21€) in Continente",
+    name: "Married 1 holder with cupon lunch allowance just above tax-free limit (10.21€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -424,7 +424,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -440,9 +440,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
 
   // Married 1 holder scenarios - Salary Mode Edge Cases
   {
-    name: "Married 1 holder with salary lunch allowance exactly at tax-free limit (6€) in Continente",
+    name: "Married 1 holder with salary lunch allowance exactly at tax-free limit (6€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -469,7 +469,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -483,9 +483,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with salary lunch allowance just above tax-free limit (6.01€) in Continente",
+    name: "Married 1 holder with salary lunch allowance just above tax-free limit (6.01€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -512,7 +512,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -528,9 +528,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
 
   // Married 2 holders scenarios - Cupon Mode Edge Cases
   {
-    name: "Married 2 holders with cupon lunch allowance exactly at tax-free limit (10.20€) in Continente",
+    name: "Married 2 holders with cupon lunch allowance exactly at tax-free limit (10.20€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -557,7 +557,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -571,9 +571,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with cupon lunch allowance just above tax-free limit (10.21€) in Continente",
+    name: "Married 2 holders with cupon lunch allowance just above tax-free limit (10.21€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -600,7 +600,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -616,9 +616,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
 
   // Married 2 holders scenarios - Salary Mode Edge Cases
   {
-    name: "Married 2 holders with salary lunch allowance exactly at tax-free limit (6€) in Continente",
+    name: "Married 2 holders with salary lunch allowance exactly at tax-free limit (6€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -645,7 +645,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -659,9 +659,9 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 2 holders with salary lunch allowance just above tax-free limit (6.01€) in Continente",
+    name: "Married 2 holders with salary lunch allowance just above tax-free limit (6.01€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -688,7 +688,7 @@ export const lunchAllowanceEdgeCasesScenarios: TestScenario[] = [
       married: true,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,

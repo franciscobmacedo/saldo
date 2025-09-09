@@ -8,7 +8,7 @@ Real-world examples showing how to use Saldo for different scenarios.
 
 <RunCode defaultCode={`const minimumWageWorker = simulateDependentWorker({
   income: 760, // Portuguese minimum wage 2024
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Minimum Wage Worker ===');
@@ -22,7 +22,7 @@ console.log(\`Yearly Net: €\${minimumWageWorker.yearlyNetSalary.toFixed(2)}\`)
 
 <RunCode defaultCode={`const averageWorker = simulateDependentWorker({
   income: 1200,
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Average Worker ===');
@@ -38,7 +38,7 @@ console.log(\`Effective Tax Rate: \${(averageWorker.tax / averageWorker.taxableI
   income: 1500,
   married: false,
   numberOfDependents: 2,
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Single Parent (2 children) ===');
@@ -47,7 +47,7 @@ console.log(\`Monthly Net: €\${singleParent.netSalary.toFixed(2)}\`);
 // Compare with same income but no dependents
 const noDependents = simulateDependentWorker({ 
   income: 1500, 
-  location: 'continente' 
+  location: 'continent' 
 });
 
 console.log(\`Tax Savings from dependents: €\${(noDependents.tax - singleParent.tax).toFixed(2)}\`);`} />
@@ -59,7 +59,7 @@ console.log(\`Tax Savings from dependents: €\${(noDependents.tax - singleParen
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 1,
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Married Single Income ===');
@@ -74,7 +74,7 @@ const spouse1 = simulateDependentWorker({
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 1, // One child shared
-  location: 'continente'
+  location: 'continent'
 });
 
 // Spouse 2
@@ -83,7 +83,7 @@ const spouse2 = simulateDependentWorker({
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 0, // Child already counted in spouse1
-  location: 'continente'
+  location: 'continent'
 });
 
 const totalHouseholdNet = spouse1.netSalary + spouse2.netSalary;
@@ -98,14 +98,14 @@ console.log(\`Total Household Net: €\${totalHouseholdNet.toFixed(2)}\`);`} />
 
 <RunCode defaultCode={`const income = 1500;
 
-const continente = simulateDependentWorker({
+const continent = simulateDependentWorker({
   income,
-  location: 'continente'
+  location: 'continent'
 });
 
-const acores = simulateDependentWorker({
+const azores = simulateDependentWorker({
   income,
-  location: 'acores'
+  location: 'azores'
 });
 
 const madeira = simulateDependentWorker({
@@ -114,8 +114,8 @@ const madeira = simulateDependentWorker({
 });
 
 console.log('=== Regional Comparison ===');
-console.log(\`Continente Net: €\${continente.netSalary.toFixed(2)}\`);
-console.log(\`Açores Net: €\${acores.netSalary.toFixed(2)}\`);
+console.log(\`Continent Net: €\${continent.netSalary.toFixed(2)}\`);
+console.log(\`Azores Net: €\${azores.netSalary.toFixed(2)}\`);
 console.log(\`Madeira Net: €\${madeira.netSalary.toFixed(2)}\`);`} />
 
 ## Disability Benefits
@@ -125,13 +125,13 @@ console.log(\`Madeira Net: €\${madeira.netSalary.toFixed(2)}\`);`} />
 <RunCode defaultCode={`const workerWithDisability = simulateDependentWorker({
   income: 1300,
   disabled: true,
-  location: 'continente'
+  location: 'continent'
 });
 
 const workerWithoutDisability = simulateDependentWorker({
   income: 1300,
   disabled: false,
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Disability Benefits ===');
@@ -207,7 +207,7 @@ console.log(\`Yearly Net (Two Months): €\${twoTwelfths.yearlyNetSalary.toFixed
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 2,
-  location: 'continente',
+  location: 'continent',
   lunchAllowanceDailyValue: 12,
   lunchAllowanceMode: 'cupon',
   lunchAllowanceDaysCount: 22
@@ -231,7 +231,7 @@ console.log(\`Yearly Net: €\${executive.yearlyNetSalary.toFixed(2)}\`);`} />
   numberOfDependents: 2,
   numberOfDependentsDisabled: 1,
   partnerDisabled: false,
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Family with Disabled Child ===');
@@ -247,7 +247,7 @@ const earlyYear = simulateDependentWorker({
   income: 1800,
   dateStart: new Date(2024, 0, 1), // January 1
   dateEnd: new Date(2024, 5, 30),  // June 30
-  location: 'continente'
+  location: 'continent'
 });
 
 // Late year rates  
@@ -255,7 +255,7 @@ const lateYear = simulateDependentWorker({
   income: 1800,
   dateStart: new Date(2024, 6, 1),  // July 1
   dateEnd: new Date(2024, 11, 31), // December 31
-  location: 'continente'
+  location: 'continent'
 });
 
 console.log('=== Tax Year Comparison ===');

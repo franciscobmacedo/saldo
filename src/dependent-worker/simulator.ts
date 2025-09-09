@@ -26,7 +26,7 @@ export function simulateDependentWorker({
   married = false,
   disabled = false,
   partnerDisabled = false,
-  location = "continente",
+  location = "continent",
   numberOfHolders = null,
   numberOfDependents = null,
   numberOfDependentsDisabled = null,

@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
   // Single person with disability and 1 disabled dependent scenarios
   {
-    name: "Single person with disability and 1 disabled dependent in Continente with minimum wage",
+    name: "Single person with disability and 1 disabled dependent in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -33,7 +33,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,
@@ -47,9 +47,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 1 disabled dependent in Continente with average salary",
+    name: "Single person with disability and 1 disabled dependent in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -76,7 +76,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,
@@ -92,9 +92,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
 
   // Single person with disability and 2 dependents where 1 is disabled scenarios
   {
-    name: "Single person with disability and 2 dependents where 1 is disabled in Continente with minimum wage",
+    name: "Single person with disability and 2 dependents where 1 is disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -121,7 +121,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 1,
@@ -135,9 +135,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 2 dependents where 1 is disabled in Continente with average salary",
+    name: "Single person with disability and 2 dependents where 1 is disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -164,7 +164,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 1,
@@ -181,9 +181,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
 
   // Single person with disability and 2 dependents where both are disabled scenarios
   {
-    name: "Single person with disability and 2 dependents where both are disabled in Continente with minimum wage",
+    name: "Single person with disability and 2 dependents where both are disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -210,7 +210,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,
@@ -224,9 +224,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 2 dependents where both are disabled in Continente with average salary",
+    name: "Single person with disability and 2 dependents where both are disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -253,7 +253,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,
@@ -269,9 +269,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
 
   // Single person with disability and 3+ dependents where 1 is disabled scenarios
   {
-    name: "Single person with disability and 3+ dependents where 1 is disabled in Continente with minimum wage",
+    name: "Single person with disability and 3+ dependents where 1 is disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -298,7 +298,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 1,
@@ -312,9 +312,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 3+ dependents where 1 is disabled in Continente with average salary",
+    name: "Single person with disability and 3+ dependents where 1 is disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -341,7 +341,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 1,
@@ -358,9 +358,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
 
   // Single person with disability and 3+ dependents where 2 are disabled scenarios
   {
-    name: "Single person with disability and 3+ dependents where 2 are disabled in Continente with minimum wage",
+    name: "Single person with disability and 3+ dependents where 2 are disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -387,7 +387,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 2,
@@ -401,9 +401,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 3+ dependents where 2 are disabled in Continente with average salary",
+    name: "Single person with disability and 3+ dependents where 2 are disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -430,7 +430,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 2,
@@ -447,9 +447,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
 
   // Single person with disability and 3+ dependents where all are disabled scenarios
   {
-    name: "Single person with disability and 3+ dependents where all are disabled in Continente with minimum wage",
+    name: "Single person with disability and 3+ dependents where all are disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -476,7 +476,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 3,
@@ -490,9 +490,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with disability and 3+ dependents where all are disabled in Continente with average salary",
+    name: "Single person with disability and 3+ dependents where all are disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -519,7 +519,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: false,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 3,
@@ -536,9 +536,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
 
   // Married 1 holder with disability and 1 disabled dependent scenarios
   {
-    name: "Married 1 holder with disability and 1 disabled dependent in Continente with minimum wage",
+    name: "Married 1 holder with disability and 1 disabled dependent in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -565,7 +565,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,
@@ -579,9 +579,9 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Married 1 holder with disability and 1 disabled dependent in Continente with average salary",
+    name: "Married 1 holder with disability and 1 disabled dependent in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 1,
       disability_above_60: true,
@@ -608,7 +608,7 @@ export const personDisabilityDependentsDisabilityScenarios: TestScenario[] = [
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 1,
       numberOfDependentsDisabled: 1,

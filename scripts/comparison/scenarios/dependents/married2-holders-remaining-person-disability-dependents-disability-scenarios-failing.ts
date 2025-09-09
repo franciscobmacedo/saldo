@@ -5,9 +5,9 @@ import { TestScenario } from "../../types";
 export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenariosFAILING: TestScenario[] = [
   // Married 2 holders with disability and 2 dependents where 1 is disabled scenarios
   {
-    name: "Married 2 holders with disability and 2 dependents where 1 is disabled in Continente with high salary",
+    name: "Married 2 holders with disability and 2 dependents where 1 is disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -34,7 +34,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 1,
@@ -50,9 +50,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
 
   // Married 2 holders with disability and 2 dependents where both are disabled scenarios
   {
-    name: "Married 2 holders with disability and 2 dependents where both are disabled in Continente with high salary",
+    name: "Married 2 holders with disability and 2 dependents where both are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -79,7 +79,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,
@@ -95,9 +95,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
 
   // Married 2 holders with disability and 3+ dependents where 1 is disabled scenarios
   {
-    name: "Married 2 holders with disability and 3+ dependents where 1 is disabled in Continente with high salary",
+    name: "Married 2 holders with disability and 3+ dependents where 1 is disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -124,7 +124,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 1,
@@ -140,9 +140,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
 
   // Married 2 holders with disability and 3+ dependents where 2 are disabled scenarios
   {
-    name: "Married 2 holders with disability and 3+ dependents where 2 are disabled in Continente with high salary",
+    name: "Married 2 holders with disability and 3+ dependents where 2 are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -169,7 +169,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 2,
@@ -185,9 +185,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
 
   // Married 2 holders with disability and 3+ dependents where all are disabled scenarios
   {
-    name: "Married 2 holders with disability and 3+ dependents where all are disabled in Continente with high salary",
+    name: "Married 2 holders with disability and 3+ dependents where all are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -214,7 +214,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 3,
@@ -228,9 +228,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
     },
   },
   {
-    name: "Married 2 holders with disability and 2 dependents where 1 is disabled in Continente with average salary",
+    name: "Married 2 holders with disability and 2 dependents where 1 is disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -257,7 +257,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 1,
@@ -271,9 +271,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
     },
   },
   {
-    name: "Married 2 holders with disability and 2 dependents where both are disabled in Continente with average salary",
+    name: "Married 2 holders with disability and 2 dependents where both are disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -300,7 +300,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,
@@ -314,9 +314,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
     },
   },
   {
-    name: "Married 2 holders with disability and 3+ dependents where 1 is disabled in Continente with average salary",
+    name: "Married 2 holders with disability and 3+ dependents where 1 is disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -343,7 +343,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 1,
@@ -357,9 +357,9 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
     },
   },
   {
-    name: "Married 2 holders with disability and 3+ dependents where 2 are disabled in Continente with average salary",
+    name: "Married 2 holders with disability and 3+ dependents where 2 are disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS2",
       number_of_dependents: 3,
       disability_above_60: true,
@@ -386,7 +386,7 @@ export const married2HoldersRemainingPersonDisabilityDependentsDisabilityScenari
       married: true,
       disabled: true,
       partnerDisabled: true,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 2,
       numberOfDependents: 3,
       numberOfDependentsDisabled: 2,

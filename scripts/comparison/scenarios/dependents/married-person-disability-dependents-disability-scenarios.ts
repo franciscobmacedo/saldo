@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[] = [
   // Married 1 holder with disability and 2 dependents where 1 is disabled scenarios
   {
-    name: "Married 1 holder with disability and 2 dependents where 1 is disabled in Continente with minimum wage",
+    name: "Married 1 holder with disability and 2 dependents where 1 is disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -33,7 +33,7 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 1,
@@ -47,9 +47,9 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
     },
   },
   {
-    name: "Married 1 holder with disability and 2 dependents where 1 is disabled in Continente with average salary",
+    name: "Married 1 holder with disability and 2 dependents where 1 is disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -76,7 +76,7 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 1,
@@ -93,9 +93,9 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
 
   // Married 1 holder with disability and 2 dependents where both are disabled scenarios
   {
-    name: "Married 1 holder with disability and 2 dependents where both are disabled in Continente with minimum wage",
+    name: "Married 1 holder with disability and 2 dependents where both are disabled in Continent with minimum wage",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -122,7 +122,7 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,
@@ -136,9 +136,9 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
     },
   },
   {
-    name: "Married 1 holder with disability and 2 dependents where both are disabled in Continente with average salary",
+    name: "Married 1 holder with disability and 2 dependents where both are disabled in Continent with average salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -165,7 +165,7 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,
@@ -179,9 +179,9 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
     },
   },
   {
-    name: "Married 1 holder with disability and 2 dependents where both are disabled in Continente with high salary",
+    name: "Married 1 holder with disability and 2 dependents where both are disabled in Continent with high salary",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "CAS1",
       number_of_dependents: 2,
       disability_above_60: true,
@@ -208,7 +208,7 @@ export const marriedPersonDisabilityDependentsDisabilityScenarios: TestScenario[
       married: true,
       disabled: true,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: 1,
       numberOfDependents: 2,
       numberOfDependentsDisabled: 2,

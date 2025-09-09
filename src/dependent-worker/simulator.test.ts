@@ -124,12 +124,12 @@ describe("simulateDependentWorker", () => {
     expect(result.taxableIncome).toBe(incomeVal + 44);
   });
 
-  it("should calculate for 'acores' location and no twelfths", () => {
+  it("should calculate for 'azores' location and no twelfths", () => {
     const incomeVal = 2500;
 
     const result = simulateDependentWorker({
       income: incomeVal,
-      location: "acores",
+      location: "azores",
       twelfths: Twelfths.NONE,
     });
     expect(result).toBeDefined();

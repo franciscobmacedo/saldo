@@ -6,14 +6,14 @@ import { married1HolderScenarios } from "./marital-status/married-1-holder-scena
 import { married2HoldersScenarios } from "./marital-status/married-2-holders-scenarios";
 
 // Regional Scenarios
-import { acoresSinglePersonScenarios } from "./regional/acores-single-person-scenarios";
-import { acoresMarriedScenarios } from "./regional/acores-married-scenarios";
+import { azoresSinglePersonScenarios } from "./regional/azores-single-person-scenarios";
+import { azoresMarriedScenarios } from "./regional/azores-married-scenarios";
 import { madeiraSinglePersonScenarios } from "./regional/madeira-single-person-scenarios";
 import { madeiraMarriedScenarios } from "./regional/madeira-married-scenarios";
 import {
-    acoresSinglePersonDisabilityDependentsScenarios,
+    azoresSinglePersonDisabilityDependentsScenarios,
     madeiraSinglePersonDisabilityDependentsScenarios,
-    acoresMarriedDisabilityScenarios,
+    azoresMarriedDisabilityScenarios,
     madeiraMarriedDisabilityScenarios,
     regionalEdgeCasesFailingScenarios,
 } from "./regional/regional-edge-cases-scenarios";
@@ -70,13 +70,13 @@ export const testScenarios: TestScenario[] = [
     ...married2HoldersScenarios, // ✅
     
     // // Regional Scenarios
-    ...acoresSinglePersonScenarios, // ✅
-    ...acoresMarriedScenarios, // ✅
+    ...azoresSinglePersonScenarios, // ✅
+    ...azoresMarriedScenarios, // ✅
     ...madeiraSinglePersonScenarios, // ✅
     ...madeiraMarriedScenarios, // ✅
-    ...acoresSinglePersonDisabilityDependentsScenarios, // ✅ Single person in Açores with disability and dependents
+    ...azoresSinglePersonDisabilityDependentsScenarios, // ✅ Single person in Azores with disability and dependents
     ...madeiraSinglePersonDisabilityDependentsScenarios, // ✅ Single person in Madeira with disability and dependents
-    ...acoresMarriedDisabilityScenarios, // ✅ Married scenarios in Açores with various disability combinations
+    ...azoresMarriedDisabilityScenarios, // ✅ Married scenarios in Azores with various disability combinations
     ...madeiraMarriedDisabilityScenarios, // ✅ Married scenarios in Madeira with various disability combinations
     
     // // Disability Scenarios

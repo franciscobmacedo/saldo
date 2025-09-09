@@ -4,9 +4,9 @@ import { TestScenario } from "../../types";
 export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
   // Cupon Mode Scenarios - Single Person
   {
-    name: "Single person with cupon lunch allowance at minimum daily value (0€) in Continente",
+    name: "Single person with cupon lunch allowance at minimum daily value (0€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -33,7 +33,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -47,9 +47,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance at standard daily value (10.20€) in Continente",
+    name: "Single person with cupon lunch allowance at standard daily value (10.20€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -76,7 +76,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -90,9 +90,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance at maximum tax-free value (10.20€) in Continente",
+    name: "Single person with cupon lunch allowance at maximum tax-free value (10.20€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -119,7 +119,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -133,9 +133,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance above tax-free limit (15€) in Continente",
+    name: "Single person with cupon lunch allowance above tax-free limit (15€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -162,7 +162,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -176,9 +176,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance at high value (20€) in Continente",
+    name: "Single person with cupon lunch allowance at high value (20€) in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -205,7 +205,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -219,9 +219,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance for 20 working days in Continente",
+    name: "Single person with cupon lunch allowance for 20 working days in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -248,7 +248,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -262,9 +262,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance for 22 working days in Continente",
+    name: "Single person with cupon lunch allowance for 22 working days in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -291,7 +291,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
@@ -305,9 +305,9 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
     },
   },
   {
-    name: "Single person with cupon lunch allowance for 25 working days in Continente",
+    name: "Single person with cupon lunch allowance for 25 working days in Continent",
     doutorFinancasRequest: {
-      location: "continente",
+      location: "continent",
       marital_status: "SOL",
       number_of_dependents: 0,
       disability_above_60: false,
@@ -334,7 +334,7 @@ export const singlePersonLunchAllowanceScenarios: TestScenario[] = [
       married: false,
       disabled: false,
       partnerDisabled: false,
-      location: "continente",
+      location: "continent",
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
