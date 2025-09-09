@@ -2,7 +2,7 @@
   "situation": "TABLE6_CASADO_2_TITULARES_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
   "title": "Table VI",
   "table": "Table VI",
-  "description": "Trabalho dependente, Casado dois titulares, com um dependente - Deficiente",
+  "description": "Trabalho dependente, Casado dois titulares, com um ou mais dependentes - Deficiente",
   "brackets": [
     {
       "signal": "max",
@@ -95,5 +95,5 @@
       "effective_mensal_rate": -1
     }
   ],
-  "dependent_disabled_addition_deduction": 21.43
+  "dependent_disabled_addition_deduction": 42.86
 }

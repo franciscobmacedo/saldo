@@ -2,7 +2,7 @@
   "situation": "TABLE5_SOLTEIRO_UM_OU_MAIS_DEPENDENTES_PESSOA_COM_DEF",
   "title": "Table V",
   "table": "Table V",
-  "description": "Trabalho dependente, Não casado, com um dependente - Deficiente",
+  "description": "Trabalho dependente, Não casado, com um ou mais dependentes - Deficiente",
   "brackets": [
     {
       "signal": "max",
