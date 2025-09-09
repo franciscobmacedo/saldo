@@ -113,13 +113,14 @@ Represents the three Portuguese tax regions:
 
 ```typescript
 enum Twelfths {
-  NONE = 0,        // No holiday allowances
-  ONE_MONTH = 1,   // Either Christmas OR holiday allowance
-  TWO_MONTHS = 2   // Both Christmas AND holiday allowance
+  NONE = 0,           // No holiday allowances
+  ONE_HALF_MONTH = 0.5, // 1x50% - One allowance at 50% (half month)
+  ONE_MONTH = 1,       // 2x50% - Two allowances at 50% each (one month total)
+  TWO_MONTHS = 2       // 2x100% - Two allowances at 100% each (two months total)
 }
 ```
 
-Represents how holiday allowances (13th and 14th month) are distributed throughout the year.
+Represents how holiday allowances (13th and 14th month) are distributed throughout the year, matching Doutor Finanças options.
 
 ### `LunchAllowance`
 
