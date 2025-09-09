@@ -1,25 +1,19 @@
 import nextra from 'nextra'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+ 
+// Set up Nextra with its configuration
 const withNextra = nextra({
-  latex: true,
-  search: {
-    codeblocks: false
-  },
-  contentDirBasePath: '/docs'
+  // ... Add Nextra-specific options here
 })
-
+ 
+// Export the final Next.js config with Nextra included
 export default withNextra({
-  reactStrictMode: true,
-  webpack: (config, { isServer }) => {
-    // Handle TypeScript files from local packages
-    config.resolve.extensions.push('.ts', '.tsx')
-    
-    // Add the parent src directory to the resolve paths
-    if (process.env.NODE_ENV === 'development') {
-      config.resolve.modules.push('../src/')
-    }
-    
-    return config
-  },
-  ...(process.env.NODE_ENV === 'development' && { transpilePackages: ['saldo'] })
+  // Set the correct root directory for Turbopack
+  turbopack: {
+    root: __dirname
+  }
 })

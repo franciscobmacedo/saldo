@@ -1,10 +1,13 @@
-import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
-import RunCode from './src/components/RunCode'
+import { useMDXComponents as getThemeComponents } from 'nextra-theme-docs' // nextra-theme-blog or your custom theme
+import RunCode from '@/components/RunCode'
+// Get the default MDX components
+const themeComponents = getThemeComponents()
 
-const docsComponents = getDocsMDXComponents()
-
-export const useMDXComponents = components => ({
-  ...docsComponents,
-  RunCode,
-  ...components
-})
+// Merge components
+export function useMDXComponents(components) {
+    return {
+        ...themeComponents,
+        ...components,
+        RunCode
+    }
+}

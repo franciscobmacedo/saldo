@@ -17,7 +17,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 0,
         numberOfDependentsDisabled: 0,
         dateStart: new Date(2025, 0, 1), // JS months are 0-indexed
-        dateEnd: new Date(2025, 11, 31), // JS months are 0-indexed
+        dateEnd: new Date(2025, 6, 31), // JS months are 0-indexed - July 31st
         socialSecurityTaxRate: 0.11,
         twelfths: Twelfths.NONE,
         lunchAllowanceDailyValue: 10.2,
@@ -58,8 +58,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 2,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       // Tax should be lower due to dependents
@@ -68,8 +68,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: false,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       expect(result.tax).toBeLessThan(singleResult.tax);
@@ -84,8 +84,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 2,
         numberOfDependentsDisabled: 1,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       const withoutDisabledDependent = simulateDependentWorker({
@@ -95,8 +95,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 2,
         numberOfDependentsDisabled: 0,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       // Should have lower tax due to disabled dependent deduction
@@ -115,8 +115,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         partnerDisabled: true,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       const withoutDisabledPartner = simulateDependentWorker({
@@ -125,8 +125,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         partnerDisabled: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       // Should have lower tax due to partner disability deduction (€135.71)
@@ -147,8 +147,8 @@ describe("simulateDependentWorker - End-to-End", () => {
       income: 1500,
       married: false,
       disabled: false,
-      dateStart: new Date(2024, 0, 1),
-      dateEnd: new Date(2024, 7, 31),
+      dateStart: new Date(2025, 0, 1),
+      dateEnd: new Date(2025, 6, 31),
     };
 
     it("should produce different results for different regions", () => {
@@ -182,7 +182,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       disabled: false,
       location: "continent" as const,
       dateStart: new Date(2025, 0, 1),
-      dateEnd: new Date(2025, 11, 31),
+        dateEnd: new Date(2025, 6, 31), // July 31st
     };
 
     it("should show different tax burden based on twelfths", () => {
@@ -231,15 +231,15 @@ describe("simulateDependentWorker - End-to-End", () => {
         lunchAllowanceMode: "cupon",
         lunchAllowanceDaysCount: 20,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       const withDefaultLunch = simulateDependentWorker({
         income: 1200,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       expect(withCustomLunch.lunchAllowance.dailyValue).toBe(12);
@@ -256,16 +256,16 @@ describe("simulateDependentWorker - End-to-End", () => {
         income: 1500,
         married: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1), // January
-        dateEnd: new Date(2024, 7, 31), // August
+        dateStart: new Date(2025, 0, 1), // January
+        dateEnd: new Date(2025, 6, 31), // July
       });
 
       const lateYear = simulateDependentWorker({
         income: 1500,
         married: false,
         location: "continent",
-        dateStart: new Date(2024, 8, 1), // September
-        dateEnd: new Date(2024, 9, 31), // October
+        dateStart: new Date(2025, 7, 1), // August
+        dateEnd: new Date(2025, 8, 30), // September
       });
 
       // Tax calculations might differ due to different table periods
@@ -282,8 +282,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: false,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       // Should be in highest tax bracket
@@ -299,8 +299,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: false,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       expect(minIncome.tax).toBeGreaterThanOrEqual(0);
@@ -315,8 +315,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2024, 0, 1),
-        dateEnd: new Date(2024, 7, 31),
+        dateStart: new Date(2025, 0, 1),
+        dateEnd: new Date(2025, 6, 31),
       });
 
       expect(result.tax).toBeGreaterThanOrEqual(0);

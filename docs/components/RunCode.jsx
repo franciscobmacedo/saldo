@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { simulateDependentWorker } from 'saldo'
+import { simulateDependentWorker, Twelfths } from 'saldo'
 import CodeEditor from '@uiw/react-textarea-code-editor'
 
 const RunCode = ({ children, defaultCode }) => {
@@ -19,24 +19,66 @@ const RunCode = ({ children, defaultCode }) => {
       // Create a safe execution environment
       const safeGlobals = {
         simulateDependentWorker,
+        Twelfths,
         console: {
           log: (...args) => {
             const output = args.map(arg => 
               typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
             ).join(' ')
             setResult(prev => prev ? prev + '\n' + output : output)
+          },
+          error: (...args) => {
+            const output = args.map(arg => 
+              typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ')
+            setResult(prev => prev ? prev + '\nERROR: ' + output : 'ERROR: ' + output)
+          },
+          warn: (...args) => {
+            const output = args.map(arg => 
+              typeof arg === 'object' ? JSON.stringify(arg, null, 2) : String(arg)
+            ).join(' ')
+            setResult(prev => prev ? prev + '\nWARN: ' + output : 'WARN: ' + output)
           }
-        }
+        },
+        // Add common globals that might be expected
+        JSON,
+        Math,
+        Date,
+        Array,
+        Object,
+        String,
+        Number,
+        Boolean,
+        Promise,
+        setTimeout,
+        setInterval,
+        clearTimeout,
+        clearInterval
       }
-
+      
       // Create function with safe globals
       const func = new Function(...Object.keys(safeGlobals), code)
       
       // Execute the code
-      await func(...Object.values(safeGlobals))
+      const result = await func(...Object.values(safeGlobals))
+      
+      // If the function returned something, log it
+      if (result !== undefined) {
+        const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
+        setResult(prev => prev ? prev + '\n' + output : output)
+      }
       
     } catch (err) {
-      setError(err.message)
+      // Enhanced error message with debugging info
+      let errorMessage = err.message
+      
+      if (err.message.includes('ReferenceError')) {
+        errorMessage = `Reference Error: ${err.message}\n\n💡 Available functions: ${Object.keys(safeGlobals || {}).join(', ')}`
+      } else if (err.message.includes('SyntaxError')) {
+        errorMessage = `Syntax Error: ${err.message}\n\n💡 Check your JavaScript syntax.`
+      }
+      
+      setError(errorMessage)
     } finally {
       setIsRunning(false)
     }
@@ -83,7 +125,15 @@ const RunCode = ({ children, defaultCode }) => {
         <CodeEditor
           value={code}
           language="js"
-          placeholder="Enter your TypeScript/JavaScript code here..."
+          placeholder="// Example with proper imports:
+import { simulateDependentWorker, Twelfths } from 'saldo';
+
+const result = simulateDependentWorker({
+  income: 2000,
+  location: 'continent',
+  twelfths: Twelfths.TWO_MONTHS
+});
+console.log(result);"
           onChange={(evn) => setCode(evn.target.value)}
           padding={16}
           style={{

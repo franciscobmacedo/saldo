@@ -47,6 +47,18 @@ vi.mock("@/tables/tax-retention", () => {
         number_of_dependents * 10;
       return Math.max(0, basicTax);
     }
+    toJSON() {
+      return {
+        signal: "max",
+        limit: this.data.limit || 1000,
+        max_marginal_rate: this.data.max_marginal_rate || 0.2,
+        deduction: 100,
+        var1_deduction: 0,
+        var2_deduction: 0,
+        dependent_aditional_deduction: 10,
+        effective_mensal_rate: 0.1
+      };
+    }
   }
 
   class MockTaxRetentionTable {
@@ -73,6 +85,14 @@ vi.mock("@/tables/tax-retention", () => {
         limit: taxableIncome + 1000,
         max_marginal_rate: 0.2,
       });
+    }
+    toJSON() {
+      return {
+        situation: this.situationCode,
+        description: "Mock tax table",
+        brackets: [],
+        dependent_disabled_addition_deduction: this.dependent_disabled_addition_deduction
+      };
     }
   }
   return { TaxRetentionTable: MockTaxRetentionTable };
