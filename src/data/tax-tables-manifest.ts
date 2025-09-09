@@ -1,10 +1,10 @@
 // src/data/tax-tables-manifest.ts
 
-// Example for one file: 2024/continente/2024-01-01_2024-08-31/SOLD.json
+// Example for one file: 2024/continente/2024-01-01_2024-08-31/SOME_TABLE_NAME.json
 // You will need to import all your JSON files similarly.
 // For example:
-// import sold_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/SOLD.json';
-// import cas1_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/CAS1.json';
+// import SOME_TABLE_NAME_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/SOME_TABLE_NAME.json';
+// import ANOTHER_TABLE_NAME_2024_continente_0101_0831 from './retention-tax-tables/2024/continente/2024-01-01_2024-08-31/ANOTHER_TABLE_NAME.json';
 // etc. for all files in all year/location/date_range directories.
 
 // This interface should match the structure of your JSON tax table files.
@@ -12,6 +12,7 @@
 interface TaxTableJsonData {
     situation: string;
     description: string;
+    table: string;
     brackets: Array<{
         signal: "max" | "min";
         limit: number;
