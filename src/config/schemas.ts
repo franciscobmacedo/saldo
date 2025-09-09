@@ -295,7 +295,7 @@ export class RetentionPathsSchema {
     dateStart: Date,
     dateEnd: Date,
     location: LocationT,
-    situationCode: SituationCodesT, // This is the code like "SOLD", "CAS1"
+    situationCode: SituationCodesT,
     year: number | string
   ) {
     const yearStr = String(year);
