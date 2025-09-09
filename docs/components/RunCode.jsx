@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { simulateDependentWorker, Twelfths } from 'saldo'
 import CodeEditor from '@uiw/react-textarea-code-editor'
 
@@ -9,6 +9,30 @@ const RunCode = ({ children, defaultCode }) => {
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
   const [isRunning, setIsRunning] = useState(false)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  useEffect(() => {
+    // Check if dark mode is active
+    const checkDarkMode = () => {
+      const isDark = document.documentElement.classList.contains('dark') || 
+                    window.matchMedia('(prefers-color-scheme: dark)').matches
+      setIsDarkMode(isDark)
+    }
+    
+    checkDarkMode()
+    
+    // Listen for theme changes
+    const observer = new MutationObserver(checkDarkMode)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+    
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+    mediaQuery.addEventListener('change', checkDarkMode)
+    
+    return () => {
+      observer.disconnect()
+      mediaQuery.removeEventListener('change', checkDarkMode)
+    }
+  }, [])
 
   const runCode = async () => {
     setIsRunning(true)
@@ -85,7 +109,83 @@ const RunCode = ({ children, defaultCode }) => {
   }
 
   return (
-    <div className="my-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 shadow-sm">
+    <>
+      <style jsx>{`
+        .code-editor-theme {
+          --w-tc-editor-bgcolor: transparent !important;
+          --w-tc-editor-gutters-bgcolor: transparent !important;
+          --w-tc-editor-activeline-bgcolor: rgba(59, 130, 246, 0.1) !important;
+        }
+        
+        .code-editor-theme.dark {
+          --w-tc-editor-color: #e5e7eb !important;
+          --w-tc-editor-selected-text-color: #1f2937 !important;
+          --w-tc-editor-selected-text-bgcolor: #3b82f6 !important;
+          --w-tc-editor-gutters-color: #6b7280 !important;
+          --w-tc-editor-linenumber-color: #6b7280 !important;
+          --w-tc-editor-cursor-color: #e5e7eb !important;
+          --w-tc-editor-matchingbracket-color: #fbbf24 !important;
+          --w-tc-editor-syntax-comment-color: #9ca3af !important;
+          --w-tc-editor-syntax-keyword-color: #c084fc !important;
+          --w-tc-editor-syntax-atom-color: #34d399 !important;
+          --w-tc-editor-syntax-number-color: #34d399 !important;
+          --w-tc-editor-syntax-def-color: #60a5fa !important;
+          --w-tc-editor-syntax-variable-color: #60a5fa !important;
+          --w-tc-editor-syntax-variable-2-color: #60a5fa !important;
+          --w-tc-editor-syntax-variable-3-color: #60a5fa !important;
+          --w-tc-editor-syntax-property-color: #fbbf24 !important;
+          --w-tc-editor-syntax-operator-color: #e5e7eb !important;
+          --w-tc-editor-syntax-string-color: #34d399 !important;
+          --w-tc-editor-syntax-string-2-color: #34d399 !important;
+          --w-tc-editor-syntax-meta-color: #e5e7eb !important;
+          --w-tc-editor-syntax-qualifier-color: #c084fc !important;
+          --w-tc-editor-syntax-builtin-color: #c084fc !important;
+          --w-tc-editor-syntax-bracket-color: #e5e7eb !important;
+          --w-tc-editor-syntax-tag-color: #f87171 !important;
+          --w-tc-editor-syntax-attribute-color: #fbbf24 !important;
+          --w-tc-editor-syntax-header-color: #60a5fa !important;
+          --w-tc-editor-syntax-quote-color: #34d399 !important;
+          --w-tc-editor-syntax-hr-color: #6b7280 !important;
+          --w-tc-editor-syntax-link-color: #60a5fa !important;
+          --w-tc-editor-syntax-error-color: #f87171 !important;
+          --w-tc-editor-syntax-invalidchar-color: #f87171 !important;
+        }
+        
+        .code-editor-theme.light {
+          --w-tc-editor-color: #1f2937 !important;
+          --w-tc-editor-selected-text-color: #ffffff !important;
+          --w-tc-editor-selected-text-bgcolor: #3b82f6 !important;
+          --w-tc-editor-gutters-color: #6b7280 !important;
+          --w-tc-editor-linenumber-color: #6b7280 !important;
+          --w-tc-editor-cursor-color: #1f2937 !important;
+          --w-tc-editor-matchingbracket-color: #d97706 !important;
+          --w-tc-editor-syntax-comment-color: #6b7280 !important;
+          --w-tc-editor-syntax-keyword-color: #7c3aed !important;
+          --w-tc-editor-syntax-atom-color: #059669 !important;
+          --w-tc-editor-syntax-number-color: #059669 !important;
+          --w-tc-editor-syntax-def-color: #2563eb !important;
+          --w-tc-editor-syntax-variable-color: #2563eb !important;
+          --w-tc-editor-syntax-variable-2-color: #2563eb !important;
+          --w-tc-editor-syntax-variable-3-color: #2563eb !important;
+          --w-tc-editor-syntax-property-color: #d97706 !important;
+          --w-tc-editor-syntax-operator-color: #1f2937 !important;
+          --w-tc-editor-syntax-string-color: #059669 !important;
+          --w-tc-editor-syntax-string-2-color: #059669 !important;
+          --w-tc-editor-syntax-meta-color: #1f2937 !important;
+          --w-tc-editor-syntax-qualifier-color: #7c3aed !important;
+          --w-tc-editor-syntax-builtin-color: #7c3aed !important;
+          --w-tc-editor-syntax-bracket-color: #1f2937 !important;
+          --w-tc-editor-syntax-tag-color: #dc2626 !important;
+          --w-tc-editor-syntax-attribute-color: #d97706 !important;
+          --w-tc-editor-syntax-header-color: #2563eb !important;
+          --w-tc-editor-syntax-quote-color: #059669 !important;
+          --w-tc-editor-syntax-hr-color: #6b7280 !important;
+          --w-tc-editor-syntax-link-color: #2563eb !important;
+          --w-tc-editor-syntax-error-color: #dc2626 !important;
+          --w-tc-editor-syntax-invalidchar-color: #dc2626 !important;
+        }
+      `}</style>
+      <div className="my-6 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 shadow-sm">
       {/* Code Editor Header */}
       <div className="border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3">
         <div className="flex items-center justify-between">
@@ -121,7 +221,7 @@ const RunCode = ({ children, defaultCode }) => {
         </div>
       </div>
       
-      <div className="relative">
+      <div className={`relative code-editor-theme ${isDarkMode ? 'dark' : 'light'}`}>
         <CodeEditor
           value={code}
           language="js"
@@ -140,9 +240,10 @@ console.log(result);"
             fontSize: 14,
             backgroundColor: 'transparent',
             fontFamily: 'ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace',
-            minHeight: '200px'
+            minHeight: '200px',
+            color: isDarkMode ? '#e5e7eb' : '#1f2937',
           }}
-          data-color-mode="auto"
+          data-color-mode={isDarkMode ? 'dark' : 'light'}
         />
       </div>
 
@@ -177,7 +278,8 @@ console.log(result);"
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }
 

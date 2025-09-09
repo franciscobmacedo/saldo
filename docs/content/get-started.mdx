@@ -14,8 +14,7 @@ pnpm add saldo
 
 ## Quick Start
 
-<RunCode defaultCode={`import { simulateDependentWorker } from 'saldo';
-
+<RunCode defaultCode={`
 const result = simulateDependentWorker({
   income: 1500, // Monthly gross income in euros
   location: 'continent',
@@ -151,8 +150,7 @@ console.log(\`Tax-free Lunch: €\${withLunch.lunchAllowance.taxFreeMonthlyValue
 
 ### Using Twelfths Enum
 
-<RunCode defaultCode={`import { simulateDependentWorker, Twelfths } from 'saldo';
-
+<RunCode defaultCode={`
 const withoutHolidayAllowance = simulateDependentWorker({
   income: 1500,
   twelfths: Twelfths.NONE, // No holiday allowance distribution
