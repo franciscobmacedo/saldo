@@ -20,8 +20,7 @@ interface SimulateDependentWorkerOptions {
   numberOfHolders?: number | null;
   numberOfDependents?: number | null;
   numberOfDependentsDisabled?: number | null;
-  dateStart?: Date;
-  dateEnd?: Date;
+  period?: PeriodT;
   socialSecurityTaxRate?: number;
   twelfths?: Twelfths;
   lunchAllowanceDailyValue?: number;
@@ -40,8 +39,7 @@ interface SimulateDependentWorkerOptions {
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders in marriage (1 or 2) |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of dependents with disabilities |
-| `dateStart` | `Date` | `new Date(2025, 0, 1)` | Calculation period start date |
-| `dateEnd` | `Date` | `new Date(2025, 11, 31)` | Calculation period end date |
+| `period` | `PeriodT` | `"2025-01-01_2025-07-31"` | Tax calculation period in format "YYYY-MM-DD_YYYY-MM-DD" |
 | `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
 | `twelfths` | `Twelfths` | `Twelfths.TWO_MONTHS` | Holiday allowance distribution |
 | `lunchAllowanceDailyValue` | `number` | `10.2` | Daily lunch allowance amount in euros |
@@ -285,8 +283,7 @@ class RetentionPathsSchema {
   public identifier: string;
 
   constructor(
-    dateStart: Date,
-    dateEnd: Date,
+    period: PeriodT,
     location: LocationT,
     situationCode: SituationCodesT,
     year: number | string
@@ -296,7 +293,7 @@ class RetentionPathsSchema {
 }
 ```
 
-This class constructs identifiers in the format: `"2025/continent/2025-01-01_2025-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`
+This class constructs identifiers in the format: `"2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`
 
 ## Validation Functions
 
@@ -338,18 +335,17 @@ try {
 
 ## Advanced Usage
 
-### Date Range Calculations
+### Period-based Calculations
 
-The library supports calculations for specific time periods:
+The library supports calculations for specific tax periods:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
-  dateStart: new Date(2024, 0, 1),  // January 1, 2024
-  dateEnd: new Date(2024, 11, 31),  // December 31, 2024
+  period: "2025-01-01_2025-07-31",  // First period of 2025
   location: 'continent'
 });
 
-console.log('=== Date Range Calculation ===');
+console.log('=== Period-based Calculation ===');
 console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
 console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
 
@@ -357,7 +353,7 @@ console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
-  socialSecurityTaxRate: 0.11, // 11% (default)
+        socialSecurityTaxRate: 0.11, // 11% (default)
   location: 'continent'
 });
 

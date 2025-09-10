@@ -87,8 +87,7 @@ const azoresResult = simulateDependentWorker({
   income: 1600,
   location: "azores",
   twelfths: Twelfths.TWO_MONTHS, // Christmas + Holiday allowance
-  dateStart: new Date(2025, 0, 1),
-  dateEnd: new Date(2025, 11, 31)
+  period: "2025-01-01_2025-07-31" // Tax period
 });
 ```
 
@@ -108,8 +107,7 @@ const azoresResult = simulateDependentWorker({
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of disabled dependents |
-| `dateStart` | `Date` | `2025-01-01` | Tax period start date |
-| `dateEnd` | `Date` | `2025-12-31` | Tax period end date |
+| `period` | `PeriodT` | `"2025-01-01_2025-07-31"` | Tax period |
 | `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
 | `twelfths` | `Twelfths` | `TWO_MONTHS` | Holiday bonus distribution |
 | `lunchAllowanceDailyValue` | `number` | `10.2` | Daily lunch allowance value |

@@ -239,28 +239,34 @@ console.log('=== Family with Disabled Child ===');
 console.log(\`Net Salary: €\${familyWithDisabledChild.netSalary.toFixed(2)}\`);
 console.log(\`Tax Benefits Applied: Yes\`);`} />
 
-## Date Range Examples
+## Period-based Examples
 
-### Tax Year Transitions
+### Tax Period Transitions
 
-<RunCode defaultCode={`// Early year rates
-const earlyYear = simulateDependentWorker({
+<RunCode defaultCode={`// First period of 2025
+const firstPeriod = simulateDependentWorker({
   income: 1800,
-  dateStart: new Date(2024, 0, 1), // January 1
-  dateEnd: new Date(2024, 5, 30),  // June 30
+  period: "2025-01-01_2025-07-31", // January 1 - July 31
   location: 'continent'
 });
 
-// Late year rates  
-const lateYear = simulateDependentWorker({
+// Second period of 2025
+const secondPeriod = simulateDependentWorker({
   income: 1800,
-  dateStart: new Date(2024, 6, 1),  // July 1
-  dateEnd: new Date(2024, 11, 31), // December 31
+  period: "2025-08-01_2025-09-30", // August 1 - September 30
   location: 'continent'
 });
 
-console.log('=== Tax Year Comparison ===');
-console.log(\`H1 Net: €\${earlyYear.netSalary.toFixed(2)}\`);
-console.log(\`H2 Net: €\${lateYear.netSalary.toFixed(2)}\`);`} />
+// Third period of 2025
+const thirdPeriod = simulateDependentWorker({
+  income: 1800,
+  period: "2025-10-01_2025-12-31", // October 1 - December 31
+  location: 'continent'
+});
 
-These examples demonstrate the flexibility and comprehensive nature of Saldofor various Portuguese tax scenarios. 
+console.log('=== Tax Period Comparison ===');
+console.log(\`First Period Net: €\${firstPeriod.netSalary.toFixed(2)}\`);
+console.log(\`Second Period Net: €\${secondPeriod.netSalary.toFixed(2)}\`);
+console.log(\`Third Period Net: €\${thirdPeriod.netSalary.toFixed(2)}\`);`} />
+
+These examples demonstrate the flexibility and comprehensive nature of Saldo for various Portuguese tax scenarios. 

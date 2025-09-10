@@ -17,7 +17,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 0,
         numberOfDependentsDisabled: 0,
         period: "2025-01-01_2025-07-31",
-        socialSecurityTaxRate: 0.11,
+  
+      socialSecurityTaxRate: 0.11,
         twelfths: Twelfths.NONE,
         lunchAllowanceDailyValue: 10.2,
         lunchAllowanceMode: "cupon",
@@ -140,8 +141,6 @@ describe("simulateDependentWorker - End-to-End", () => {
       income: 1500,
       married: false,
       disabled: false,
-      dateStart: new Date(2025, 0, 1),
-      dateEnd: new Date(2025, 6, 31),
     };
 
     it("should produce different results for different regions", () => {
@@ -174,7 +173,6 @@ describe("simulateDependentWorker - End-to-End", () => {
       married: false,
       disabled: false,
       location: "continent" as const,
-      dateStart: new Date(2025, 0, 1),
  // July 31st
     };
 

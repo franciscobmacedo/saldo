@@ -37,8 +37,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -80,8 +79,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -123,8 +121,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: null,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -168,8 +165,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -211,8 +207,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -254,8 +249,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: 1,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -299,8 +293,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -342,8 +335,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
@@ -385,8 +377,7 @@ export const midYearPeriodScenarios: TestScenario[] = [
       numberOfHolders: 2,
       numberOfDependents: null,
       numberOfDependentsDisabled: null,
-      dateStart: new Date(2025, 7, 1), // August 1, 2025
-      dateEnd: new Date(2025, 8, 30), // September 30, 2025
+      period: "2025-01-01_2025-07-31",
       socialSecurityTaxRate: 0.11,
       twelfths: Twelfths.NONE,
       lunchAllowanceDailyValue: 10.2,
