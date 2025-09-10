@@ -1,3 +1,5 @@
+import { VALID_PERIODS, PeriodT } from "@/config/schemas";
+
 export const validateNumberOfHolders = (numberOfHolders?: number | null): void => {
     if (numberOfHolders !== null && numberOfHolders !== undefined && (numberOfHolders !== 1 && numberOfHolders !== 2)) {
         throw new Error("'numberOfHolders' must be null, undefined, 1 or 2");
@@ -54,3 +56,9 @@ export const validateLunchAllowanceMode = (lunchAllowanceMode: "cupon" | "salary
         throw new Error(`'lunchAllowanceMode' must be 'cupon' or 'salary'. Provided: ${lunchAllowanceMode}`);
     }
 };
+
+export const validatePeriod = (period: PeriodT): void => {
+    if (!VALID_PERIODS.includes(period)) {
+        throw new Error(`'period' must be one of ${VALID_PERIODS.join(', ')}. Provided: ${period}`);
+    }
+};  

@@ -1,4 +1,4 @@
-import { SituationUtils } from "@/config/schemas";
+import { SituationUtils, getYearFromPeriod } from "@/config/schemas";
 import { TaxRetentionTable } from "@/tables/tax-retention";
 import {
   validateNumberOfHolders,
@@ -6,6 +6,7 @@ import {
   validateDependents,
   validatePartnerDisabled,
   validateLunchAllowanceMode,
+  validatePeriod,
 } from "@/dependent-worker/validators";
 import {
   Twelfths,
@@ -30,8 +31,7 @@ export function simulateDependentWorker({
   numberOfHolders = null,
   numberOfDependents = null,
   numberOfDependentsDisabled = null,
-  dateStart = new Date(2025, 0, 1), // JS months are 0-indexed
-  dateEnd = new Date(2025, 6, 31), // JS months are 0-indexed
+  period = "2025-01-01_2025-07-31", // Default to first period of 2025
   socialSecurityTaxRate = 0.11,
   twelfths = Twelfths.TWO_MONTHS,
   lunchAllowanceDailyValue = 10.2,
@@ -49,6 +49,7 @@ export function simulateDependentWorker({
   validatePartnerDisabled(married, partnerDisabled);
   validateDependents(numberOfDependents, numberOfDependentsDisabled);
   validateLunchAllowanceMode(lunchAllowanceMode);
+  validatePeriod(period);
   
 
   // Partner with disability results in extra deduction
@@ -87,11 +88,12 @@ export function simulateDependentWorker({
   }
 
   // Load the corresponding tax retention table
+  const year = getYearFromPeriod(period);
   const taxRetentionTable = TaxRetentionTable.load(
-    dateStart,
-    dateEnd,
+    period,
     location,
-    situation.code
+    situation.code,
+    year
   );
   // console.log('taxRetentionTable', taxRetentionTable);
 

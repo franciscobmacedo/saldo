@@ -9,6 +9,35 @@ export type SituationCodesT =
 
 export type LocationT = "continent" | "azores" | "madeira";
 
+export type PeriodT = 
+  | "2025-01-01_2025-07-31"
+  | "2025-08-01_2025-09-30" 
+  | "2025-10-01_2025-12-31";
+
+export const VALID_PERIODS: readonly PeriodT[] = Object.freeze([
+  "2025-01-01_2025-07-31",
+  "2025-08-01_2025-09-30", 
+  "2025-10-01_2025-12-31"
+] as const);
+
+export function getYearFromPeriod(period: PeriodT): number {
+  // Validate period format: should be YYYY-MM-DD_YYYY-MM-DD
+  const periodPattern = /^\d{4}-\d{2}-\d{2}_\d{4}-\d{2}-\d{2}$/;
+  if (!periodPattern.test(period)) {
+    throw new Error(`Could not extract year from period: ${period}`);
+  }
+  
+  const yearStr = period.substring(0, 4);
+  const year = parseInt(yearStr);
+  
+  // Validate that the year part is actually numeric
+  if (isNaN(year)) {
+    throw new Error(`Could not extract year from period: ${period}`);
+  }
+  
+  return year;
+}
+
 export interface Condition {
   married: boolean;
   dependents: boolean; // True if has dependents False if not
@@ -292,39 +321,17 @@ export class RetentionPathsSchema {
   public identifier: string; // Renamed from yearPath, locationPath, etc. to a single identifier
 
   constructor(
-    dateStart: Date,
-    dateEnd: Date,
+    period: PeriodT,
     location: LocationT,
     situationCode: SituationCodesT,
     year: number | string
   ) {
     const yearStr = String(year);
 
-    const customPadStart = (str: string, targetLength: number, padString: string): string => {
-      targetLength = targetLength >> 0; // floor if number or convert non-number to 0
-      padString = String(typeof padString !== 'undefined' ? padString : ' ');
-      if (str.length > targetLength) {
-        return String(str);
-      } else {
-        targetLength = targetLength - str.length;
-        if (targetLength > padString.length) {
-          padString += padString.repeat(targetLength / padString.length); // append to original to ensure we are longer than needed
-        }
-        return padString.slice(0, targetLength) + String(str);
-      }
-    };
-
-    const formatDate = (date: Date) => {
-      const y = date.getFullYear();
-      const m = customPadStart(String(date.getMonth() + 1), 2, "0");
-      const d = customPadStart(String(date.getDate()), 2, "0");
-      return `${y}-${m}-${d}`;
-    };
-
     // Construct the identifier string matching the keys in taxTablesData
-    // e.g., "2024/continent/2024-01-01_2024-12-31/SOLD"
+    // e.g., "2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"
     // Note: situationCode already comes without .json
-    this.identifier = `${yearStr}/${location}/${formatDate(dateStart)}_${formatDate(dateEnd)}/${situationCode}`;
+    this.identifier = `${yearStr}/${location}/${period}/${situationCode}`;
   }
 
   public get path(): string { // Keep 'path' getter name for compatibility if it's widely used,

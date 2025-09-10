@@ -1,5 +1,5 @@
 import { LunchAllowance } from "./lunch-allowance";
-import { LocationT } from "@/config/schemas";
+import { LocationT, PeriodT } from "@/config/schemas";
 
 export enum Twelfths {
   NONE = 0, // No twelfths
@@ -18,8 +18,7 @@ export interface SimulateDependentWorkerOptions {
     numberOfHolders?: number | null;
     numberOfDependents?: number | null;
     numberOfDependentsDisabled?: number | null;
-    dateStart?: Date;
-    dateEnd?: Date;
+    period?: PeriodT;
     socialSecurityTaxRate?: number;
     twelfths?: Twelfths;
     lunchAllowanceDailyValue?: number;

@@ -72,10 +72,10 @@ vi.mock("@/tables/tax-retention", () => {
     }
 
     static load(
-      date_start: Date,
-      date_end: Date,
+      period: ConfigSchemas.PeriodT,
       location: ConfigSchemas.LocationT,
-      situation_code: string
+      situation_code: string,
+      year: number | string
     ) {
       return new MockTaxRetentionTable(situation_code, 30);
     }
@@ -196,7 +196,6 @@ describe("simulateDependentWorker", () => {
     getSituationSpy.mockRestore();
   });
 
-  // Example test for checking yearly values (highly dependent on mocked calculations)
   it("should calculate yearly gross and net salaries correctly based on (mocked) monthly values", () => {
     const income = 1200;
     const twelfths = Twelfths.ONE_MONTH; // example
@@ -208,5 +207,57 @@ describe("simulateDependentWorker", () => {
 
     expect(result.yearlyGrossSalary).toBeCloseTo(expectedYearlyGrossSalary);
     expect(result.yearlyNetSalary).toBeCloseTo(expectedYearlyNetSalary);
+  });
+
+  describe("period parameter", () => {
+    it("should use default period when not specified", () => {
+      const result = simulateDependentWorker({ income: 1000 });
+      expect(result).toBeDefined();
+      expect(result.taxableIncome).toBe(
+        1000 + defaultLunchAllowance.taxableMonthlyValue
+      );
+    });
+
+    it("should work with first period of 2025", () => {
+      const result = simulateDependentWorker({
+        income: 1000,
+        period: "2025-01-01_2025-07-31"
+      });
+      expect(result).toBeDefined();
+      expect(result.taxableIncome).toBe(
+        1000 + defaultLunchAllowance.taxableMonthlyValue
+      );
+    });
+
+    it("should work with second period of 2025", () => {
+      const result = simulateDependentWorker({
+        income: 1000,
+        period: "2025-08-01_2025-09-30"
+      });
+      expect(result).toBeDefined();
+      expect(result.taxableIncome).toBe(
+        1000 + defaultLunchAllowance.taxableMonthlyValue
+      );
+    });
+
+    it("should work with third period of 2025", () => {
+      const result = simulateDependentWorker({
+        income: 1000,
+        period: "2025-10-01_2025-12-31"
+      });
+      expect(result).toBeDefined();
+      expect(result.taxableIncome).toBe(
+        1000 + defaultLunchAllowance.taxableMonthlyValue
+      );
+    });
+
+    it("should throw error for invalid period", () => {
+      expect(() => {
+        simulateDependentWorker({
+          income: 1000,
+          period: "2025-01-01_2025-06-30" as any // Invalid period
+        });
+      }).toThrow("'period' must be one of");
+    });
   });
 });
