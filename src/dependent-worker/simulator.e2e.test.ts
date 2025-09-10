@@ -16,8 +16,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         numberOfDependents: 0,
         numberOfDependentsDisabled: 0,
-        dateStart: new Date(2025, 0, 1), // JS months are 0-indexed
-        dateEnd: new Date(2025, 6, 31), // JS months are 0-indexed - July 31st
+        period: "2025-01-01_2025-07-31",
         socialSecurityTaxRate: 0.11,
         twelfths: Twelfths.NONE,
         lunchAllowanceDailyValue: 10.2,
@@ -58,8 +57,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 2,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       // Tax should be lower due to dependents
@@ -68,8 +66,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: false,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       expect(result.tax).toBeLessThan(singleResult.tax);
@@ -84,8 +81,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 2,
         numberOfDependentsDisabled: 1,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       const withoutDisabledDependent = simulateDependentWorker({
@@ -95,8 +91,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependents: 2,
         numberOfDependentsDisabled: 0,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       // Should have lower tax due to disabled dependent deduction
@@ -115,8 +110,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         partnerDisabled: true,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       const withoutDisabledPartner = simulateDependentWorker({
@@ -125,8 +119,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         partnerDisabled: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       // Should have lower tax due to partner disability deduction (€135.71)
@@ -182,7 +175,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       disabled: false,
       location: "continent" as const,
       dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31), // July 31st
+ // July 31st
     };
 
     it("should show different tax burden based on twelfths", () => {
@@ -231,15 +224,13 @@ describe("simulateDependentWorker - End-to-End", () => {
         lunchAllowanceMode: "cupon",
         lunchAllowanceDaysCount: 20,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       const withDefaultLunch = simulateDependentWorker({
         income: 1200,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       expect(withCustomLunch.lunchAllowance.dailyValue).toBe(12);
@@ -256,16 +247,15 @@ describe("simulateDependentWorker - End-to-End", () => {
         income: 1500,
         married: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1), // January
-        dateEnd: new Date(2025, 6, 31), // July
+        period: "2025-01-01_2025-07-31", // January
+ // July
       });
 
       const lateYear = simulateDependentWorker({
         income: 1500,
         married: false,
         location: "continent",
-        dateStart: new Date(2025, 7, 1), // August
-        dateEnd: new Date(2025, 8, 30), // September
+        period: "2025-10-01_2025-12-31",
       });
 
       // Tax calculations might differ due to different table periods
@@ -282,8 +272,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: false,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       // Should be in highest tax bracket
@@ -299,8 +288,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         married: false,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       expect(minIncome.tax).toBeGreaterThanOrEqual(0);
@@ -315,8 +303,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         disabled: false,
         location: "continent",
-        dateStart: new Date(2025, 0, 1),
-        dateEnd: new Date(2025, 6, 31),
+        period: "2025-01-01_2025-07-31",
       });
 
       expect(result.tax).toBeGreaterThanOrEqual(0);
