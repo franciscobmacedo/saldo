@@ -19,7 +19,7 @@ function generateKey(region: string, dateRange: string, fileName: string): strin
 
 function updateManifest() {
   const basePath = path.join(__dirname, '../src/data/retention-tax-tables/2025');
-  const manifestPath = path.join(__dirname, '../src/data/tax-tables-manifest.ts');
+  const manifestPath = path.join(__dirname, '../src/data/retention-tax-tables-data.ts');
   
   // Read current manifest
   const manifestContent = fs.readFileSync(manifestPath, 'utf-8');

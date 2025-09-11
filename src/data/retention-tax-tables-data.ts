@@ -1,4 +1,4 @@
-// src/data/tax-tables-manifest.ts
+// src/data/retention-tax-tables-data.ts
 
 // Example for one file: 2024/continent/2024-01-01_2024-08-31/SOME_TABLE_NAME.json
 // You will need to import all your JSON files similarly.

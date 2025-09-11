@@ -1,5 +1,5 @@
 import { LocationT, RetentionPathsSchema, SituationCodesT, PeriodT } from "@/config/schemas";
-import { taxTablesData } from "@/data/tax-tables-manifest"; // Import the pre-loaded JSON data
+import { taxTablesData } from "@/data/retention-tax-tables-data"; // Import the pre-loaded JSON data
 
 // Interface for the raw data structure of a tax bracket
 interface TaxBracketData {
@@ -169,7 +169,7 @@ class TaxRetentionTable {
         const tableData = taxTablesData[identifier]; // Look up in the manifest
 
         if (!tableData) {
-            throw new Error(`Tax table not found for identifier: ${identifier}. Ensure it's in tax-tables-manifest.ts`);
+            throw new Error(`Tax table not found for identifier: ${identifier}. Ensure it's in retention-tax-tables-data.ts`);
         }
         
         // Assuming 'location' can be used as the region directly.
