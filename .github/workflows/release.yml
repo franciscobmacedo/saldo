@@ -33,6 +33,7 @@ jobs:
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
+          # OIDC token is automatically used for publishing when trusted publisher is configured
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v4
