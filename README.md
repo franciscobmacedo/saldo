@@ -182,6 +182,31 @@ saldo/
 └── tests/                        # Test files
 ```
 
+## 🚢 Releasing
+
+This project uses GitHub Actions for automated releases. To create a new release:
+
+1. Go to the **Actions** tab in the GitHub repository
+2. Select the **Release** workflow in the left sidebar
+3. Click **Run workflow**
+4. Choose a version type:
+   - `patch` — 1.0.0 → 1.0.1 (bug fixes)
+   - `minor` — 1.0.0 → 1.1.0 (new features)
+   - `major` — 1.0.0 → 2.0.0 (breaking changes)
+   - `prerelease` — creates a beta prerelease (e.g., 1.0.0 → 1.0.1-beta.0)
+5. Click **Run workflow**
+
+The workflow will automatically:
+- Run tests
+- Build the package
+- Bump the version in `package.json`
+- Create a git tag
+- Push changes to `main`
+- Create a GitHub Release
+- Publish to NPM
+
+**Note:** Requires `NPM_TOKEN` secret to be configured in GitHub repository settings.
+
 ## 📚 Documentation
 
 Visit our comprehensive documentation site for detailed guides, examples, and API reference:
