@@ -3,6 +3,7 @@ import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import Link from 'next/link'
+import Image from 'next/image'
 
 import '../globals.css'
 
@@ -23,8 +24,18 @@ export const metadata = {
   appleWebApp: {
     title: 'Saldo'
   },
+  manifest: '/favicon/site.webmanifest',
+  icons: {
+    icon: [
+      { url: '/favicon/favicon.ico' },
+      { url: '/favicon/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/favicon/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   other: {
-    'msapplication-TileImage': '/ms-icon-144x144.png',
     'msapplication-TileColor': '#fff'
   },
   twitter: {
@@ -48,7 +59,8 @@ export default async function RootLayout({ children, params: paramsPromise }) {
   const navbar = (
     <Navbar
       logo={
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <Image src="/logo-xs.webp" width={24} height={24} alt="Saldo logo" />
           <b>Saldo</b>{' '}
           <span style={{ opacity: '60%' }}>Portuguese Salary Calculator</span>
         </div>
@@ -60,7 +72,7 @@ export default async function RootLayout({ children, params: paramsPromise }) {
   const pageMap = await getPageMap(`/${lang}`)
   return (
     <html lang={lang} dir="ltr" suppressHydrationWarning>
-      <Head faviconGlyph="✦" />
+      <Head />
       <body>
         <Layout
           banner={<Banner storageKey="saldo-docs">Saldo is currently in alpha - report any bugs <Link target="_blank" className="underline" href="https://github.com/franciscobmacedo/saldo/issues">here </Link></Banner>}
