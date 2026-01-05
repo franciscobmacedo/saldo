@@ -1,5 +1,6 @@
 #!/usr/bin/env tsx
 
+import cliProgress from "cli-progress";
 import { simulateDependentWorker } from "../../src/dependent-worker/simulator";
 import { DoutorFinancasAPI } from "./api-client";
 import { TestComparator } from "./comparator";
@@ -30,17 +31,36 @@ export async function runComparisonTests(
   let failedTests = 0;
   const failedScenarios: FailureDetails[] = [];
 
-  for (const scenario of testScenarios) {
+  // Create progress bar
+  const progressBar = new cliProgress.SingleBar({
+    format: '  {bar} | {percentage}% | {value}/{total} | {status}',
+    barCompleteChar: '█',
+    barIncompleteChar: '░',
+    hideCursor: true,
+    clearOnComplete: false,
+    barsize: 30,
+  }, cliProgress.Presets.shades_classic);
+
+  progressBar.start(testScenarios.length, 0, { status: 'Starting...' });
+
+  for (let i = 0; i < testScenarios.length; i++) {
+    const scenario = testScenarios[i];
+    
+    // Truncate scenario name to fit in progress bar
+    const truncatedName = scenario.name.length > 50 
+      ? scenario.name.substring(0, 47) + '...' 
+      : scenario.name;
+    
+    progressBar.update(i, { status: truncatedName });
+    
     try {
       // Calculate using Saldo
       const saldoResult = simulateDependentWorker(scenario.saldoRequest);
-      // console.log('saldoResult', saldoResult);
 
       // Calculate using Doutor Finanças API
       const doutorResult = await DoutorFinancasAPI.calculate(
         scenario.doutorFinancasRequest
       );
-      // console.log('doutorResult', doutorResult);
 
       // Compare results
       const comparisonResult = TestComparator.compareResults(
@@ -54,6 +74,27 @@ export async function runComparisonTests(
         passedTests++;
       } else {
         failedTests++;
+        
+        // Stop progress bar to show failure details
+        progressBar.stop();
+        
+        console.log(`\n❌ FAILED: ${scenario.name}`);
+        console.log('Request parameters:');
+        console.log(`  Base Salary: €${scenario.doutorFinancasRequest.base_salary}`);
+        console.log(`  Location: ${scenario.doutorFinancasRequest.location}`);
+        console.log(`  Marital Status: ${scenario.doutorFinancasRequest.marital_status}`);
+        console.log(`  Dependents: ${scenario.doutorFinancasRequest.number_of_dependents}`);
+        console.log(`  Meal Card: €${scenario.doutorFinancasRequest.daily_meal_card_value} x ${scenario.doutorFinancasRequest.meal_card_days} days`);
+        console.log('   📊 Comparison details:');
+        comparisonResult.details.forEach((detail: any) => {
+          const status = detail.matches ? "✅" : "❌";
+          console.log(`      ${status} ${detail.name}: Saldo €${detail.saldo.toFixed(2)} vs Doutor €${detail.doutor.toFixed(2)}${!detail.matches ? ` (diff: €${detail.diff.toFixed(2)})` : ''}`);
+        });
+        console.log('');
+        
+        // Restart progress bar
+        progressBar.start(testScenarios.length, i + 1, { status: 'Continuing...' });
+        
         failedScenarios.push({
           scenarioName: scenario.name,
           saldoRequest: scenario.saldoRequest,
@@ -67,8 +108,15 @@ export async function runComparisonTests(
       // Add delay between API calls to be respectful
       // await new Promise(resolve => setTimeout(resolve, 1000));
     } catch (error) {
-      console.error(`❌ Error in scenario "${scenario.name}":`, error);
       failedTests++;
+      
+      // Stop progress bar to show error
+      progressBar.stop();
+      console.error(`\n❌ Error in scenario "${scenario.name}":`, error);
+      
+      // Restart progress bar
+      progressBar.start(testScenarios.length, i + 1, { status: 'Continuing...' });
+      
       failedScenarios.push({
         scenarioName: scenario.name,
         saldoRequest: scenario.saldoRequest,
@@ -79,6 +127,9 @@ export async function runComparisonTests(
       });
     }
   }
+  
+  progressBar.update(testScenarios.length, { status: 'Complete!' });
+  progressBar.stop();
 
   // Summary
   console.log("\n" + "=".repeat(60));
