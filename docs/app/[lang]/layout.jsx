@@ -8,8 +8,8 @@ import Image from 'next/image'
 import '../globals.css'
 
 const locales = [
-  { locale: 'pt', name: 'Português' },
-  { locale: 'en', name: 'English' }
+  { locale: 'pt', name: '🇵🇹 Português' },
+  { locale: 'en', name: '🇬🇧 English' }
 ]
 const defaultLocale = process.env.NEXTRA_DEFAULT_LOCALE || 'pt'
 
