@@ -4,7 +4,7 @@ import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import Link from 'next/link'
 
-import './globals.css'
+import '../globals.css'
 
 const locales = [
   { locale: 'pt', name: 'Português' },
@@ -36,6 +36,10 @@ export const metadata = {
       en: '/en'
     }
   }
+}
+
+export async function generateStaticParams() {
+  return locales.map(locale => ({ lang: locale.locale }))
 }
 
 export default async function RootLayout({ children, params: paramsPromise }) {
@@ -74,3 +78,4 @@ export default async function RootLayout({ children, params: paramsPromise }) {
     </html>
   )
 }
+
