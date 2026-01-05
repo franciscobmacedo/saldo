@@ -1,46 +1,58 @@
 # Independent Worker Test Scenarios
 
-This directory contains test scenarios for the `simulateIndependentWorker` function. These scenarios can be used for testing, validation, and comparison with external calculators.
+This directory contains comparison scenarios for the `simulateIndependentWorker` function. They are executed through Playwright against the public web simulator (`https://freelancept.fmacedo.com`).
+
+## Running the suite
+
+```bash
+# Full run (headless Playwright)
+pnpm compare:independent
+
+# Custom tolerance (default: €1.00) and verbose diffs
+pnpm compare:independent -- --tolerance=0.05 --verbose
+```
 
 ## Structure
 
 The scenarios are organized into categories based on different aspects of independent worker calculations:
 
-### 📁 Basic Scenarios (`basic/`)
-- **Basic Independent Worker Scenarios** - Standard scenarios with various income levels and frequencies
-- **Income Frequency Testing** - Yearly, monthly, and daily income calculations
-- **Expense Scenarios** - Testing with declared expenses and deductions
-- **Youth IRS Benefits** - Scenarios for workers under 35 with tax benefits
-- **RNH Scenarios** - Resident Non-Habitual tax regime scenarios
+### 📁 Basic (`basic/`)
+- Standard profiles with varied income frequencies and days off
+
+### 📁 Income Levels (`income-level/`)
+- Coverage from €5,000 to €150,000 to exercise every IRS bracket (2023-2025)
+
+### 📁 Income Frequency (`income-frequency/`)
+- Yearly, monthly, and daily flows using the 248 business-day calendar and `nrDaysOff`
+
+### 📁 Expenses (`expenses/`)
+- Simplified regime caps, declared expenses vs. missing expenses, and organized accounting toggles
+
+### 📁 Regional Periods (`regional/`)
+- Period-sensitive cases (Jan–Jul, Aug–Sep, Oct–Dec) to validate IAS and tax-rank year handling
+
+### 📁 Social Security (`social-security/`)
+- Rate overrides, discounts (-25% to +25%), caps (12× IAS), and first-12-month exemptions
+
+### 📁 RNH (`rnh/`)
+- Flat-rate RNH paths vs. progressive brackets, including custom `rnhTax`
+
+### 📁 Edge Cases (`edge-cases/`)
+- Parameter boundaries, date-based first/second year flags, and calculation cliffs
+
+### 📁 Configuration (`configuration/`)
+- Default-value coverage and mixed parameter combinations
+
+### 📁 Real World (`real-world/`)
+- Practical freelancer profiles and seasonal patterns
+
+### 📁 Errors (`error-scenarios/`)
+- Invalid inputs that should trigger validation errors
 
 ## Current Test Coverage
 
-### 💰 Income Scenarios
-- **Low Income** - €15,000 - €20,000 yearly (testing lower tax brackets)
-- **Medium Income** - €25,000 - €30,000 yearly (testing middle tax brackets)
-- **High Income** - €40,000 - €50,000 yearly (testing higher tax brackets)
-
-### 📅 Income Frequency Scenarios
-- **Yearly** - Standard annual income calculations
-- **Monthly** - Monthly contractor scenarios (€2,000/month)
-- **Daily** - Daily contractor scenarios (€100/day with days off)
-
-### 🧾 Expense Scenarios
-- **No Expenses** - Standard simplified regime (15% expense rate)
-- **Declared Expenses** - Scenarios with actual declared expenses (€3,000)
-
-### 👶 Youth IRS Scenarios
-- **Youth Benefits** - Workers under 35 with progressive tax benefits
-- **Different Benefit Years** - Testing 1st, 2nd year benefits
-
-### 🏖️ RNH Scenarios
-- **RNH Regime** - 20% flat tax rate for qualified activities
-- **Standard vs RNH** - Comparison scenarios
-
-### ⚙️ Configuration Scenarios
-- **Social Security Rates** - Standard 21.4% rate testing
-- **Tax Years** - 2025 tax tables (latest available)
-- **Days Off** - Impact of non-working days on daily contractors
+### Youth IRS coverage
+- Benefits across allowed years (up to 10 years in 2025 tables) with IAS-capped discounts
 
 ## Test Scenario Format
 
@@ -50,7 +62,7 @@ Each scenario follows this structure:
 {
   name: string;                              // Descriptive test name
   observations?: string;                     // Optional notes about the scenario
-  saldoRequest: SimulateIndependentWorkerOptions; // Parameters for our simulator
+  params: SimulateIndependentWorkerOptions;  // Parameters for our simulator
 }
 ```
 
@@ -64,7 +76,7 @@ import { simulateIndependentWorker } from '../../src/independent-worker/simulato
 
 // Run a specific scenario
 const scenario = independentWorkerTestScenarios[0];
-const result = simulateIndependentWorker(scenario.saldoRequest);
+const result = simulateIndependentWorker(scenario.params);
 ```
 
 ## Future Expansion

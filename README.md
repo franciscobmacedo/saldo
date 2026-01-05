@@ -1,21 +1,21 @@
 # saldo
 
-A comprehensive TypeScript library for calculating Portuguese salary taxes, social security contributions, and net salary for dependent workers.
+A comprehensive TypeScript library for calculating Portuguese taxes for both dependent (category A/H) and independent (category B) workers.
 
 ## 🇵🇹 About
 
-`saldo` provides accurate salary calculations based on official Portuguese tax retention tables. It supports different Portuguese locations (Continent, Azores, Madeira), various tax situations, and includes features like lunch allowances and holiday bonus distributions.
+`saldo` provides accurate calculations for Portuguese income tax and social security:
+- **Dependent workers**: official 2025 retention tables (continent, Azores, Madeira), lunch allowances, and holiday bonus twelfths.
+- **Independent workers**: simplified regime calculations with youth IRS benefits, RNH flat rate, expense caps, social security caps/discounts, and first/second year rules.
 
 ## ✨ Features
 
-- 📊 **Accurate Tax Calculations**: Uses official Portuguese tax retention tables (2024-2025)
-- 🗺️ **Multi-location Support**: Continent, Azores, and Madeira tax tables
-- 👥 **Complex Tax Situations**: Married/single, disabled workers, dependents
-- 🍽️ **Lunch Allowances**: Supports both coupon and salary-based allowances  
-- 🎁 **Holiday Bonuses**: Handles Christmas and holiday allowance distributions
-- 📅 **Date-specific**: Accurate calculations based on tax table periods
-- 🧮 **Complete Breakdown**: Gross salary, taxes, social security, and net salary
-- 📈 **Yearly Projections**: Both monthly and yearly salary calculations
+- 📊 **Dependent worker calculations**: 2025 IRS retention tables with regional coverage and twelfths/holiday handling
+- 🍽️ **Allowances**: Meal vouchers vs. cash allowances with the correct taxable/tax-free split
+- 🧮 **Independent worker simulator**: Simplified regime with expense caps, specific deductions, and 248 business-day calendar
+- 🧒 **Youth IRS + RNH**: Year-capped youth IRS discounts (per IAS limits) and RNH flat-rate option
+- 🛡️ **Social security**: Rate overrides, discounts, caps (12× IAS), and first-12-month exemption for new activities
+- 🔎 **Validation**: Detailed input validation errors for misconfigured scenarios
 
 ## 📦 Installation
 
@@ -30,64 +30,89 @@ yarn add saldo
 ## 🚀 Quick Start
 
 ```typescript
-import { simulateDependentWorker, Twelfths } from 'saldo';
+import {
+  simulateDependentWorker,
+  simulateIndependentWorker,
+  Twelfths,
+  FrequencyChoices,
+} from 'saldo';
 
-// Basic salary calculation
-const result = simulateDependentWorker({
-  income: 1500, // Monthly gross income in EUR
+// Dependent worker (monthly income)
+const dependent = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.TWO_MONTHS,
+  location: 'continent',
 });
 
-console.log(`Net Salary: €${result.netSalary.toFixed(2)}`);
-console.log(`Tax: €${result.tax.toFixed(2)}`);
-console.log(`Social Security: €${result.socialSecurity.toFixed(2)}`);
+console.log(`Dependent Net Salary: €${dependent.netSalary.toFixed(2)}`);
+
+// Independent worker (annual income, simplified regime)
+const independent = simulateIndependentWorker({
+  income: 30000,
+  incomeFrequency: FrequencyChoices.Year,
+  expenses: 2500,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+console.log(`Independent Net Income (year): €${independent.netIncome.year.toFixed(2)}`);
 ```
 
 ## 📖 Usage Examples
 
-### Basic Single Worker
+### Dependent worker scenarios
 
 ```typescript
-const basicResult = simulateDependentWorker({
-  income: 2000,
-  location: "continent"
-});
-```
-
-### Married Worker with Dependents
-
-```typescript
-const marriedResult = simulateDependentWorker({
+// Married household with dependents
+const married = simulateDependentWorker({
   income: 2500,
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 2,
-  location: "continent"
+  location: "continent",
 });
-```
 
-### Worker with Disabilities and Custom Lunch Allowance
-
-```typescript
-const disabledResult = simulateDependentWorker({
+// Worker with disability and meal vouchers
+const disabled = simulateDependentWorker({
   income: 1800,
   disabled: true,
   partnerDisabled: true,
   married: true,
   numberOfHolders: 1,
-  lunchAllowanceDailyValue: 8.50,
+  lunchAllowanceDailyValue: 8.5,
   lunchAllowanceMode: "salary",
-  lunchAllowanceDaysCount: 22
+});
+
+// Azores with twelfths distributed
+const azores = simulateDependentWorker({
+  income: 1600,
+  location: "azores",
+  twelfths: Twelfths.TWO_MONTHS,
+  period: "2025-01-01_2025-07-31",
 });
 ```
 
-### Azores Location with Holiday Bonuses
+### Independent worker scenarios
 
 ```typescript
-const azoresResult = simulateDependentWorker({
-  income: 1600,
-  location: "azores",
-  twelfths: Twelfths.TWO_MONTHS, // Christmas + Holiday allowance
-  period: "2025-01-01_2025-07-31" // Tax period
+import { FrequencyChoices } from "saldo";
+
+// Monthly freelancer with days off and simplified regime
+const freelancer = simulateIndependentWorker({
+  income: 2500,
+  incomeFrequency: FrequencyChoices.Month,
+  nrDaysOff: 25, // yearly days off
+  expenses: 1800, // declared expenses
+  ssDiscount: -0.1, // 10% reduction
+});
+
+// RNH flat rate with youth IRS benefits
+const rnh = simulateIndependentWorker({
+  income: 45000,
+  rnh: true,
+  rnhTax: 0.2,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
 });
 ```
 
@@ -130,42 +155,54 @@ interface DependentWorkerResult {
 }
 ```
 
-### `Twelfths` Enum
+### `simulateIndependentWorker(options: SimulateIndependentWorkerOptions)`
 
-```typescript
-enum Twelfths {
-  NONE = 0,       // No holiday bonuses
-  ONE_MONTH = 1,  // Christmas OR Holiday allowance
-  TWO_MONTHS = 2  // Christmas AND Holiday allowance
-}
-```
+Key parameters:
+- `income`: Gross income (year/month/day depending on `incomeFrequency`)
+- `incomeFrequency`: `"year"` (default), `"month"`, or `"day"` (248 business days)
+- `nrDaysOff`: Days off for daily calculations (cannot reach/exceed 248)
+- `ssTax`: Social security rate (default 21.4%), `ssDiscount`: adjustment range -25%..25%
+- `currentTaxRankYear`: 2023/2024/2025 progressive IRS tables
+- `maxExpensesTax`: Simplified regime percentage (default 15%) and `expenses`: declared expenses
+- `dateOfOpeningAcivity`: Determines first/second year factors and first-12-month SS exemption
+- `rnh` / `rnhTax`: Apply RNH flat rate instead of progressive brackets
+- `benefitsOfYouthIrs` + `yearOfYouthIrs`: Youth IRS discount with IAS caps (up to 10 years in 2025 tables)
+
+Return highlights:
+- `grossIncome`, `taxableIncome`, `netIncome`, `ssPay`, `irsPay` (per year/month/day)
+- `specificDeductions` (max of €4104 vs 10% SS)
+- `expensesNeeded` (missing expenses to hit the simplified cap)
+- `youthIrsDiscount`, `taxRank`, `currentIas`, `maxSsIncome`
+- Flags: `workerWithinFirstFinancialYear`, `workerWithinSecondFinancialYear`, `workerWithinFirst12Months`
 
 ## 🧪 Development
 
 ### Prerequisites
 
 - Node.js 18+
-- pnpm (recommended package manager)
+- pnpm (recommended)
 
 ### Setup
 
 ```bash
-# Clone the repository
-git clone <repository-url>
-cd saldo
-
-# Install dependencies
 pnpm install
 
-# Run tests
+# Run unit tests
 pnpm test
 
 # Build the library
 pnpm build
 
-# Run documentation site
-pnpm docs
+# Run documentation site (builds the lib first)
+pnpm saldo:docs
 ```
+
+### Comparison suites
+
+- Dependent worker vs. Doutor Finanças: `pnpm compare:dependent [-- --tolerance=1 --verbose]`
+- Independent worker vs. web simulator: `pnpm compare:independent [-- --tolerance=1 --verbose]`
+
+Both suites stream progress and highlight mismatches with detailed diffs.
 
 ### Project Structure
 
@@ -209,18 +246,13 @@ The workflow will automatically:
 
 ## 📚 Documentation
 
-Visit our comprehensive documentation site for detailed guides, examples, and API reference:
+Visit the documentation site for guides, scenarios, and API reference:
 
 ```bash
-pnpm docs
+pnpm saldo:docs
 ```
 
-The documentation includes:
-- Getting started guide
-- Tax situations explanations
-- Lunch allowance guide
-- API reference with examples
-- Calculator showcase
+The docs cover dependent and independent simulators, tax tables, lunch allowances, and worked examples.
 
 ## 🤝 Contributing
 

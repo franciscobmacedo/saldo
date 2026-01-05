@@ -6,18 +6,18 @@ This comprehensive test suite compares the results of the `simulateDependentWork
 
 ```bash
 # Run all comparison tests
-pnpm run test:compare
+pnpm compare:dependent
 
-# Run with custom tolerance (default: €0.01)
-tsx scripts/comparison/index.ts --tolerance=0.05
+# Run with custom tolerance (default: €1.00)
+pnpm compare:dependent -- --tolerance=0.05
 
 # Run with verbose output for failed scenarios
-tsx scripts/comparison/index.ts --verbose
+pnpm compare:dependent -- --verbose
 ```
 
 ## Test Coverage
 
-The test suite includes **hundreds of scenarios** organized into comprehensive categories:
+The suite includes **hundreds of scenarios** under `scripts/dependent-worker/scenarios`:
 
 ### 🏠 Marital Status Scenarios
 - **Single Person** - Various salary levels and configurations
@@ -78,7 +78,7 @@ For each scenario, the script compares:
 ## Configuration
 
 ### Tolerance
-- **Default**: €0.01 (1 cent)
+- **Default**: €1.00
 - **Customizable**: Use `--tolerance=X.XX` parameter
 - **Purpose**: Accounts for minor rounding differences between calculators
 
