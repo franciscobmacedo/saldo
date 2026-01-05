@@ -24,8 +24,10 @@
     "dev": "tsx src/index.ts",
     "saldo:docs": "pnpm build && cd docs && pnpm install && pnpm dev",
     "compare:dependent": "tsx scripts/dependent-worker/index.ts",
+    "compare:independent": "tsx scripts/independent-worker/index.ts",
     "update:manifest": "tsx scripts/update-manifest-2025.ts",
-    "convert": "tsx scripts/excel-retention-table-to-json.ts"
+    "convert": "tsx scripts/excel-retention-table-to-json.ts",
+    "isim": "tsx scripts/log-simulator-results.ts"
   },
   "keywords": [
     "portugal",
@@ -35,7 +37,9 @@
   ],
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/node": "^22.15.17",
+    "cli-progress": "^3.12.0",
     "playwright": "^1.55.0",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
