@@ -1,8 +1,6 @@
-import { Steps } from 'nextra/components'
-
 # Getting Started
 
-Welcome to Saldo! This guide will help you quickly integrate Portuguese tax calculations into your application.
+Welcome to Saldo's **dependent worker** guide. If you need the self-employed flow, jump to the [independent worker docs](/docs/independent/get-started).
 
 ## Installation
 
@@ -30,68 +28,32 @@ console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ## Understanding the Result
 
-The `simulateDependentWorker` function returns a comprehensive breakdown of tax calculations:
-
 ```typescript
 interface DependentWorkerResult {
   taxableIncome: number;        // Income subject to tax
-  grossIncome: number;          // Total monthly gross income
-  tax: number;                   // Monthly tax amount
-  socialSecurity: number;       // Monthly social security contribution
-  socialSecurityTax: number;   // Social security tax rate applied
-  netSalary: number;            // Monthly net salary
-  yearlyNetSalary: number;     // Annual net salary (14 months)
-  yearlyGrossSalary: number;   // Annual gross salary (14 months)
-  lunchAllowance: LunchAllowance; // Lunch allowance details
-  bracket: {
-    signal: "max" | "min";
-    limit: number;
-    max_marginal_rate: number;
-    deduction: number;
-    var1_deduction: number;
-    var2_deduction: number;
-    dependent_aditional_deduction: number;
-    effective_mensal_rate: number;
-  };
-  taxRetentionTable: {
-    situation: string;
-    description: string;
-    brackets: {
-      signal: "max" | "min";
-      limit: number;
-      max_marginal_rate: number;
-      deduction: number;
-      var1_deduction: number;
-      var2_deduction: number;
-      dependent_aditional_deduction: number;
-      effective_mensal_rate: number;
-    }[];
-    dependent_disabled_addition_deduction?: number;
-  };
+  grossIncome: number;          // Monthly gross income (taxable + tax-free lunch)
+  tax: number;                  // IRS withheld
+  socialSecurity: number;       // Social security withheld
+  socialSecurityTax: number;    // SS rate applied
+  netSalary: number;            // Monthly net
+  yearlyNetSalary: number;      // Net across 14 months
+  yearlyGrossSalary: number;    // Gross across 14 months (incl. lunch)
+  lunchAllowance: LunchAllowance; // Tax split for vouchers/cash
+  bracket: Bracket;               // Applied bracket
+  taxRetentionTable: TaxRetentionTable; // Full table metadata
 }
 ```
 
 ## Key Parameters
 
-### Required Parameters
-
 - **`income`**: Monthly gross income in euros
-
-### Optional Parameters
-
-- **`married`**: Whether the person is married (default: `false`)
-- **`disabled`**: Whether the person has a disability (default: `false`)
-- **`partnerDisabled`**: Whether the spouse has a disability (default: `false`)
-- **`location`**: Tax region - `'continent'`, `'azores'`, or `'madeira'` (default: `'continent'`)
-- **`numberOfHolders`**: Number of income holders in marriage - `1` or `2` (default: `null`)
-- **`numberOfDependents`**: Number of dependents (default: `null`)
-- **`numberOfDependentsDisabled`**: Number of dependents with disabilities (default: `null`)
-- **`period`**: Tax calculation period in format "YYYY-MM-DD_YYYY-MM-DD" (default: `"2025-01-01_2025-07-31"`)
-- **`socialSecurityTaxRate`**: Social security tax rate (default: `0.11`)
-- **`twelfths`**: Holiday allowance distribution (default: `Twelfths.TWO_MONTHS`)
-- **`lunchAllowanceDailyValue`**: Daily lunch allowance amount in euros (default: `10.2`)
-- **`lunchAllowanceMode`**: Type of lunch allowance - `"cupon"` or `"salary"` (default: `"cupon"`)
-- **`lunchAllowanceDaysCount`**: Working days per month for lunch allowance (default: `22`)
+- **`married`** / **`numberOfHolders`**: Required together for married workers (1 or 2)
+- **`disabled`**, **`partnerDisabled`**, **`numberOfDependents`**, **`numberOfDependentsDisabled`**
+- **`location`**: `'continent' | 'azores' | 'madeira'` (default `'continent'`)
+- **`period`**: `"2025-01-01_2025-07-31"`, `"2025-08-01_2025-09-30"`, `"2025-10-01_2025-12-31"`
+- **`socialSecurityTaxRate`**: Default `0.11`
+- **`twelfths`**: `Twelfths.NONE | ONE_HALF_MONTH | ONE_MONTH | TWO_MONTHS` (default `TWO_MONTHS`)
+- **`lunchAllowanceDailyValue`**, **`lunchAllowanceMode`** (`"cupon"` or `"salary"`), **`lunchAllowanceDaysCount`**
 
 ## Common Scenarios
 
@@ -158,7 +120,7 @@ const withoutHolidayAllowance = simulateDependentWorker({
 
 const withOneHolidayAllowance = simulateDependentWorker({
   income: 1500,
-  twelfths: Twelfths.ONE_MONTH, // Only Christmas OR holiday allowance
+  twelfths: Twelfths.ONE_MONTH, // Two 50% allowances (one month total)
   location: 'continent'
 });
 
@@ -176,8 +138,6 @@ console.log(\`Two Months - Yearly Net: €\${withBothHolidayAllowances.yearlyNet
 
 ## Working with Types
 
-The library exports all necessary types for TypeScript users:
-
 ```typescript
 import { 
   simulateDependentWorker, 
@@ -185,22 +145,15 @@ import {
   Twelfths, 
   DependentWorkerResult,
   SimulateDependentWorkerOptions,
-  LunchAllowance 
+  LunchAllowance
 } from 'saldo';
 
-// Type-safe function
-function calculateTax(options: SimulateDependentWorkerOptions): DependentWorkerResult {
-  return simulateDependentWorker(options);
-}
-
-// Using location type
-const location: LocationT = 'continent';
-
-// Using the result type
-const result: DependentWorkerResult = simulateDependentWorker({
+// Type-safe dependent worker calculation
+const dependentOpts: SimulateDependentWorkerOptions = {
   income: 1500,
-  location
-});
+  location: 'continent',
+};
+const dependentResult: DependentWorkerResult = simulateDependentWorker(dependentOpts);
 ```
 
 ## Regional Differences
@@ -246,10 +199,12 @@ The library provides clear error messages for invalid configurations:
 
 ## Next Steps
 
-- Learn about [tax situations and scenarios](/docs/tax-situations)
-- Check out [examples](/docs/examples) for common use cases
-- Understand [lunch allowances](/docs/lunch-allowances)
-- Review [API reference](/docs/api-reference)
+- Learn about [tax situations and scenarios](/docs/dependent/tax-situations)
+- Explore the [tax tables explorer](/docs/dependent/tax-tables)
+- Understand [lunch allowances](/docs/dependent/lunch-allowances)
+- Review the [dependent worker API](/docs/dependent/api-reference)
+- Browse [dependent worker examples](/docs/dependent/examples)
+- Switching contexts? Jump to the [independent worker docs](/docs/independent/get-started).
 
 ---
 

@@ -176,6 +176,25 @@ graph TD
     YearlyCalc --> Result[Return Result]
 ```
 
+## Independent Worker Flow
+
+```mermaid
+flowchart TD
+    A[Income + Frequency] --> B[Validate inputs<br/>(days off, tax year, RNH)];
+    B --> C[Gross Income<br/>(12 months, 248 business days)];
+    C --> D[Social Security<br/>(70% base × rate × discount,<br/>capped at 12× IAS,<br/>first 12 months exempt)];
+    C --> E[Specific Deductions<br/>(max €4104 vs 10% SS)];
+    C --> F[Expense Cap<br/>(maxExpensesTax% simplified regime)];
+    F --> G[Expenses Needed];
+    E --> H[Taxable Income];
+    D --> H;
+    G --> H;
+    H --> I[Youth IRS Discount<br/>+ First/Second Year factors];
+    I --> J[IRS Calculation<br/>(progressive ranks or RNH flat)];
+    J --> K[Net Income];
+    D --> K;
+```
+
 ## Regional Data Structure
 
 ```mermaid

@@ -2,26 +2,18 @@
 
 **Modern TypeScript library for Portuguese tax calculations**
 
-Accurately calculate dependent worker taxes, social security contributions, and net salaries in Portugal with full TypeScript support.
+Accurately calculate dependent worker payslips and independent worker (category B) income in Portugal with full TypeScript support.
 
 ## Quick Start
 
-<RunCode defaultCode={`const result = simulateDependentWorker({
-  income: 1500,
-  married: true,
-  numberOfHolders: 1,
-  numberOfDependents: 2,
-  location: 'continent'
-});
-
-console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
-console.log(\`Tax: €\${result.tax.toFixed(2)}\`);
-console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);`} />
+Choose the path you need:
+- **Dependent workers** — Payroll with retention tables. Start with [dependent worker getting started](/docs/dependent/get-started).
+- **Independent workers** — Simplified regime / RNH for self-employed. Start with [independent worker getting started](/docs/independent/get-started).
 
 ## Features
 
-✅ **Complete Tax Calculations** - Portuguese IRS retention tables for 2024-2025  
-✅ **All Regions Supported** - Continent, Azores, and Madeira  
+✅ **Dependent workers** - 2025 retention tables for continent, Azores, and Madeira  
+✅ **Independent workers** - Simplified regime, expense caps, 248 business-day calendar  
 ✅ **Family Situations** - Single, married, dependents, disabilities  
 ✅ **Lunch Allowances** - Meal vouchers and cash allowances  
 ✅ **Holiday Bonuses** - 13th and 14th month distribution  
@@ -31,10 +23,9 @@ console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);`} />
 
 ## Next Steps
 
-- [Get Started](/docs/get-started) - Installation and basic usage
-- [Examples](/docs/examples) - Real-world scenarios  
-- [API Reference](/docs/api-reference) - Complete function reference
-- [Lunch Allowances](/docs/lunch-allowances) - Meal voucher calculations
+- [Dependent worker docs](/docs/dependent/get-started) - Setup, API, scenarios  
+- [Independent worker docs](/docs/independent/get-started) - Setup, API, scenarios  
+- [Architecture](/docs/mermaid) - System design and data flow diagrams
 
 ## Installation
 
@@ -70,10 +61,10 @@ Tax calculations are based on specific date ranges as tax tables change over tim
 
 ## What's Next?
 
-- **[Getting Started](/get-started)** - Installation and basic usage guide
-- **[API Reference](/api-reference)** - Complete function documentation  
-- **[Tax Situations](/tax-situations)** - Understanding Portuguese tax scenarios
-- **[Examples](/examples)** - Real-world use cases and scenarios
+- **[Dependent worker](/docs/dependent/get-started)** - Payroll-specific quick start
+- **[Independent worker](/docs/independent/get-started)** - Self-employed quick start
+- **[Tax Situations](/docs/dependent/tax-situations)** - Understanding Portuguese retention scenarios
+- **[Examples](/docs/dependent/examples)** - Real-world dependent worker cases
 - **[Architecture](/mermaid)** - System design and data flow diagrams
 
 ## Use Cases

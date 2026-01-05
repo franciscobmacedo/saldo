@@ -1,0 +1,153 @@
+# Getting Started
+
+Welcome to Saldo's **independent worker** guide. If you need payroll-style simulations, head to the [dependent worker docs](/docs/dependent/get-started).
+
+## Installation
+
+```bash
+npm install saldo
+# or
+pnpm add saldo
+```
+
+## Quick Start
+
+<RunCode defaultCode={`
+const result = simulateIndependentWorker({
+  income: 30000, // Annual income by default
+  incomeFrequency: 'year',
+  nrDaysOff: 20,
+  expenses: 2000,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1
+});
+
+console.log(\`Gross Income (year): €\${result.grossIncome.year.toFixed(2)}\`);
+console.log(\`Taxable Income: €\${result.taxableIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${result.irsPay.year.toFixed(2)}\`);
+console.log(\`Social Security: €\${result.ssPay.year.toFixed(2)}\`);
+console.log(\`Net Income (year): €\${result.netIncome.year.toFixed(2)}\`);`} />
+
+## Understanding the Result
+
+```typescript
+interface IndependentWorkerResult {
+  grossIncome: CurrencyByFrequency; // year/month/day
+  taxableIncome: number;
+  ssPay: CurrencyByFrequency;       // SS after discounts/caps
+  specificDeductions: number;       // Max of €4104 vs 10% SS
+  expenses: number;                 // Declared expenses
+  expensesNeeded: number;           // Missing to reach simplified cap
+  youthIrsDiscount: number;         // IAS-capped youth benefit
+  irsPay: CurrencyByFrequency;      // IRS due (progressive or RNH flat)
+  netIncome: CurrencyByFrequency;
+  taxRank: TaxRank;                 // Progressive bracket used
+  currentIas: number;               // IAS for selected year
+  maxSsIncome: number;              // 12 × IAS cap
+  ssTax: number;
+  maxExpensesTax: number;           // Simplified regime %
+  workerWithinFirstFinancialYear: boolean; // 37.5% factor
+  workerWithinSecondFinancialYear: boolean; // 56.25% factor
+  workerWithinFirst12Months: boolean; // SS exemption window
+  rnh: boolean;
+  rnhTax: number;
+  benefitsOfYouthIrs: boolean;
+  yearOfYouthIrs: number;
+}
+```
+
+## Key Parameters
+
+- **`income`** + **`incomeFrequency`**: `'year'` (default), `'month'`, or `'day'` (248 business days)
+- **`nrDaysOff`**: For daily frequency; must be an integer < 248
+- **`ssTax`**: Social security rate (default `0.214`) and **`ssDiscount`** range `-0.25..0.25`
+- **`currentTaxRankYear`**: `2023 | 2024 | 2025` IRS tables
+- **`maxExpensesTax`**: Simplified regime percentage (default `15`)
+- **`expenses`**: Declared expenses (0 by default)
+- **`dateOfOpeningAcivity`**: Determines first/second financial year factors and SS exemption in first 12 months
+- **`rnh`** / **`rnhTax`**: Apply RNH flat tax instead of progressive brackets
+- **`benefitsOfYouthIrs`** + **`yearOfYouthIrs`**: Youth IRS discounts with IAS caps (1–10 years depending on tax year)
+
+## Common Scenarios
+
+### Daily contractor with days off and SS discount
+
+<RunCode defaultCode={`const daily = simulateIndependentWorker({
+  income: 120,
+  incomeFrequency: 'day',
+  nrDaysOff: 30,
+  ssDiscount: -0.1, // 10% reduction on SS base
+});
+
+console.log('=== Daily contractor ===');
+console.log(\`Daily net: €\${daily.netIncome.day.toFixed(2)}\`);
+console.log(\`Monthly net: €\${daily.netIncome.month.toFixed(2)}\`);`} />
+
+### RNH flat rate vs. progressive IRS
+
+<RunCode defaultCode={`const standard = simulateIndependentWorker({ income: 45000 });
+const rnh = simulateIndependentWorker({
+  income: 45000,
+  rnh: true,
+  rnhTax: 0.2,
+});
+
+console.log('=== Independent Worker ===');
+console.log(\`Standard IRS (year): €\${standard.netIncome.year.toFixed(2)}\`);
+console.log(\`RNH IRS (year): €\${rnh.netIncome.year.toFixed(2)}\`);
+console.log(\`Youth IRS discount: €\${standard.youthIrsDiscount.toFixed(2)}\`);`} />
+
+### Opening activity and SS exemption
+
+<RunCode defaultCode={`const now = new Date();
+
+const firstYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(now.getFullYear(), 0, 15), // same year -> first financial year
+});
+
+const older = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(now.getFullYear() - 2, 0, 15),
+});
+
+console.log('=== SS Exemption Comparison ===');
+console.log(\`First 12 months SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
+console.log(\`After exemption SS: €\${older.ssPay.year.toFixed(2)}\`);`} />
+
+## Working with Types
+
+```typescript
+import { 
+  simulateIndependentWorker,
+  FrequencyChoices,
+  SimulateIndependentWorkerOptions,
+  IndependentWorkerResult
+} from 'saldo';
+
+const independentOpts: SimulateIndependentWorkerOptions = {
+  income: 35000,
+  incomeFrequency: FrequencyChoices.Year,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+};
+const independentResult: IndependentWorkerResult = simulateIndependentWorker(independentOpts);
+```
+
+## Error Handling
+
+<RunCode defaultCode={`try {
+  simulateIndependentWorker({
+    income: 100,
+    incomeFrequency: 'day',
+    nrDaysOff: 400, // Too many days off for 248-day calendar
+  });
+} catch (error) {
+  console.error('Independent worker error:', error.message);
+}`} />
+
+## Next Steps
+
+- Review the [independent worker API](/docs/independent/api-reference)
+- Browse [independent worker examples](/docs/independent/examples)
+- Working with payroll? Switch to the [dependent worker docs](/docs/dependent/get-started).

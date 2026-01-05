@@ -1,12 +1,12 @@
 # API Reference
 
-Complete reference for all functions, types, and interfaces in Saldo.
+Dependent worker APIs for Portuguese payroll. For self-employed calculations, see the [independent worker API](/docs/independent/api-reference).
 
 ## Main Function
 
 ### `simulateDependentWorker(options)`
 
-The primary function for calculating Portuguese dependent worker taxes and net salary.
+Calculates Portuguese dependent worker taxes and net salary using the official retention tables.
 
 #### Parameters
 
@@ -129,11 +129,6 @@ console.log(\`Lunch Allowance: €\${result.lunchAllowance.monthlyValue.toFixed(
 type LocationT = "continent" | "azores" | "madeira";
 ```
 
-Represents the three Portuguese tax regions:
-- `continent`: Mainland Portugal
-- `azores`: Azores region
-- `madeira`: Madeira region
-
 ### `Twelfths`
 
 ```typescript
@@ -144,8 +139,6 @@ enum Twelfths {
   TWO_MONTHS = 2       // 2x100% - Two allowances at 100% each (two months total)
 }
 ```
-
-Represents how holiday allowances (13th and 14th month) are distributed throughout the year, matching Doutor Finanças options.
 
 ### `LunchAllowance`
 
@@ -191,8 +184,6 @@ type SituationCodesT =
   | "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY";    // Married single holder + disability
 ```
 
-Tax table codes used internally by the library to determine the appropriate tax bracket.
-
 ### `Situation`
 
 ```typescript
@@ -202,8 +193,6 @@ interface Situation {
   conditions: Condition[];
 }
 ```
-
-Represents a tax situation with its code, description, and applicable conditions.
 
 ### `Condition`
 
@@ -218,7 +207,50 @@ interface Condition {
 }
 ```
 
-Represents specific conditions that determine which tax situation applies.
+### `Bracket`
+
+```typescript
+interface Bracket {
+  signal: "max" | "min";                    // Whether this is a maximum or minimum bracket
+  limit: number;                            // Income limit for this bracket
+  max_marginal_rate: number;                // Maximum marginal tax rate
+  deduction: number;                        // Standard deduction amount
+  var1_deduction: number;                   // Variable deduction 1
+  var2_deduction: number;                   // Variable deduction 2
+  dependent_aditional_deduction: number;   // Additional deduction per dependent
+  effective_mensal_rate: number;            // Effective monthly tax rate
+}
+```
+
+### `TaxRetentionTable`
+
+```typescript
+interface TaxRetentionTable {
+  situation: string;                       // Situation code
+  description: string;                     // Human-readable description
+  brackets: Bracket[];                      // Array of all tax brackets
+  dependent_disabled_addition_deduction?: number; // Additional deduction for disabled dependents
+}
+```
+
+### `RetentionPathsSchema`
+
+```typescript
+class RetentionPathsSchema {
+  public identifier: string;
+
+  constructor(
+    period: PeriodT,
+    location: LocationT,
+    situationCode: SituationCodesT,
+    year: number | string
+  );
+
+  get path(): string; // Returns the identifier
+}
+```
+
+Constructs identifiers in the format `"2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`.
 
 ## Utility Functions
 
@@ -244,73 +276,15 @@ SituationUtils.getSituationFromCode(code: string): Situation | undefined
 
 Retrieves a tax situation by its code.
 
-### `Bracket` Object
-
-The `bracket` object contains detailed information about the tax bracket applied to the worker's income:
-
-```typescript
-interface Bracket {
-  signal: "max" | "min";                    // Whether this is a maximum or minimum bracket
-  limit: number;                            // Income limit for this bracket
-  max_marginal_rate: number;                // Maximum marginal tax rate
-  deduction: number;                        // Standard deduction amount
-  var1_deduction: number;                   // Variable deduction 1
-  var2_deduction: number;                   // Variable deduction 2
-  dependent_aditional_deduction: number;   // Additional deduction per dependent
-  effective_mensal_rate: number;            // Effective monthly tax rate
-}
-```
-
-### `TaxRetentionTable` Object
-
-The `taxRetentionTable` object contains the complete tax retention table data:
-
-```typescript
-interface TaxRetentionTable {
-  situation: string;                       // Situation code
-  description: string;                     // Human-readable description
-  brackets: Bracket[];                      // Array of all tax brackets
-  dependent_disabled_addition_deduction?: number; // Additional deduction for disabled dependents
-}
-```
-
-### `RetentionPathsSchema` Class
-
-The `RetentionPathsSchema` class handles complex date/location/situation path construction for tax table loading:
-
-```typescript
-class RetentionPathsSchema {
-  public identifier: string;
-
-  constructor(
-    period: PeriodT,
-    location: LocationT,
-    situationCode: SituationCodesT,
-    year: number | string
-  );
-
-  get path(): string; // Returns the identifier
-}
-```
-
-This class constructs identifiers in the format: `"2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`
-
 ## Validation Functions
 
 The library includes internal validation functions that are automatically called:
 
-### `validateNumberOfHolders(numberOfHolders)`
-Validates that the number of holders is valid (1 or 2 for married, null for single).
-
-### `validateMarriedAndNumberOfHolders(married, numberOfHolders)`
-Validates the relationship between marital status and number of holders.
-
-### `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
-Validates that the number of disabled dependents doesn't exceed total dependents.
+- `validateNumberOfHolders(numberOfHolders)`
+- `validateMarriedAndNumberOfHolders(married, numberOfHolders)`
+- `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
 
 ## Error Handling
-
-The library throws descriptive errors for invalid configurations:
 
 <RunCode defaultCode={`// Invalid situation
 try {
@@ -337,8 +311,6 @@ try {
 
 ### Period-based Calculations
 
-The library supports calculations for specific tax periods:
-
 <RunCode defaultCode={`const result = simulateDependentWorker({
   income: 1500,
   period: "2025-01-01_2025-07-31",  // First period of 2025
@@ -362,8 +334,6 @@ console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
 console.log(\`Rate Applied: \${(result.socialSecurityTax * 100).toFixed(1)}%\`);`} />
 
 ### Disability Benefits
-
-The library handles various disability scenarios:
 
 <RunCode defaultCode={`// Worker with disability
 const workerDisability = simulateDependentWorker({
@@ -392,4 +362,4 @@ const dependentDisability = simulateDependentWorker({
 console.log('=== Disability Benefits Comparison ===');
 console.log(\`Worker Disability - Net: €\${workerDisability.netSalary.toFixed(2)}\`);
 console.log(\`Partner Disability - Net: €\${partnerDisability.netSalary.toFixed(2)}\`);
-console.log(\`Dependent Disability - Net: €\${dependentDisability.netSalary.toFixed(2)}\`);`} /> 
+console.log(\`Dependent Disability - Net: €\${dependentDisability.netSalary.toFixed(2)}\`);`} />

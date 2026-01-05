@@ -1,0 +1,169 @@
+# API Reference
+
+Independent worker APIs (simplified regime/RNH). For payroll calculations, see the [dependent worker API](/docs/dependent/api-reference).
+
+## Main Function
+
+### `simulateIndependentWorker(options)`
+
+Calculates Portuguese category B (independent worker) income with simplified regime rules, social security, youth IRS, and optional RNH flat tax.
+
+#### Parameters
+
+```typescript
+interface SimulateIndependentWorkerOptions {
+  income: number;
+  incomeFrequency?: FrequencyChoices;
+  nrDaysOff?: number;
+  ssDiscount?: number;
+  maxExpensesTax?: number;
+  expenses?: number;
+  ssTax?: number;
+  currentTaxRankYear?: 2023 | 2024 | 2025;
+  rnh?: boolean;
+  rnhTax?: number;
+  dateOfOpeningAcivity?: Date | null;
+  benefitsOfYouthIrs?: boolean;
+  yearOfYouthIrs?: number;
+}
+```
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `income` | `number` | **Required** | Gross income based on `incomeFrequency` |
+| `incomeFrequency` | `FrequencyChoices` | `"year"` | Frequency of the `income` (`"year"`, `"month"`, `"day"`) |
+| `nrDaysOff` | `number` | `0` | Days off for daily frequency (integer, must be < 248) |
+| `ssDiscount` | `number` | `0` | Social security adjustment (-0.25 to 0.25) applied to the 70% SS base |
+| `maxExpensesTax` | `number` | `15` | Simplified regime percentage for deductible expenses |
+| `expenses` | `number` | `0` | Declared expenses (used before adding missing expenses) |
+| `ssTax` | `number` | `0.214` | Social security rate |
+| `currentTaxRankYear` | `2023 \| 2024 \| 2025` | `2025` | IRS progressive table year |
+| `rnh` | `boolean` | `false` | Apply RNH flat tax instead of progressive brackets |
+| `rnhTax` | `number` | `0.2` | RNH flat tax rate |
+| `dateOfOpeningAcivity` | `Date \| null` | `null` | Sets first/second financial year multipliers and first-12-month SS exemption |
+| `benefitsOfYouthIrs` | `boolean` | `false` | Apply youth IRS discount |
+| `yearOfYouthIrs` | `number` | `1` | Youth IRS benefit year (1-10 for 2025 tables) |
+
+#### Return Value
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `grossIncome` | `CurrencyByFrequency` | Income per year/month/day (12 months, 248 business days) |
+| `taxableIncome` | `number` | Income used for IRS after simplified regime factors |
+| `ssPay` | `CurrencyByFrequency` | Social security due (respects caps, discounts, first-year exemption) |
+| `specificDeductions` | `number` | Max of €4104 vs. 10% of SS payments |
+| `expenses` | `number` | Declared expenses |
+| `expensesNeeded` | `number` | Extra expenses needed to reach the simplified cap |
+| `youthIrsDiscount` | `number` | Youth IRS deduction limited by IAS multipliers |
+| `irsPay` | `CurrencyByFrequency` | IRS owed (progressive tables or RNH flat) |
+| `netIncome` | `CurrencyByFrequency` | Net income after IRS and SS |
+| `taxRank` | `TaxRank` | Progressive bracket applied |
+| `currentIas` | `number` | IAS value for the selected tax year |
+| `maxSsIncome` | `number` | Cap for SS base (12 × IAS) |
+| `workerWithinFirstFinancialYear` | `boolean` | Uses 37.5% simplified factor |
+| `workerWithinSecondFinancialYear` | `boolean` | Uses 56.25% simplified factor |
+| `workerWithinFirst12Months` | `boolean` | SS waived for first 12 months after opening activity |
+| `rnh` / `rnhTax` | `boolean` / `number` | Indicates RNH flat rate usage |
+| `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Youth IRS inputs echoed back |
+
+#### Example
+
+<RunCode defaultCode={`
+const result = simulateIndependentWorker({
+  income: 40000,
+  incomeFrequency: 'year',
+  expenses: 3000,
+  ssDiscount: -0.1,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+console.log(\`Taxable income: €\${result.taxableIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${result.irsPay.year.toFixed(2)}\`);
+console.log(\`Social security: €\${result.ssPay.year.toFixed(2)}\`);
+console.log(\`Net income: €\${result.netIncome.year.toFixed(2)}\`);`} />
+
+## Types and Enums
+
+### `FrequencyChoices`
+
+```typescript
+enum FrequencyChoices {
+  Year = "year",
+  Month = "month",
+  Day = "day"
+}
+```
+
+Used by `simulateIndependentWorker` to interpret the `income` amount.
+
+### `CurrencyByFrequency`
+
+```typescript
+interface CurrencyByFrequency {
+  year: number;
+  month: number;
+  day: number;
+}
+```
+
+Most independent worker results are returned in this shape (always using 12 months and 248 business days).
+
+### `TaxRank`
+
+```typescript
+interface TaxRank {
+  id: number;
+  min: number;
+  max: number | null;
+  normalTax: number;
+  averageTax: number | null;
+}
+```
+
+Represents a progressive IRS bracket for independent workers (tables for 2023, 2024, and 2025).
+
+## Validation Functions
+
+- `validateIncome`, `validateIncomeFrequency`, `validateNrDaysOff`
+- `validateSsDiscount`, `validateMaxExpensesTax`, `validateExpenses`, `validateSsTax`
+- `validateCurrentTaxRankYear`, `validateRnhTax`
+- `validateYearOfYouthIrs` (caps years to 1-5 for 2023/2024 and 1-10 for 2025)
+
+## Error Handling
+
+<RunCode defaultCode={`try {
+  simulateIndependentWorker({
+    income: 100,
+    incomeFrequency: 'day',
+    nrDaysOff: 400, // Too many days off for 248-day calendar
+  });
+} catch (error) {
+  console.error('Independent worker error:', error.message);
+}`} />
+
+## Advanced Usage
+
+### Opening activity and youth IRS
+
+<RunCode defaultCode={`// First financial year: 37.5% factor + SS exemption for first 12 months
+const firstYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(new Date().getFullYear(), 0, 15),
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+// Second financial year: 56.25% factor, SS payable
+const secondYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(new Date().getFullYear() - 1, 3, 1),
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+console.log('=== Opening Activity Impact ===');
+console.log(\`First year taxable: €\${firstYear.taxableIncome.toFixed(2)}\`);
+console.log(\`Second year taxable: €\${secondYear.taxableIncome.toFixed(2)}\`);
+console.log(\`First year SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
+console.log(\`Second year SS: €\${secondYear.ssPay.year.toFixed(2)}\`);`} />
