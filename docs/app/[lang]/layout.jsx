@@ -5,6 +5,8 @@ import { getPageMap } from 'nextra/page-map'
 import Link from 'next/link'
 import Image from 'next/image'
 
+import logo from '../../public/logo-xs.webp'
+
 import '../globals.css'
 
 const locales = [
@@ -60,7 +62,7 @@ export default async function RootLayout({ children, params: paramsPromise }) {
     <Navbar
       logo={
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Image src="/logo-xs.webp" width={24} height={24} alt="Saldo logo" />
+          <Image src={logo} width={24} height={24} alt="Saldo logo" />
           <b>Saldo</b>{' '}
           <span style={{ opacity: '60%' }}>Portuguese Salary Calculator</span>
         </div>
