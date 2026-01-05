@@ -103,4 +103,4 @@ jobs:
           prerelease: ${{ github.event.inputs.version == 'prerelease' }}
 
       - name: Publish to NPM
-        run: pnpm publish --access public --no-git-checks
+        run: npm publish --access public
