@@ -23,7 +23,7 @@
     "build": "tsc && tsc-alias",
     "dev": "tsx src/index.ts",
     "saldo:docs": "pnpm build && cd docs && pnpm install && pnpm dev",
-    "test:compare": "tsx scripts/comparison/index.ts",
+    "compare:dependent": "tsx scripts/dependent-worker/index.ts",
     "update:manifest": "tsx scripts/update-manifest-2025.ts",
     "convert": "tsx scripts/excel-retention-table-to-json.ts"
   },
@@ -36,6 +36,7 @@
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "@types/node": "^22.15.17",
+    "playwright": "^1.55.0",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.4",
