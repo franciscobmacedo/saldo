@@ -1,0 +1,272 @@
+# Exemplos
+
+Cenários de trabalhador por conta de outrem. Para casos de trabalhadores por conta própria, consulte os [exemplos de trabalhador independente](/independent/examples).
+
+## Cálculos Básicos
+
+### Trabalhador com Salário Mínimo
+
+<RunCode defaultCode={`const minimumWageWorker = simulateDependentWorker({
+  income: 760, // Salário mínimo português 2024
+  location: 'continent'
+});
+
+console.log('=== Trabalhador com Salário Mínimo ===');
+console.log(\`Rendimento Bruto: €\${minimumWageWorker.grossIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${minimumWageWorker.tax.toFixed(2)}\`);
+console.log(\`Segurança Social: €\${minimumWageWorker.socialSecurity.toFixed(2)}\`);
+console.log(\`Salário Líquido: €\${minimumWageWorker.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${minimumWageWorker.yearlyNetSalary.toFixed(2)}\`);`} />
+
+### Trabalhador Médio
+
+<RunCode defaultCode={`const averageWorker = simulateDependentWorker({
+  income: 1200,
+  location: 'continent'
+});
+
+console.log('=== Trabalhador Médio ===');
+console.log(\`Líquido Mensal: €\${averageWorker.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${averageWorker.yearlyNetSalary.toFixed(2)}\`);
+console.log(\`Taxa Efetiva de Imposto: \${(averageWorker.tax / averageWorker.taxableIncome * 100).toFixed(1)}%\`);`} />
+
+## Situações Familiares
+
+### Pai/Mãe Solteiro(a) com 2 Filhos
+
+<RunCode defaultCode={`const singleParent = simulateDependentWorker({
+  income: 1500,
+  married: false,
+  numberOfDependents: 2,
+  location: 'continent'
+});
+
+console.log('=== Pai/Mãe Solteiro(a) (2 filhos) ===');
+console.log(\`Líquido Mensal: €\${singleParent.netSalary.toFixed(2)}\`);
+
+// Comparar com o mesmo rendimento mas sem dependentes
+const noDependents = simulateDependentWorker({ 
+  income: 1500, 
+  location: 'continent' 
+});
+
+console.log(\`Poupança Fiscal com dependentes: €\${(noDependents.tax - singleParent.tax).toFixed(2)}\`);`} />
+
+### Casado com Rendimento Único (1 Titular)
+
+<RunCode defaultCode={`const marriedSingleIncome = simulateDependentWorker({
+  income: 2000,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 1,
+  location: 'continent'
+});
+
+console.log('=== Casado com Rendimento Único ===');
+console.log(\`Líquido Mensal: €\${marriedSingleIncome.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${marriedSingleIncome.yearlyNetSalary.toFixed(2)}\`);`} />
+
+### Casado com Rendimentos Duplos (2 Titulares)
+
+<RunCode defaultCode={`// Cônjuge 1
+const spouse1 = simulateDependentWorker({
+  income: 1400,
+  married: true,
+  numberOfHolders: 2,
+  numberOfDependents: 1, // Um filho partilhado
+  location: 'continent'
+});
+
+// Cônjuge 2
+const spouse2 = simulateDependentWorker({
+  income: 1100,
+  married: true,
+  numberOfHolders: 2,
+  numberOfDependents: 0, // Filho já contado no cônjuge1
+  location: 'continent'
+});
+
+const totalHouseholdNet = spouse1.netSalary + spouse2.netSalary;
+console.log('=== Casado com Rendimentos Duplos ===');
+console.log(\`Cônjuge 1 Líquido: €\${spouse1.netSalary.toFixed(2)}\`);
+console.log(\`Cônjuge 2 Líquido: €\${spouse2.netSalary.toFixed(2)}\`);
+console.log(\`Total do Agregado Líquido: €\${totalHouseholdNet.toFixed(2)}\`);`} />
+
+## Comparações Regionais
+
+### Mesmo Salário em Diferentes Regiões
+
+<RunCode defaultCode={`const income = 1500;
+
+const continent = simulateDependentWorker({
+  income,
+  location: 'continent'
+});
+
+const azores = simulateDependentWorker({
+  income,
+  location: 'azores'
+});
+
+const madeira = simulateDependentWorker({
+  income,
+  location: 'madeira'
+});
+
+console.log('=== Comparação Regional ===');
+console.log(\`Continente Líquido: €\${continent.netSalary.toFixed(2)}\`);
+console.log(\`Açores Líquido: €\${azores.netSalary.toFixed(2)}\`);
+console.log(\`Madeira Líquido: €\${madeira.netSalary.toFixed(2)}\`);`} />
+
+## Benefícios de Deficiência
+
+### Trabalhador com Deficiência
+
+<RunCode defaultCode={`const workerWithDisability = simulateDependentWorker({
+  income: 1300,
+  disabled: true,
+  location: 'continent'
+});
+
+const workerWithoutDisability = simulateDependentWorker({
+  income: 1300,
+  disabled: false,
+  location: 'continent'
+});
+
+console.log('=== Benefícios de Deficiência ===');
+console.log(\`Com Deficiência - Líquido: €\${workerWithDisability.netSalary.toFixed(2)}\`);
+console.log(\`Sem Deficiência - Líquido: €\${workerWithoutDisability.netSalary.toFixed(2)}\`);
+console.log(\`Benefício: €\${(workerWithDisability.netSalary - workerWithoutDisability.netSalary).toFixed(2)}\`);`} />
+
+## Subsídios de Refeição
+
+### Com Cartões de Refeição
+
+<RunCode defaultCode={`const withVouchers = simulateDependentWorker({
+  income: 1400,
+  lunchAllowanceDailyValue: 7.5,
+  lunchAllowanceMode: "cupon",
+  lunchAllowanceDaysCount: 22
+});
+
+const withoutVouchers = simulateDependentWorker({
+  income: 1400
+});
+
+console.log('=== Impacto dos Cartões de Refeição ===');
+console.log(\`Com Cartões - Líquido: €\${withVouchers.netSalary.toFixed(2)}\`);
+console.log(\`Sem Cartões - Líquido: €\${withoutVouchers.netSalary.toFixed(2)}\`);
+console.log(\`Benefício: €\${(withVouchers.netSalary - withoutVouchers.netSalary).toFixed(2)}\`);`} />
+
+### Subsídio de Refeição em Dinheiro de Alto Valor
+
+<RunCode defaultCode={`const cashAllowance = simulateDependentWorker({
+  income: 2000,
+  lunchAllowanceDailyValue: 10.00,
+  lunchAllowanceMode: "salary",
+  lunchAllowanceDaysCount: 21
+});
+
+console.log('=== Subsídio de Refeição em Dinheiro Alto ===');
+console.log(\`Total do Subsídio: €\${cashAllowance.lunchAllowance.monthlyValue}\`);
+console.log(\`Porção Tributável: €\${cashAllowance.lunchAllowance.taxableMonthlyValue}\`);
+console.log(\`Porção Isenta: €\${cashAllowance.lunchAllowance.taxFreeMonthlyValue}\`);`} />
+
+## Distribuição de Subsídios de Férias
+
+### Comparar Métodos de Distribuição
+
+<RunCode defaultCode={`
+const noTwelfths = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.NONE
+});
+
+const oneTwelfth = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.ONE_MONTH
+});
+
+const twoTwelfths = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.TWO_MONTHS
+});
+
+console.log('=== Impacto da Distribuição de Subsídios de Férias ===');
+console.log(\`Sem Distribuição - Líquido Mensal: €\${noTwelfths.netSalary.toFixed(2)}\`);
+console.log(\`Um Mês - Líquido Mensal: €\${oneTwelfth.netSalary.toFixed(2)}\`);
+console.log(\`Dois Meses - Líquido Mensal: €\${twoTwelfths.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual (Dois Meses): €\${twoTwelfths.yearlyNetSalary.toFixed(2)}\`);`} />
+
+## Exemplos de Altos Rendimentos
+
+### Salário Executivo
+
+<RunCode defaultCode={`const executive = simulateDependentWorker({
+  income: 8000,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continent',
+  lunchAllowanceDailyValue: 12,
+  lunchAllowanceMode: 'cupon',
+  lunchAllowanceDaysCount: 22
+});
+
+console.log('=== Salário Executivo ===');
+console.log(\`Bruto: €\${executive.grossIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${executive.tax.toFixed(2)}\`);
+console.log(\`Líquido: €\${executive.netSalary.toFixed(2)}\`);
+console.log(\`Taxa Efetiva: \${(executive.tax / executive.taxableIncome * 100).toFixed(1)}%\`);
+console.log(\`Líquido Anual: €\${executive.yearlyNetSalary.toFixed(2)}\`);`} />
+
+## Cenários Complexos
+
+### Família com Dependente com Deficiência
+
+<RunCode defaultCode={`const familyWithDisabledChild = simulateDependentWorker({
+  income: 2200,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  numberOfDependentsDisabled: 1,
+  partnerDisabled: false,
+  location: 'continent'
+});
+
+console.log('=== Família com Filho com Deficiência ===');
+console.log(\`Salário Líquido: €\${familyWithDisabledChild.netSalary.toFixed(2)}\`);
+console.log(\`Benefícios Fiscais Aplicados: Sim\`);`} />
+
+## Exemplos Baseados em Períodos
+
+### Transições de Períodos Fiscais
+
+<RunCode defaultCode={`// Primeiro período de 2025
+const firstPeriod = simulateDependentWorker({
+  income: 1800,
+  period: "2025-01-01_2025-07-31", // 1 de janeiro - 31 de julho
+  location: 'continent'
+});
+
+// Segundo período de 2025
+const secondPeriod = simulateDependentWorker({
+  income: 1800,
+  period: "2025-08-01_2025-09-30", // 1 de agosto - 30 de setembro
+  location: 'continent'
+});
+
+// Terceiro período de 2025
+const thirdPeriod = simulateDependentWorker({
+  income: 1800,
+  period: "2025-10-01_2025-12-31", // 1 de outubro - 31 de dezembro
+  location: 'continent'
+});
+
+console.log('=== Comparação de Períodos Fiscais ===');
+console.log(\`Primeiro Período Líquido: €\${firstPeriod.netSalary.toFixed(2)}\`);
+console.log(\`Segundo Período Líquido: €\${secondPeriod.netSalary.toFixed(2)}\`);
+console.log(\`Terceiro Período Líquido: €\${thirdPeriod.netSalary.toFixed(2)}\`);`} />
+
+Estes exemplos demonstram a flexibilidade e natureza abrangente do Saldo para vários cenários fiscais portugueses.

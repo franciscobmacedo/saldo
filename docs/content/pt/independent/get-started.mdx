@@ -1,0 +1,153 @@
+# Começar
+
+Bem-vindo ao guia de **trabalhador independente** do Saldo. Se precisar de simulações de folha de pagamento, vá para a [documentação de trabalhador por conta de outrem](/dependent/get-started).
+
+## Instalação
+
+```bash
+npm install saldo
+# ou
+pnpm add saldo
+```
+
+## Início Rápido
+
+<RunCode defaultCode={`
+const result = simulateIndependentWorker({
+  income: 30000, // Rendimento anual por predefinição
+  incomeFrequency: 'year',
+  nrDaysOff: 20,
+  expenses: 2000,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1
+});
+
+console.log(\`Rendimento Bruto (ano): €\${result.grossIncome.year.toFixed(2)}\`);
+console.log(\`Rendimento Tributável: €\${result.taxableIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${result.irsPay.year.toFixed(2)}\`);
+console.log(\`Segurança Social: €\${result.ssPay.year.toFixed(2)}\`);
+console.log(\`Rendimento Líquido (ano): €\${result.netIncome.year.toFixed(2)}\`);`} />
+
+## Compreender o Resultado
+
+```typescript
+interface IndependentWorkerResult {
+  grossIncome: CurrencyByFrequency; // ano/mês/dia
+  taxableIncome: number;
+  ssPay: CurrencyByFrequency;       // SS após descontos/limites
+  specificDeductions: number;       // Máx de €4104 vs 10% SS
+  expenses: number;                 // Despesas declaradas
+  expensesNeeded: number;           // Faltam para atingir o limite simplificado
+  youthIrsDiscount: number;         // Benefício de juventude limitado por IAS
+  irsPay: CurrencyByFrequency;      // IRS devido (progressivo ou RNH fixo)
+  netIncome: CurrencyByFrequency;
+  taxRank: TaxRank;                 // Escalão progressivo usado
+  currentIas: number;               // IAS para o ano selecionado
+  maxSsIncome: number;              // Limite 12 × IAS
+  ssTax: number;
+  maxExpensesTax: number;           // Percentagem do regime simplificado
+  workerWithinFirstFinancialYear: boolean; // Fator 37.5%
+  workerWithinSecondFinancialYear: boolean; // Fator 56.25%
+  workerWithinFirst12Months: boolean; // Janela de isenção SS
+  rnh: boolean;
+  rnhTax: number;
+  benefitsOfYouthIrs: boolean;
+  yearOfYouthIrs: number;
+}
+```
+
+## Parâmetros Principais
+
+- **`income`** + **`incomeFrequency`**: `'year'` (predefinição), `'month'`, ou `'day'` (248 dias úteis)
+- **`nrDaysOff`**: Para frequência diária; deve ser um inteiro < 248
+- **`ssTax`**: Taxa de segurança social (predefinição `0.214`) e **`ssDiscount`** intervalo `-0.25..0.25`
+- **`currentTaxRankYear`**: Tabelas IRS `2023 | 2024 | 2025`
+- **`maxExpensesTax`**: Percentagem do regime simplificado (predefinição `15`)
+- **`expenses`**: Despesas declaradas (0 por predefinição)
+- **`dateOfOpeningAcivity`**: Determina fatores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses
+- **`rnh`** / **`rnhTax`**: Aplicar imposto fixo RNH em vez de escalões progressivos
+- **`benefitsOfYouthIrs`** + **`yearOfYouthIrs`**: Descontos IRS de juventude com limites IAS (1–10 anos dependendo do ano fiscal)
+
+## Cenários Comuns
+
+### Contratado diário com dias de folga e desconto SS
+
+<RunCode defaultCode={`const daily = simulateIndependentWorker({
+  income: 120,
+  incomeFrequency: 'day',
+  nrDaysOff: 30,
+  ssDiscount: -0.1, // Redução de 10% na base SS
+});
+
+console.log('=== Contratado diário ===');
+console.log(\`Líquido diário: €\${daily.netIncome.day.toFixed(2)}\`);
+console.log(\`Líquido mensal: €\${daily.netIncome.month.toFixed(2)}\`);`} />
+
+### Taxa fixa RNH vs. IRS progressivo
+
+<RunCode defaultCode={`const standard = simulateIndependentWorker({ income: 45000 });
+const rnh = simulateIndependentWorker({
+  income: 45000,
+  rnh: true,
+  rnhTax: 0.2,
+});
+
+console.log('=== Trabalhador Independente ===');
+console.log(\`IRS Padrão (ano): €\${standard.netIncome.year.toFixed(2)}\`);
+console.log(\`IRS RNH (ano): €\${rnh.netIncome.year.toFixed(2)}\`);
+console.log(\`Desconto IRS de juventude: €\${standard.youthIrsDiscount.toFixed(2)}\`);`} />
+
+### Abertura de atividade e isenção SS
+
+<RunCode defaultCode={`const now = new Date();
+
+const firstYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(now.getFullYear(), 0, 15), // mesmo ano -> primeiro ano fiscal
+});
+
+const older = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(now.getFullYear() - 2, 0, 15),
+});
+
+console.log('=== Comparação de Isenção SS ===');
+console.log(\`Primeiros 12 meses SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
+console.log(\`Após isenção SS: €\${older.ssPay.year.toFixed(2)}\`);`} />
+
+## Trabalhar com Tipos
+
+```typescript
+import { 
+  simulateIndependentWorker,
+  FrequencyChoices,
+  SimulateIndependentWorkerOptions,
+  IndependentWorkerResult
+} from 'saldo';
+
+const independentOpts: SimulateIndependentWorkerOptions = {
+  income: 35000,
+  incomeFrequency: FrequencyChoices.Year,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+};
+const independentResult: IndependentWorkerResult = simulateIndependentWorker(independentOpts);
+```
+
+## Tratamento de Erros
+
+<RunCode defaultCode={`try {
+  simulateIndependentWorker({
+    income: 100,
+    incomeFrequency: 'day',
+    nrDaysOff: 400, // Demasiados dias de folga para calendário de 248 dias
+  });
+} catch (error) {
+  console.error('Erro de trabalhador independente:', error.message);
+}`} />
+
+## Próximos Passos
+
+- Revise a [API de trabalhador independente](/independent/api-reference)
+- Navegue pelos [exemplos de trabalhador independente](/independent/examples)
+- A trabalhar com folha de pagamento? Mude para a [documentação de trabalhador por conta de outrem](/dependent/get-started).

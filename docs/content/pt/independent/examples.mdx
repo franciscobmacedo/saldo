@@ -1,0 +1,56 @@
+# Exemplos
+
+Cenários de trabalhador independente. Para casos de folha de pagamento, consulte os [exemplos de trabalhador por conta de outrem](/dependent/examples).
+
+## Freelancer mensal com despesas
+
+<RunCode defaultCode={`const freelancer = simulateIndependentWorker({
+  income: 2500,
+  incomeFrequency: 'month',
+  nrDaysOff: 20,
+  expenses: 1800,
+  maxExpensesTax: 20,
+});
+
+console.log('=== Freelancer Mensal ===');
+console.log(\`Bruto (ano): €\${freelancer.grossIncome.year.toFixed(2)}\`);
+console.log(\`Rendimento tributável: €\${freelancer.taxableIncome.toFixed(2)}\`);
+console.log(\`Despesas necessárias: €\${freelancer.expensesNeeded.toFixed(2)}\`);
+console.log(\`Líquido (mês): €\${freelancer.netIncome.month.toFixed(2)}\`);`} />
+
+## IRS de juventude vs. RNH
+
+<RunCode defaultCode={`const standard = simulateIndependentWorker({
+  income: 45000,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+const rnh = simulateIndependentWorker({
+  income: 45000,
+  rnh: true,
+  rnhTax: 0.20,
+});
+
+console.log('=== IRS de Juventude vs. RNH ===');
+console.log(\`IRS padrão líquido (ano): €\${standard.netIncome.year.toFixed(2)}\`);
+console.log(\`RNH líquido (ano): €\${rnh.netIncome.year.toFixed(2)}\`);
+console.log(\`Desconto IRS de juventude: €\${standard.youthIrsDiscount.toFixed(2)}\`);`} />
+
+## Abertura de atividade e isenção SS
+
+<RunCode defaultCode={`const now = new Date();
+
+const firstYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(now.getFullYear(), 0, 15), // mesmo ano -> primeiro ano fiscal
+});
+
+const older = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(now.getFullYear() - 2, 0, 15),
+});
+
+console.log('=== Comparação de Isenção SS ===');
+console.log(\`Primeiros 12 meses SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
+console.log(\`Após isenção SS: €\${older.ssPay.year.toFixed(2)}\`);`} />

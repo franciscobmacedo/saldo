@@ -1,0 +1,169 @@
+# Referência da API
+
+APIs de trabalhador independente (regime simplificado/RNH). Para cálculos de folha de pagamento, consulte a [API de trabalhador por conta de outrem](/dependent/api-reference).
+
+## Função Principal
+
+### `simulateIndependentWorker(options)`
+
+Calcula o rendimento de categoria B (trabalhador independente) português com regras de regime simplificado, segurança social, IRS de juventude e imposto fixo RNH opcional.
+
+#### Parâmetros
+
+```typescript
+interface SimulateIndependentWorkerOptions {
+  income: number;
+  incomeFrequency?: FrequencyChoices;
+  nrDaysOff?: number;
+  ssDiscount?: number;
+  maxExpensesTax?: number;
+  expenses?: number;
+  ssTax?: number;
+  currentTaxRankYear?: 2023 | 2024 | 2025;
+  rnh?: boolean;
+  rnhTax?: number;
+  dateOfOpeningAcivity?: Date | null;
+  benefitsOfYouthIrs?: boolean;
+  yearOfYouthIrs?: number;
+}
+```
+
+| Parâmetro | Tipo | Predefinição | Descrição |
+|-----------|------|---------|-------------|
+| `income` | `number` | **Obrigatório** | Rendimento bruto baseado em `incomeFrequency` |
+| `incomeFrequency` | `FrequencyChoices` | `"year"` | Frequência do `income` (`"year"`, `"month"`, `"day"`) |
+| `nrDaysOff` | `number` | `0` | Dias de folga para frequência diária (inteiro, deve ser < 248) |
+| `ssDiscount` | `number` | `0` | Ajuste de segurança social (-0.25 a 0.25) aplicado à base SS de 70% |
+| `maxExpensesTax` | `number` | `15` | Percentagem do regime simplificado para despesas dedutíveis |
+| `expenses` | `number` | `0` | Despesas declaradas (usadas antes de adicionar despesas em falta) |
+| `ssTax` | `number` | `0.214` | Taxa de segurança social |
+| `currentTaxRankYear` | `2023 \| 2024 \| 2025` | `2025` | Ano da tabela IRS progressiva |
+| `rnh` | `boolean` | `false` | Aplicar imposto fixo RNH em vez de escalões progressivos |
+| `rnhTax` | `number` | `0.2` | Taxa de imposto fixo RNH |
+| `dateOfOpeningAcivity` | `Date \| null` | `null` | Define multiplicadores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses |
+| `benefitsOfYouthIrs` | `boolean` | `false` | Aplicar desconto IRS de juventude |
+| `yearOfYouthIrs` | `number` | `1` | Ano de benefício IRS de juventude (1-10 para tabelas 2025) |
+
+#### Valor de Retorno
+
+| Propriedade | Tipo | Descrição |
+|----------|------|-------------|
+| `grossIncome` | `CurrencyByFrequency` | Rendimento por ano/mês/dia (12 meses, 248 dias úteis) |
+| `taxableIncome` | `number` | Rendimento usado para IRS após fatores de regime simplificado |
+| `ssPay` | `CurrencyByFrequency` | Segurança social devida (respeita limites, descontos, isenção do primeiro ano) |
+| `specificDeductions` | `number` | Máx de €4104 vs. 10% dos pagamentos SS |
+| `expenses` | `number` | Despesas declaradas |
+| `expensesNeeded` | `number` | Despesas extra necessárias para atingir o limite simplificado |
+| `youthIrsDiscount` | `number` | Dedução IRS de juventude limitada por multiplicadores IAS |
+| `irsPay` | `CurrencyByFrequency` | IRS devido (tabelas progressivas ou RNH fixo) |
+| `netIncome` | `CurrencyByFrequency` | Rendimento líquido após IRS e SS |
+| `taxRank` | `TaxRank` | Escalão progressivo aplicado |
+| `currentIas` | `number` | Valor IAS para o ano fiscal selecionado |
+| `maxSsIncome` | `number` | Limite para base SS (12 × IAS) |
+| `workerWithinFirstFinancialYear` | `boolean` | Usa fator simplificado de 37.5% |
+| `workerWithinSecondFinancialYear` | `boolean` | Usa fator simplificado de 56.25% |
+| `workerWithinFirst12Months` | `boolean` | SS isenta nos primeiros 12 meses após abertura de atividade |
+| `rnh` / `rnhTax` | `boolean` / `number` | Indica uso de taxa fixa RNH |
+| `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Entradas IRS de juventude ecoadas de volta |
+
+#### Exemplo
+
+<RunCode defaultCode={`
+const result = simulateIndependentWorker({
+  income: 40000,
+  incomeFrequency: 'year',
+  expenses: 3000,
+  ssDiscount: -0.1,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+console.log(\`Rendimento tributável: €\${result.taxableIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${result.irsPay.year.toFixed(2)}\`);
+console.log(\`Segurança social: €\${result.ssPay.year.toFixed(2)}\`);
+console.log(\`Rendimento líquido: €\${result.netIncome.year.toFixed(2)}\`);`} />
+
+## Tipos e Enums
+
+### `FrequencyChoices`
+
+```typescript
+enum FrequencyChoices {
+  Year = "year",
+  Month = "month",
+  Day = "day"
+}
+```
+
+Usado por `simulateIndependentWorker` para interpretar o valor `income`.
+
+### `CurrencyByFrequency`
+
+```typescript
+interface CurrencyByFrequency {
+  year: number;
+  month: number;
+  day: number;
+}
+```
+
+A maioria dos resultados de trabalhador independente são retornados nesta forma (sempre usando 12 meses e 248 dias úteis).
+
+### `TaxRank`
+
+```typescript
+interface TaxRank {
+  id: number;
+  min: number;
+  max: number | null;
+  normalTax: number;
+  averageTax: number | null;
+}
+```
+
+Representa um escalão IRS progressivo para trabalhadores independentes (tabelas para 2023, 2024 e 2025).
+
+## Funções de Validação
+
+- `validateIncome`, `validateIncomeFrequency`, `validateNrDaysOff`
+- `validateSsDiscount`, `validateMaxExpensesTax`, `validateExpenses`, `validateSsTax`
+- `validateCurrentTaxRankYear`, `validateRnhTax`
+- `validateYearOfYouthIrs` (limita anos a 1-5 para 2023/2024 e 1-10 para 2025)
+
+## Tratamento de Erros
+
+<RunCode defaultCode={`try {
+  simulateIndependentWorker({
+    income: 100,
+    incomeFrequency: 'day',
+    nrDaysOff: 400, // Demasiados dias de folga para calendário de 248 dias
+  });
+} catch (error) {
+  console.error('Erro de trabalhador independente:', error.message);
+}`} />
+
+## Uso Avançado
+
+### Abertura de atividade e IRS de juventude
+
+<RunCode defaultCode={`// Primeiro ano fiscal: fator 37.5% + isenção SS nos primeiros 12 meses
+const firstYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(new Date().getFullYear(), 0, 15),
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+// Segundo ano fiscal: fator 56.25%, SS a pagar
+const secondYear = simulateIndependentWorker({
+  income: 28000,
+  dateOfOpeningAcivity: new Date(new Date().getFullYear() - 1, 3, 1),
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+console.log('=== Impacto da Abertura de Atividade ===');
+console.log(\`Primeiro ano tributável: €\${firstYear.taxableIncome.toFixed(2)}\`);
+console.log(\`Segundo ano tributável: €\${secondYear.taxableIncome.toFixed(2)}\`);
+console.log(\`Primeiro ano SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
+console.log(\`Segundo ano SS: €\${secondYear.ssPay.year.toFixed(2)}\`);`} />

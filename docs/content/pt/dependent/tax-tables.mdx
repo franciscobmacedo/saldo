@@ -1,0 +1,55 @@
+import { TaxBracketsViewer } from "@/components/TaxBracketsViewer"
+
+# Explorador de Tabelas Fiscais
+
+Esta página interativa permite explorar todas as tabelas de retenção fiscal portuguesas usadas pela biblioteca Saldo. Pode filtrar, ordenar e pesquisar nas tabelas para compreender os diferentes escalões fiscais e taxas aplicadas em diferentes regiões e períodos temporais.
+
+> Estas são as tabelas de retenção para o simulador de **trabalhador por conta de outrem**. Os cálculos de trabalhador independente usam escalões fiscais progressivos separados (2023-2025) e não são mostrados aqui.
+
+## Funcionalidades
+
+- **Dados Reais de Escalões Fiscais**: Ver os escalões fiscais reais com intervalos de rendimento, taxas e deduções
+- **Cartões Interativos**: Cartões expansíveis mostrando informação detalhada dos escalões
+- **Filtragem por Localização**: Filtrar por regiões portuguesas (continente, açores, madeira)
+- **Filtragem por Intervalo de Datas**: Filtrar por períodos fiscais (2025-01-01 a 2025-07-31, 2025-08-01 a 2025-09-30, 2025-10-01 a 2025-12-31)
+- **Filtragem por Tipo de Tabela**: Filtrar por tipos específicos de tabela fiscal (TABLE1 a TABLE7)
+- **Pesquisável**: Pesquisar nas descrições e identificadores das tabelas
+- **Valores Formatados**: Valores de moeda e percentagem devidamente formatados
+- **Copiar Dados**: Copiar dados da tabela para a área de transferência
+- **Vista de Consola**: Ver dados brutos na consola do navegador
+
+## Dados Disponíveis
+
+As tabelas fiscais incluem dados para:
+- **Ano**: 2025
+- **Regiões**: continente, açores, madeira
+- **Intervalos de Datas**: 
+  - 2025-01-01 a 2025-07-31 (primeiro semestre)
+  - 2025-08-01 a 2025-09-30 (período de verão)
+  - 2025-10-01 a 2025-12-31 (último trimestre)
+- **Tipos de Tabela**: TABLE1 a TABLE7 cobrindo diferentes situações de estado civil e dependência
+
+## Estrutura do Escalão Fiscal
+
+Cada escalão fiscal contém:
+- **Intervalo de Rendimento**: Limite mínimo ou máximo de rendimento para o escalão
+- **Taxa Marginal**: A taxa de imposto aplicada ao rendimento neste escalão
+- **Dedução**: Valor de dedução base para este escalão
+- **Dedução Var1**: Componente de dedução variável 1
+- **Dedução Var2**: Componente de dedução variável 2
+- **Dependente Adicional**: Dedução adicional por dependente
+- **Taxa Efetiva**: A taxa efetiva mensal de imposto para este escalão
+
+## Utilização
+
+Use os filtros acima dos cartões para restringir resultados por localização e intervalo de datas. Também pode usar a caixa de pesquisa para filtrar tabelas por descrição. Clique em qualquer cartão para expandir e ver os escalões fiscais detalhados. Cada escalão mostra o intervalo de rendimento, taxas fiscais e deduções numa tabela clara e formatada.
+
+<TaxBracketsViewer />
+
+## Fonte de Dados
+
+Os dados das tabelas fiscais vêm das tabelas de retenção fiscal oficiais portuguesas e são carregados automaticamente do manifesto `taxTablesData`. Isto garante que os dados exibidos estão sempre atualizados com os cálculos fiscais internos da biblioteca.
+
+:::note
+Esta página exibe todas as tabelas fiscais disponíveis da biblioteca Saldo com os seus dados reais de escalões fiscais, incluindo todas as regiões (continente, açores, madeira), períodos temporais e tipos de tabela (TABLE1 a TABLE7) para o ano 2025. Clique em qualquer cartão para expandir e ver os escalões fiscais detalhados.
+:::

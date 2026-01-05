@@ -1,0 +1,225 @@
+# Arquitetura
+
+Arquitetura do sistema e fluxo de dados da biblioteca Saldo.
+
+## Visão Geral do Sistema
+
+```mermaid
+graph TD;
+  subgraph Input [Entrada do Utilizador]
+    A[Parâmetros de Rendimento];
+    B[Situação Pessoal];
+    C[Localização e Datas];
+  end
+  subgraph Processing [Processamento Principal]
+    D[Validação de Entrada];
+    E[Determinação de Situação];
+    F[Carregamento de Tabela Fiscal];
+    G[Cálculo Fiscal];
+  end
+  subgraph Data [Dados Fiscais]
+    H[Tabelas de Retenção];
+    I[Dados Regionais];
+    J[Benefícios de Deficiência];
+  end
+  subgraph Output [Resultados]
+    K[Valores de Imposto];
+    L[Salário Líquido];
+    M[Totais Anuais];
+  end
+  
+  A --> D;
+  B --> D;
+  C --> D;
+  D --> E;
+  E --> F;
+  F --> H;
+  F --> I;
+  F --> J;
+  H --> G;
+  I --> G;
+  J --> G;
+  G --> K;
+  G --> L;
+  G --> M;
+```
+
+## Processo de Fluxo de Dados
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Validator
+    participant SituationUtils
+    participant TaxRetentionTable
+    participant Calculator
+    
+    User->>Validator: simulateDependentWorker(options)
+    Validator->>Validator: validateNumberOfHolders()
+    Validator->>Validator: validateMarriedAndNumberOfHolders()
+    Validator->>Validator: validateDependents()
+    
+    Validator->>SituationUtils: getSituation(married, disabled, holders, dependents)
+    SituationUtils->>SituationUtils: Determine tax situation code
+    SituationUtils-->>Validator: Return situation
+    
+    Validator->>TaxRetentionTable: load(dates, location, situationCode)
+    TaxRetentionTable->>TaxRetentionTable: Load appropriate tax table
+    TaxRetentionTable-->>Validator: Return tax table
+    
+    Validator->>Calculator: calculate(income, allowances, deductions)
+    Calculator->>TaxRetentionTable: find_bracket(taxableIncome)
+    TaxRetentionTable-->>Calculator: Return tax bracket
+    Calculator->>Calculator: Apply tax calculations
+    Calculator->>Calculator: Apply social security
+    Calculator-->>User: Return DependentWorkerResult
+```
+
+## Determinação de Situação Fiscal
+
+```mermaid
+flowchart TD
+    Start([Início]) --> Married{Casado?}
+    
+    Married -->|Não| SingleDeps{Tem Dependentes?}
+    Married -->|Sim| Holders{Número de Titulares?}
+    
+    SingleDeps -->|Não| TABLE1[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
+    SingleDeps -->|Sim| TABLE2[TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS]
+    
+    Holders -->|1| TABLE3[TABLE3_MARRIED_1_HOLDER]
+    Holders -->|2| MarriedDeps{Tem Dependentes?}
+    
+    MarriedDeps -->|Não| TABLE1
+    MarriedDeps -->|Sim| DisabledCheck{Tem Deficiência?}
+    
+    DisabledCheck -->|Não| TABLE1
+    DisabledCheck -->|Sim| TABLE6[TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY]
+    
+    TABLE1 --> Disabled{Deficiência?}
+    TABLE2 --> Disabled
+    TABLE3 --> Disabled
+    
+    Disabled -->|Não| FinalCode[Código Fiscal Final]
+    Disabled -->|Sim| AddDEF[Adicionar sufixo +DEF]
+    AddDEF --> FinalCode
+    TABLE6 --> FinalCode
+    
+    FinalCode --> LoadTable[Carregar Tabela de Retenção Fiscal]
+```
+
+## Arquitetura de Componentes
+
+```mermaid
+graph LR;
+  subgraph API [API Pública]
+    simulateDependentWorker[simulateDependentWorker];
+  end
+  
+  subgraph Validation [Camada de Validação]
+    validateNumberOfHolders;
+    validateMarriedAndNumberOfHolders;
+    validateDependents;
+  end
+  
+  subgraph Core [Lógica Principal]
+    SituationUtils;
+    TaxRetentionTable;
+    Calculations;
+  end
+  
+  subgraph Data [Camada de Dados]
+    TaxTables[Tabelas Fiscais JSON];
+    Manifest[Manifesto de Tabelas];
+  end
+  
+  subgraph Types [Sistema de Tipos]
+    Schemas;
+    Interfaces;
+    Enums;
+  end
+  
+  simulateDependentWorker --> Validation;
+  Validation --> Core;
+  Core --> Data;
+  Types --> simulateDependentWorker;
+  Types --> Core;
+```
+
+## Fluxo de Cálculo Fiscal
+
+```mermaid
+graph TD
+    Income[Rendimento Base] --> LunchCalc{Subsídio de Refeição?}
+    LunchCalc -->|Sim| AddLunch[Adicionar Porção Tributável]
+    LunchCalc -->|Não| TaxableIncome[Rendimento Tributável]
+    AddLunch --> TaxableIncome
+    
+    TaxableIncome --> Twelfths{Subsídios de Férias?}
+    Twelfths -->|Sim| AddTwelfths[Adicionar Rendimento de Twelfths]
+    Twelfths -->|Não| RetentionIncome[Rendimento de Retenção]
+    AddTwelfths --> RetentionIncome
+    
+    RetentionIncome --> TaxBracket[Encontrar Escalão Fiscal]
+    TaxBracket --> Deductions{Deduções Extra?}
+    
+    Deductions -->|Cônjuge com Deficiência| PartnerDed[Dedução do Cônjuge]
+    Deductions -->|Dependentes com Deficiência| DepDed[Dedução de Dependente]
+    Deductions -->|Nenhuma| CalcTax[Calcular Imposto]
+    
+    PartnerDed --> CalcTax
+    DepDed --> CalcTax
+    
+    CalcTax --> SocialSec[Calcular Segurança Social]
+    SocialSec --> NetSalary[Calcular Salário Líquido]
+    NetSalary --> YearlyCalc[Calcular Valores Anuais]
+    YearlyCalc --> Result[Retornar Resultado]
+```
+
+## Fluxo de Trabalhador Independente
+
+```mermaid
+flowchart TD
+    A[Rendimento + Frequência] --> B[Validar entradas<br/>(dias de folga, ano fiscal, RNH)];
+    B --> C[Rendimento Bruto<br/>(12 meses, 248 dias úteis)];
+    C --> D[Segurança Social<br/>(base 70% × taxa × desconto,<br/>limitado a 12× IAS,<br/>primeiros 12 meses isentos)];
+    C --> E[Deduções Específicas<br/>(máx €4104 vs 10% SS)];
+    C --> F[Limite de Despesas<br/>(% regime simplificado maxExpensesTax)];
+    F --> G[Despesas Necessárias];
+    E --> H[Rendimento Tributável];
+    D --> H;
+    G --> H;
+    H --> I[Desconto IRS de Juventude<br/>+ Fatores de Primeiro/Segundo Ano];
+    I --> J[Cálculo IRS<br/>(escalões progressivos ou RNH fixo)];
+    J --> K[Rendimento Líquido];
+    D --> K;
+```
+
+## Estrutura de Dados Regionais
+
+```mermaid
+graph TD
+    Portugal[Portugal] --> Continent[Continente]
+    Portugal --> Acores[Açores]
+    Portugal --> Madeira[Madeira]
+    
+    Continent --> ContTables[Tabelas Fiscais 2023-2024]
+    Acores --> AcoresTables[Tabelas Fiscais Regionais]
+    Madeira --> MadeiraTables[Tabelas Fiscais Regionais]
+    
+    ContTables --> Situations[Situações Fiscais]
+    AcoresTables --> Situations
+    MadeiraTables --> Situations
+    
+    Situations --> TABLE1_Table[TABLE1_SINGLE_OR_MARRIED_2_HOLDERS]
+    Situations --> TABLE2_Table[TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS]
+    Situations --> TABLE3_Table[TABLE3_MARRIED_1_HOLDER]
+    Situations --> Disability_Tables[Variantes +DEF]
+```
+
+A arquitetura foi projetada para:
+- **Modularidade**: Separação clara de responsabilidades
+- **Extensibilidade**: Fácil adicionar novas regiões ou regras fiscais
+- **Manutenibilidade**: Interfaces bem definidas e validação
+- **Desempenho**: Carregamento eficiente de tabelas fiscais e cálculo
+- **Segurança de Tipos**: Cobertura TypeScript completa para todas as operações

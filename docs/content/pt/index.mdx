@@ -1,0 +1,77 @@
+# Saldo
+
+**Biblioteca TypeScript moderna para cálculos fiscais portugueses**
+
+Calcule com precisão recibos de vencimento de trabalhadores por conta de outrem e rendimentos de trabalhadores independentes (categoria B) em Portugal com suporte completo para TypeScript.
+
+## Início Rápido
+
+Escolha o caminho de que precisa:
+- **Trabalhadores por conta de outrem** — Folha de pagamento com tabelas de retenção. Comece com [guia de trabalhador por conta de outrem](/dependent/get-started).
+- **Trabalhadores independentes** — Regime simplificado / RNH para trabalhadores por conta própria. Comece com [guia de trabalhador independente](/independent/get-started).
+
+## Funcionalidades
+
+✅ **Trabalhadores por conta de outrem** - Tabelas de retenção 2025 para continente, Açores e Madeira  
+✅ **Trabalhadores independentes** - Regime simplificado, limites de despesas, calendário de 248 dias úteis  
+✅ **Situações Familiares** - Solteiro, casado, dependentes, deficiências  
+✅ **Subsídios de Refeição** - Cartões de refeição e subsídios em dinheiro  
+✅ **Subsídios de Férias** - Distribuição do 13º e 14º mês  
+✅ **Informação Fiscal Detalhada** - Dados completos de escalões e tabelas  
+✅ **TypeScript Nativo** - Segurança de tipos completa e IntelliSense  
+✅ **Zero Dependências** - Leve e confiável  
+
+## Próximos Passos
+
+- [Documentação de trabalhador por conta de outrem](/dependent/get-started) - Configuração, API, cenários  
+- [Documentação de trabalhador independente](/independent/get-started) - Configuração, API, cenários  
+- [Arquitetura](/mermaid) - Diagramas de design do sistema e fluxo de dados
+
+## Instalação
+
+```bash
+npm install saldo
+# ou
+pnpm add saldo
+# ou
+yarn add saldo
+```
+
+## Conceitos Fundamentais
+
+### Situações Fiscais
+
+A biblioteca determina automaticamente a tabela fiscal apropriada com base em:
+- **Estado Civil**: Solteiro ou casado
+- **Número de Titulares de Rendimentos**: 1 ou 2 (para casais)
+- **Dependentes**: Número de filhos/dependentes
+- **Estado de Deficiência**: Benefícios de deficiência do trabalhador ou cônjuge
+
+### Localizações Suportadas
+
+- **`continent`**: Portugal Continental
+- **`azores`**: Região dos Açores
+- **`madeira`**: Região da Madeira
+
+Cada localização tem taxas fiscais diferentes e pode ter regras de cálculo específicas.
+
+### Períodos Temporais
+
+Os cálculos fiscais baseiam-se em intervalos de datas específicos, uma vez que as tabelas fiscais mudam ao longo do tempo. A biblioteca inclui dados históricos para cálculos precisos em diferentes períodos.
+
+## O Que Segue?
+
+- **[Trabalhador por conta de outrem](/dependent/get-started)** - Início rápido específico para folha de pagamento
+- **[Trabalhador independente](/independent/get-started)** - Início rápido para trabalhadores por conta própria
+- **[Situações Fiscais](/dependent/tax-situations)** - Compreender cenários de retenção portugueses
+- **[Exemplos](/dependent/examples)** - Casos reais de trabalhadores por conta de outrem
+- **[Arquitetura](/mermaid)** - Diagramas de design do sistema e fluxo de dados
+
+## Casos de Uso
+
+Perfeito para:
+- **Sistemas de Folha de Pagamento**: Cálculos fiscais portugueses precisos
+- **Aplicações de RH**: Simulações de salários de funcionários
+- **Planeamento Financeiro**: Projeções de salário líquido
+- **Otimização Fiscal**: Comparar diferentes cenários
+- **Conformidade**: Garantir retenções fiscais precisas

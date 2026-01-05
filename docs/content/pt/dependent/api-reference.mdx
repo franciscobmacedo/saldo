@@ -1,0 +1,365 @@
+# Referência da API
+
+APIs de trabalhador por conta de outrem para folha de pagamento portuguesa. Para cálculos de trabalhadores por conta própria, consulte a [API de trabalhador independente](/independent/api-reference).
+
+## Função Principal
+
+### `simulateDependentWorker(options)`
+
+Calcula os impostos e o salário líquido de trabalhadores por conta de outrem portugueses usando as tabelas de retenção oficiais.
+
+#### Parâmetros
+
+```typescript
+interface SimulateDependentWorkerOptions {
+  income: number;
+  married?: boolean;
+  disabled?: boolean;
+  partnerDisabled?: boolean;
+  location?: LocationT;
+  numberOfHolders?: number | null;
+  numberOfDependents?: number | null;
+  numberOfDependentsDisabled?: number | null;
+  period?: PeriodT;
+  socialSecurityTaxRate?: number;
+  twelfths?: Twelfths;
+  lunchAllowanceDailyValue?: number;
+  lunchAllowanceMode?: "cupon" | "salary";
+  lunchAllowanceDaysCount?: number;
+}
+```
+
+| Parâmetro | Tipo | Predefinição | Descrição |
+|-----------|------|---------|-------------|
+| `income` | `number` | **Obrigatório** | Rendimento bruto mensal em euros |
+| `married` | `boolean` | `false` | Se a pessoa é casada |
+| `disabled` | `boolean` | `false` | Se a pessoa tem deficiência |
+| `partnerDisabled` | `boolean` | `false` | Se o cônjuge tem deficiência |
+| `location` | `LocationT` | `'continent'` | Região fiscal: `'continent'`, `'azores'`, ou `'madeira'` |
+| `numberOfHolders` | `number \| null` | `null` | Número de titulares de rendimentos no casamento (1 ou 2) |
+| `numberOfDependents` | `number \| null` | `null` | Número de dependentes |
+| `numberOfDependentsDisabled` | `number \| null` | `null` | Número de dependentes com deficiências |
+| `period` | `PeriodT` | `"2025-01-01_2025-07-31"` | Período de cálculo fiscal no formato "YYYY-MM-DD_YYYY-MM-DD" |
+| `socialSecurityTaxRate` | `number` | `0.11` | Taxa de segurança social (11%) |
+| `twelfths` | `Twelfths` | `Twelfths.TWO_MONTHS` | Distribuição de subsídios de férias |
+| `lunchAllowanceDailyValue` | `number` | `10.2` | Valor diário do subsídio de refeição em euros |
+| `lunchAllowanceMode` | `"cupon" \| "salary"` | `"cupon"` | Tipo de subsídio de refeição |
+| `lunchAllowanceDaysCount` | `number` | `22` | Dias úteis por mês para subsídio de refeição |
+
+#### Valor de Retorno
+
+```typescript
+interface DependentWorkerResult {
+  taxableIncome: number;
+  grossIncome: number;
+  tax: number;
+  socialSecurity: number;
+  socialSecurityTax: number;
+  netSalary: number;
+  yearlyNetSalary: number;
+  yearlyGrossSalary: number;
+  lunchAllowance: LunchAllowance;
+  bracket: {
+    signal: "max" | "min";
+    limit: number;
+    max_marginal_rate: number;
+    deduction: number;
+    var1_deduction: number;
+    var2_deduction: number;
+    dependent_aditional_deduction: number;
+    effective_mensal_rate: number;
+  };
+  taxRetentionTable: {
+    situation: string;
+    description: string;
+    brackets: {
+      signal: "max" | "min";
+      limit: number;
+      max_marginal_rate: number;
+      deduction: number;
+      var1_deduction: number;
+      var2_deduction: number;
+      dependent_aditional_deduction: number;
+      effective_mensal_rate: number;
+    }[];
+    dependent_disabled_aditional_deduction?: number;
+  };
+}
+```
+
+| Propriedade | Tipo | Descrição |
+|----------|------|-------------|
+| `taxableIncome` | `number` | Rendimento mensal sujeito a imposto |
+| `grossIncome` | `number` | Rendimento bruto mensal total incluindo subsídios |
+| `tax` | `number` | Valor mensal de imposto |
+| `socialSecurity` | `number` | Contribuição mensal de segurança social |
+| `socialSecurityTax` | `number` | Taxa de segurança social aplicada |
+| `netSalary` | `number` | Salário líquido mensal após deduções |
+| `yearlyNetSalary` | `number` | Salário líquido anual (14 meses) |
+| `yearlyGrossSalary` | `number` | Salário bruto anual (14 meses) |
+| `lunchAllowance` | `LunchAllowance` | Detalhamento do subsídio de refeição |
+| `bracket` | `object` | Informação do escalão fiscal com taxas e deduções |
+| `taxRetentionTable` | `object` | Dados completos da tabela de retenção fiscal |
+
+#### Exemplo
+
+<RunCode defaultCode={`
+const result = simulateDependentWorker({
+  income: 1500,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continent',
+  lunchAllowanceDailyValue: 8.5,
+  lunchAllowanceMode: 'cupon',
+  lunchAllowanceDaysCount: 22,
+  twelfths: Twelfths.TWO_MONTHS
+});
+
+console.log(\`Salário Líquido: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`IRS: €\${result.tax.toFixed(2)}\`);
+console.log(\`Segurança Social: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Subsídio de Refeição: €\${result.lunchAllowance.monthlyValue.toFixed(2)}\`);`} />
+
+## Tipos e Enums
+
+### `LocationT`
+
+```typescript
+type LocationT = "continent" | "azores" | "madeira";
+```
+
+### `Twelfths`
+
+```typescript
+enum Twelfths {
+  NONE = 0,           // Sem subsídios de férias
+  ONE_HALF_MONTH = 0.5, // 1x50% - Um subsídio a 50% (meio mês)
+  ONE_MONTH = 1,       // 2x50% - Dois subsídios a 50% cada (um mês total)
+  TWO_MONTHS = 2       // 2x100% - Dois subsídios a 100% cada (dois meses total)
+}
+```
+
+### `LunchAllowance`
+
+```typescript
+class LunchAllowance {
+  constructor(
+    public dailyValue: number,
+    public mode: "cupon" | "salary" | null,
+    public daysCount: number
+  ) {}
+
+  get monthlyValue(): number;
+  get taxableMonthlyValue(): number;
+  get taxFreeMonthlyValue(): number;
+  get yearlyValue(): number;
+}
+```
+
+| Propriedade | Tipo | Descrição |
+|----------|------|-------------|
+| `dailyValue` | `number` | Valor diário do subsídio de refeição |
+| `mode` | `"cupon" \| "salary" \| null` | Tipo de subsídio de refeição |
+| `daysCount` | `number` | Número de dias úteis por mês |
+| `monthlyValue` | `number` | Subsídio de refeição mensal total |
+| `taxableMonthlyValue` | `number` | Porção sujeita a imposto |
+| `taxFreeMonthlyValue` | `number` | Porção isenta de imposto |
+| `yearlyValue` | `number` | Subsídio de refeição anual (11 meses) |
+
+**Regras Fiscais**:
+- **Cartões de refeição** (`"cupon"`): Isento até €10,20/dia
+- **Subsídio em dinheiro** (`"salary"`): Isento até €6,00/dia
+
+### `SituationCodesT`
+
+```typescript
+type SituationCodesT =
+  | "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"      // Solteiro ou casado com 2 titulares
+  | "TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS"     // Solteiro com dependentes
+  | "TABLE3_MARRIED_1_HOLDER"                    // Casado, um titular
+  | "TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY"  // Solteiro ou casado 2 titulares + deficiência
+  | "TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"     // Solteiro com dependentes + deficiência
+  | "TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY"    // Casado 2 titulares com dependentes + deficiência
+  | "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY";    // Casado um titular + deficiência
+```
+
+### `Situation`
+
+```typescript
+interface Situation {
+  code: SituationCodesT;
+  description: string;
+  conditions: Condition[];
+}
+```
+
+### `Condition`
+
+```typescript
+interface Condition {
+  married: boolean;
+  dependents: boolean;
+  disabled: boolean;
+  partnerDisabled: boolean;
+  description: string;
+  numberOfHolders?: number | null;
+}
+```
+
+### `Bracket`
+
+```typescript
+interface Bracket {
+  signal: "max" | "min";                    // Se este é um escalão máximo ou mínimo
+  limit: number;                            // Limite de rendimento para este escalão
+  max_marginal_rate: number;                // Taxa marginal máxima de imposto
+  deduction: number;                        // Valor de dedução padrão
+  var1_deduction: number;                   // Dedução variável 1
+  var2_deduction: number;                   // Dedução variável 2
+  dependent_aditional_deduction: number;   // Dedução adicional por dependente
+  effective_mensal_rate: number;            // Taxa efetiva mensal de imposto
+}
+```
+
+### `TaxRetentionTable`
+
+```typescript
+interface TaxRetentionTable {
+  situation: string;                       // Código da situação
+  description: string;                     // Descrição legível
+  brackets: Bracket[];                      // Array de todos os escalões fiscais
+  dependent_disabled_aditional_deduction?: number; // Dedução adicional para dependentes com deficiência
+}
+```
+
+### `RetentionPathsSchema`
+
+```typescript
+class RetentionPathsSchema {
+  public identifier: string;
+
+  constructor(
+    period: PeriodT,
+    location: LocationT,
+    situationCode: SituationCodesT,
+    year: number | string
+  );
+
+  get path(): string; // Retorna o identificador
+}
+```
+
+Constrói identificadores no formato `"2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`.
+
+## Funções Utilitárias
+
+### `SituationUtils.getSituation()`
+
+```typescript
+SituationUtils.getSituation(
+  married: boolean,
+  disabled: boolean,
+  partnerDisabled: boolean,
+  numberOfHolders?: number | null,
+  numberOfDependents?: number
+): Situation | undefined
+```
+
+Determina a situação fiscal apropriada com base nas circunstâncias pessoais.
+
+### `SituationUtils.getSituationFromCode()`
+
+```typescript
+SituationUtils.getSituationFromCode(code: string): Situation | undefined
+```
+
+Recupera uma situação fiscal pelo seu código.
+
+## Funções de Validação
+
+A biblioteca inclui funções de validação internas que são chamadas automaticamente:
+
+- `validateNumberOfHolders(numberOfHolders)`
+- `validateMarriedAndNumberOfHolders(married, numberOfHolders)`
+- `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
+
+## Tratamento de Erros
+
+<RunCode defaultCode={`// Situação inválida
+try {
+  simulateDependentWorker({
+    income: 1500,
+    married: true,
+    // Falta numberOfHolders - obrigatório para casados
+  });
+} catch (error) {
+  console.error('Erro:', error.message); // "'numberOfHolders' é obrigatório para trabalhadores casados"
+}
+
+// Escalão inválido
+try {
+  simulateDependentWorker({
+    income: 999999, // Rendimento extremamente alto
+    location: 'continent'
+  });
+} catch (error) {
+  console.error('Erro:', error.message); // "Nenhum escalão encontrado para salário..."
+}`} />
+
+## Uso Avançado
+
+### Cálculos Baseados em Períodos
+
+<RunCode defaultCode={`const result = simulateDependentWorker({
+  income: 1500,
+  period: "2025-01-01_2025-07-31",  // Primeiro período de 2025
+  location: 'continent'
+});
+
+console.log('=== Cálculo Baseado em Período ===');
+console.log(\`Salário Líquido: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
+
+### Taxas de Segurança Social Personalizadas
+
+<RunCode defaultCode={`const result = simulateDependentWorker({
+  income: 1500,
+        socialSecurityTaxRate: 0.11, // 11% (predefinição)
+  location: 'continent'
+});
+
+console.log('=== Taxa de Segurança Social Personalizada ===');
+console.log(\`Segurança Social: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Taxa Aplicada: \${(result.socialSecurityTax * 100).toFixed(1)}%\`);`} />
+
+### Benefícios de Deficiência
+
+<RunCode defaultCode={`// Trabalhador com deficiência
+const workerDisability = simulateDependentWorker({
+  income: 1500,
+  disabled: true,
+  location: 'continent'
+});
+
+// Cônjuge com deficiência (dedução extra)
+const partnerDisability = simulateDependentWorker({
+  income: 1500,
+  married: true,
+  numberOfHolders: 1,
+  partnerDisabled: true, // €135,71 de dedução extra
+  location: 'continent'
+});
+
+// Dependente com deficiência (dedução extra por dependente)
+const dependentDisability = simulateDependentWorker({
+  income: 1500,
+  numberOfDependents: 2,
+  numberOfDependentsDisabled: 1,
+  location: 'continent'
+});
+
+console.log('=== Comparação de Benefícios de Deficiência ===');
+console.log(\`Deficiência do Trabalhador - Líquido: €\${workerDisability.netSalary.toFixed(2)}\`);
+console.log(\`Deficiência do Cônjuge - Líquido: €\${partnerDisability.netSalary.toFixed(2)}\`);
+console.log(\`Deficiência do Dependente - Líquido: €\${dependentDisability.netSalary.toFixed(2)}\`);`} />

@@ -4,8 +4,13 @@ import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import Link from 'next/link'
 
-
 import './globals.css'
+
+const locales = [
+  { locale: 'pt', name: 'Português' },
+  { locale: 'en', name: 'English' }
+]
+const defaultLocale = process.env.NEXTRA_DEFAULT_LOCALE || 'pt'
 
 export const metadata = {
   metadataBase: new URL('https://saldo-docs.vercel.app'),
@@ -24,10 +29,18 @@ export const metadata = {
   },
   twitter: {
     site: 'https://saldo-docs.vercel.app'
+  },
+  alternates: {
+    languages: {
+      pt: '/pt',
+      en: '/en'
+    }
   }
 }
 
-export default async function RootLayout({ children }) {
+export default async function RootLayout({ children, params: paramsPromise }) {
+  const params = await paramsPromise
+  const lang = params?.lang || defaultLocale
   const navbar = (
     <Navbar
       logo={
@@ -40,9 +53,9 @@ export default async function RootLayout({ children }) {
       // chatLink="https://discord.gg/hEM84NMkRv"
     />
   )
-  const pageMap = await getPageMap()
+  const pageMap = await getPageMap(`/${lang}`)
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang={lang} dir="ltr" suppressHydrationWarning>
       <Head faviconGlyph="✦" />
       <body>
         <Layout
@@ -53,6 +66,7 @@ export default async function RootLayout({ children }) {
           docsRepositoryBase="https://github.com/franciscomacedo/saldo-ts/blob/main/docs"
           sidebar={{ defaultMenuCollapseLevel: 1 }}
           pageMap={pageMap}
+          i18n={locales}
         >
           {children}
         </Layout>

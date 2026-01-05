@@ -1,0 +1,215 @@
+# Começar
+
+Bem-vindo ao guia de **trabalhador por conta de outrem** do Saldo. Se precisar do fluxo para trabalhadores por conta própria, vá para a [documentação de trabalhador independente](/independent/get-started).
+
+## Instalação
+
+```bash
+npm install saldo
+# ou
+pnpm add saldo
+```
+
+## Início Rápido
+
+<RunCode defaultCode={`
+const result = simulateDependentWorker({
+  income: 1500, // Rendimento bruto mensal em euros
+  location: 'continent',
+  married: false
+});
+
+console.log(\`Rendimento Bruto: €\${result.grossIncome.toFixed(2)}\`);
+console.log(\`Rendimento Tributável: €\${result.taxableIncome.toFixed(2)}\`);
+console.log(\`IRS: €\${result.tax.toFixed(2)}\`);
+console.log(\`Segurança Social: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Salário Líquido: €\${result.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
+
+## Compreender o Resultado
+
+```typescript
+interface DependentWorkerResult {
+  taxableIncome: number;        // Rendimento sujeito a imposto
+  grossIncome: number;          // Rendimento bruto mensal (tributável + subsídio de refeição isento)
+  tax: number;                  // IRS retido
+  socialSecurity: number;       // Segurança Social retida
+  socialSecurityTax: number;    // Taxa de SS aplicada
+  netSalary: number;            // Líquido mensal
+  yearlyNetSalary: number;      // Líquido em 14 meses
+  yearlyGrossSalary: number;    // Bruto em 14 meses (incl. subsídio de refeição)
+  lunchAllowance: LunchAllowance; // Divisão fiscal para cartões/dinheiro
+  bracket: Bracket;               // Escalão aplicado
+  taxRetentionTable: TaxRetentionTable; // Metadados completos da tabela
+}
+```
+
+## Parâmetros Principais
+
+- **`income`**: Rendimento bruto mensal em euros
+- **`married`** / **`numberOfHolders`**: Obrigatórios em conjunto para trabalhadores casados (1 ou 2)
+- **`disabled`**, **`partnerDisabled`**, **`numberOfDependents`**, **`numberOfDependentsDisabled`**
+- **`location`**: `'continent' | 'azores' | 'madeira'` (predefinição `'continent'`)
+- **`period`**: `"2025-01-01_2025-07-31"`, `"2025-08-01_2025-09-30"`, `"2025-10-01_2025-12-31"`
+- **`socialSecurityTaxRate`**: Predefinição `0.11`
+- **`twelfths`**: `Twelfths.NONE | ONE_HALF_MONTH | ONE_MONTH | TWO_MONTHS` (predefinição `TWO_MONTHS`)
+- **`lunchAllowanceDailyValue`**, **`lunchAllowanceMode`** (`"cupon"` ou `"salary"`), **`lunchAllowanceDaysCount`**
+
+## Cenários Comuns
+
+### Pessoa Solteira
+
+<RunCode defaultCode={`const single = simulateDependentWorker({
+  income: 1000,
+  location: 'continent'
+});
+
+console.log('=== Pessoa Solteira ===');
+console.log(\`Salário Líquido: €\${single.netSalary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${single.yearlyNetSalary.toFixed(2)}\`);`} />
+
+### Casado com Filhos
+
+<RunCode defaultCode={`const marriedWithKids = simulateDependentWorker({
+  income: 1800,
+  married: true,
+  numberOfHolders: 1,
+  numberOfDependents: 2,
+  location: 'continent'
+});
+
+console.log('=== Casado com Filhos ===');
+console.log(\`Salário Líquido: €\${marriedWithKids.netSalary.toFixed(2)}\`);
+console.log(\`Benefícios Fiscais: €\${marriedWithKids.bracket.deduction.toFixed(2)}\`);`} />
+
+### Trabalhador com Deficiência
+
+<RunCode defaultCode={`const disabledWorker = simulateDependentWorker({
+  income: 1200,
+  disabled: true,
+  location: 'continent'
+});
+
+console.log('=== Trabalhador com Deficiência ===');
+console.log(\`Salário Líquido: €\${disabledWorker.netSalary.toFixed(2)}\`);
+console.log(\`Deduções Adicionais: €\${disabledWorker.bracket.var1_deduction.toFixed(2)}\`);`} />
+
+### Com Subsídio de Refeição
+
+<RunCode defaultCode={`const withLunch = simulateDependentWorker({
+  income: 1400,
+  lunchAllowanceDailyValue: 7.5,
+  lunchAllowanceMode: "cupon",
+  lunchAllowanceDaysCount: 22,
+  location: 'continent'
+});
+
+console.log('=== Com Subsídio de Refeição ===');
+console.log(\`Salário Líquido: €\${withLunch.netSalary.toFixed(2)}\`);
+console.log(\`Subsídio de Refeição: €\${withLunch.lunchAllowance.monthlyValue.toFixed(2)}\`);
+console.log(\`Subsídio de Refeição Isento: €\${withLunch.lunchAllowance.taxFreeMonthlyValue.toFixed(2)}\`);`} />
+
+### Usando Enum Twelfths
+
+<RunCode defaultCode={`
+const withoutHolidayAllowance = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.NONE, // Sem distribuição de subsídios de férias
+  location: 'continent'
+});
+
+const withOneHolidayAllowance = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.ONE_MONTH, // Dois subsídios a 50% (um mês total)
+  location: 'continent'
+});
+
+const withBothHolidayAllowances = simulateDependentWorker({
+  income: 1500,
+  twelfths: Twelfths.TWO_MONTHS, // Tanto o subsídio de Natal como o de férias
+  location: 'continent'
+});
+
+console.log('=== Comparação de Twelfths ===');
+console.log(\`Sem Distribuição - Líquido Mensal: €\${withoutHolidayAllowance.netSalary.toFixed(2)}\`);
+console.log(\`Um Mês - Líquido Mensal: €\${withOneHolidayAllowance.netSalary.toFixed(2)}\`);
+console.log(\`Dois Meses - Líquido Mensal: €\${withBothHolidayAllowances.netSalary.toFixed(2)}\`);
+console.log(\`Dois Meses - Líquido Anual: €\${withBothHolidayAllowances.yearlyNetSalary.toFixed(2)}\`);`} />
+
+## Trabalhar com Tipos
+
+```typescript
+import { 
+  simulateDependentWorker, 
+  LocationT, 
+  Twelfths, 
+  DependentWorkerResult,
+  SimulateDependentWorkerOptions,
+  LunchAllowance
+} from 'saldo';
+
+// Cálculo de trabalhador por conta de outrem com segurança de tipos
+const dependentOpts: SimulateDependentWorkerOptions = {
+  income: 1500,
+  location: 'continent',
+};
+const dependentResult: DependentWorkerResult = simulateDependentWorker(dependentOpts);
+```
+
+## Diferenças Regionais
+
+Cada região portuguesa tem taxas fiscais diferentes:
+
+<RunCode defaultCode={`// Portugal Continental
+const continent = simulateDependentWorker({
+  income: 1500,
+  location: 'continent'
+});
+
+// Açores
+const azores = simulateDependentWorker({
+  income: 1500,
+  location: 'azores'
+});
+
+// Madeira
+const madeira = simulateDependentWorker({
+  income: 1500,
+  location: 'madeira'
+});
+
+console.log('=== Comparação Regional (€1500 de rendimento) ===');
+console.log(\`Continente - Líquido: €\${continent.netSalary.toFixed(2)}\`);
+console.log(\`Açores - Líquido: €\${azores.netSalary.toFixed(2)}\`);
+console.log(\`Madeira - Líquido: €\${madeira.netSalary.toFixed(2)}\`);`} />
+
+## Tratamento de Erros
+
+A biblioteca fornece mensagens de erro claras para configurações inválidas:
+
+<RunCode defaultCode={`try {
+  const result = simulateDependentWorker({
+    income: 1500,
+    married: true,
+    // Falta numberOfHolders - obrigatório para casados
+  });
+} catch (error) {
+  console.error('Erro:', error.message); // "'numberOfHolders' é obrigatório para trabalhadores casados"
+}`} />
+
+## Próximos Passos
+
+- Saiba mais sobre [situações fiscais e cenários](/dependent/tax-situations)
+- Explore o [explorador de tabelas fiscais](/dependent/tax-tables)
+- Compreenda [subsídios de refeição](/dependent/lunch-allowances)
+- Revise a [API de trabalhador por conta de outrem](/dependent/api-reference)
+- Navegue pelos [exemplos de trabalhador por conta de outrem](/dependent/examples)
+- A mudar de contexto? Vá para a [documentação de trabalhador independente](/independent/get-started).
+
+---
+
+<span id="sidebar-and-anchor-links" />
+
+---
+
+*É isso! Agora está pronto para usar o Saldo nos seus projetos de cálculo de salários portugueses. Para casos de uso mais avançados e documentação detalhada da API, explore as outras secções desta documentação.*
