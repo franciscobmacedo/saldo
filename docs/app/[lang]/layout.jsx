@@ -58,6 +58,11 @@ export async function generateStaticParams() {
 export default async function RootLayout({ children, params: paramsPromise }) {
   const params = await paramsPromise
   const lang = params?.lang || defaultLocale
+
+  if (!locales.some(l => l.locale === lang)) {
+    return children
+  }
+
   const navbar = (
     <Navbar
       logo={
@@ -71,7 +76,7 @@ export default async function RootLayout({ children, params: paramsPromise }) {
       // chatLink="https://discord.gg/hEM84NMkRv"
     />
   )
-  const pageMap = await getPageMap(`/${lang}`)
+  const pageMap = await getPageMap(lang)
   return (
     <html lang={lang} dir="ltr" suppressHydrationWarning>
       <Head />

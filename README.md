@@ -143,15 +143,15 @@ const rnh = simulateIndependentWorker({
 
 ```typescript
 interface DependentWorkerResult {
-  taxableIncome: number;      // Monthly taxable income
-  grossIncome: number;        // Monthly gross income
-  tax: number;               // Monthly tax amount
-  socialSecurity: number;    // Monthly social security contribution
-  socialSecurityTax: number; // Social security tax rate
-  netSalary: number;         // Monthly net salary
-  yearlyNetSalary: number;   // Yearly net salary (14 months)
-  yearlyGrossSalary: number; // Yearly gross salary (14 months)
-  lunchAllowance: LunchAllowance; // Lunch allowance details
+  taxableIncome: number;
+  tax: number;
+  socialSecurity: number;
+  socialSecurityTax: number;
+  gross: { monthly: number; yearly: number };
+  net: { base: number; salary: number; yearly: number };
+  lunchAllowance: LunchAllowanceResult;  // gross, net, taxable, taxFree
+  bracket: Bracket;
+  taxRetentionTable: TaxRetentionTable;
 }
 ```
 

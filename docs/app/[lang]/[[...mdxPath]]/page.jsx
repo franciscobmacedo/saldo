@@ -13,12 +13,14 @@ const Wrapper = getMDXComponents().wrapper
 
 export default async function Page(props) {
   const params = await props.params
+  const page = await importPage(params.mdxPath, params.lang)
+  console.log('importPage result keys:', Object.keys(page))
   const {
     default: MDXContent,
     toc,
     metadata,
     sourceCode
-  } = await importPage(params.mdxPath, params.lang)
+  } = page
   return (
     <Wrapper toc={toc} metadata={metadata} sourceCode={sourceCode}>
       <MDXContent {...props} params={params} />

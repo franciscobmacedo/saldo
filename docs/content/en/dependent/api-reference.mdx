@@ -51,53 +51,36 @@ interface SimulateDependentWorkerOptions {
 ```typescript
 interface DependentWorkerResult {
   taxableIncome: number;
-  grossIncome: number;
   tax: number;
   socialSecurity: number;
   socialSecurityTax: number;
-  netSalary: number;
-  yearlyNetSalary: number;
-  yearlyGrossSalary: number;
-  lunchAllowance: LunchAllowance;
-  bracket: {
-    signal: "max" | "min";
-    limit: number;
-    max_marginal_rate: number;
-    deduction: number;
-    var1_deduction: number;
-    var2_deduction: number;
-    dependent_aditional_deduction: number;
-    effective_mensal_rate: number;
+  gross: {
+    monthly: number;  // Total gross salary per month
+    yearly: number;   // Gross salary for the year (14 months)
   };
-  taxRetentionTable: {
-    situation: string;
-    description: string;
-    brackets: {
-      signal: "max" | "min";
-      limit: number;
-      max_marginal_rate: number;
-      deduction: number;
-      var1_deduction: number;
-      var2_deduction: number;
-      dependent_aditional_deduction: number;
-      effective_mensal_rate: number;
-    }[];
-    dependent_disabled_addition_deduction?: number;
+  net: {
+    base: number;    // Net income from base + twelfths (excludes lunch allowance)
+    salary: number;  // Total net salary: base + lunch allowance
+    yearly: number;  // Net salary for the year
   };
+  lunchAllowance: LunchAllowanceResult;  // Calculated values only
+  bracket: { ... };
+  taxRetentionTable: { ... };
 }
 ```
 
 | Property | Type | Description |
 |----------|------|-------------|
 | `taxableIncome` | `number` | Monthly income subject to tax |
-| `grossIncome` | `number` | Total monthly gross income including allowances |
 | `tax` | `number` | Monthly tax amount |
 | `socialSecurity` | `number` | Monthly social security contribution |
 | `socialSecurityTax` | `number` | Social security tax rate applied |
-| `netSalary` | `number` | Monthly net salary after deductions |
-| `yearlyNetSalary` | `number` | Annual net salary (14 months) |
-| `yearlyGrossSalary` | `number` | Annual gross salary (14 months) |
-| `lunchAllowance` | `LunchAllowance` | Lunch allowance breakdown |
+| `gross.monthly` | `number` | Total monthly gross income including allowances |
+| `gross.yearly` | `number` | Annual gross salary (14 months) |
+| `net.base` | `number` | Net income from base salary + twelfths (Rendimento líquido). Excludes lunch allowance |
+| `net.salary` | `number` | Total monthly net salary after deductions (Salário líquido = net.base + lunch allowance) |
+| `net.yearly` | `number` | Annual net salary (14 months) |
+| `lunchAllowance` | `LunchAllowanceResult` | Calculated lunch allowance: gross, net, taxable, taxFree |
 | `bracket` | `object` | Tax bracket information with rates and deductions |
 | `taxRetentionTable` | `object` | Complete tax retention table data |
 
@@ -116,10 +99,10 @@ const result = simulateDependentWorker({
   twelfths: Twelfths.TWO_MONTHS
 });
 
-console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
-console.log(\`Tax: €\${result.tax.toFixed(2)}\`);
-console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
-console.log(\`Lunch Allowance: €\${result.lunchAllowance.monthlyValue.toFixed(2)}\`);`} />
+// Doutor Finanças-style breakdown:
+console.log(\`Net Income: €\${result.net.base.toFixed(2)}\`);
+console.log(\`Lunch Allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);
+console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);`} />
 
 ## Types and Enums
 
@@ -140,32 +123,25 @@ enum Twelfths {
 }
 ```
 
-### `LunchAllowance`
+### `LunchAllowanceResult`
+
+The result contains calculated lunch allowance values only (no input data):
 
 ```typescript
-class LunchAllowance {
-  constructor(
-    public dailyValue: number,
-    public mode: "cupon" | "salary" | null,
-    public daysCount: number
-  ) {}
-
-  get monthlyValue(): number;
-  get taxableMonthlyValue(): number;
-  get taxFreeMonthlyValue(): number;
-  get yearlyValue(): number;
+interface LunchAllowanceResult {
+  gross: number;    // Gross monthly amount
+  net: number;     // Net amount after tax/SS on taxable portion
+  taxable: number; // Portion subject to tax and social security
+  taxFree: number; // Portion exempt from tax and social security
 }
 ```
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `dailyValue` | `number` | Daily lunch allowance amount |
-| `mode` | `"cupon" \| "salary" \| null` | Type of lunch allowance |
-| `daysCount` | `number` | Number of working days per month |
-| `monthlyValue` | `number` | Total monthly lunch allowance |
-| `taxableMonthlyValue` | `number` | Portion subject to tax |
-| `taxFreeMonthlyValue` | `number` | Tax-free portion |
-| `yearlyValue` | `number` | Annual lunch allowance (11 months) |
+| `gross` | `number` | Total monthly lunch allowance |
+| `net` | `number` | Net amount after tax and social security on taxable portion |
+| `taxable` | `number` | Portion subject to tax |
+| `taxFree` | `number` | Tax-free portion |
 
 **Tax Rules**:
 - **Meal vouchers** (`"cupon"`): Tax-free up to €10.20/day
@@ -318,8 +294,8 @@ try {
 });
 
 console.log('=== Period-based Calculation ===');
-console.log(\`Net Salary: €\${result.netSalary.toFixed(2)}\`);
-console.log(\`Yearly Net: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
+console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);
+console.log(\`Yearly Net: €\${result.net.yearly.toFixed(2)}\`);`} />
 
 ### Custom Social Security Rates
 
@@ -360,6 +336,6 @@ const dependentDisability = simulateDependentWorker({
 });
 
 console.log('=== Disability Benefits Comparison ===');
-console.log(\`Worker Disability - Net: €\${workerDisability.netSalary.toFixed(2)}\`);
-console.log(\`Partner Disability - Net: €\${partnerDisability.netSalary.toFixed(2)}\`);
-console.log(\`Dependent Disability - Net: €\${dependentDisability.netSalary.toFixed(2)}\`);`} />
+console.log(\`Worker Disability - Net: €\${workerDisability.net.salary.toFixed(2)}\`);
+console.log(\`Partner Disability - Net: €\${partnerDisability.net.salary.toFixed(2)}\`);
+console.log(\`Dependent Disability - Net: €\${dependentDisability.net.salary.toFixed(2)}\`);`} />

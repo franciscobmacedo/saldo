@@ -20,19 +20,28 @@ export class TestComparator {
   static compareResults(
     saldoResult: ReturnType<typeof simulateDependentWorker>, 
     doutorResult: DoutorFinancasResponse, 
-    scenario: TestScenario,
     tolerance: number = TestComparator.DEFAULT_TOLERANCE
   ): ComparisonResult {
     const comparisons = [
       {
         name: "Gross Salary",
-        saldo: saldoResult.grossIncome,
+        saldo: saldoResult.gross.monthly,
         doutor: doutorResult.result.simulation.gross_salary,
       },
       {
         name: "Net Salary",
-        saldo: saldoResult.netSalary,
+        saldo: saldoResult.net.salary,
         doutor: doutorResult.result.simulation.net_salary,
+      },
+      {
+        name: "Net Income",
+        saldo: saldoResult.net.base,
+        doutor: doutorResult.result.net_salary.net_income,
+      },
+      {
+        name: "Net Meal Allowance",
+        saldo: saldoResult.lunchAllowance.net,
+        doutor: doutorResult.result.net_salary.meal_allowance,
       },
       {
         name: "IRS Retention",

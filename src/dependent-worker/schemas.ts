@@ -1,4 +1,3 @@
-import { LunchAllowance } from "./lunch-allowance";
 import { LocationT, PeriodT } from "@/config/schemas";
 
 export enum Twelfths {
@@ -25,18 +24,44 @@ export interface SimulateDependentWorkerOptions {
     lunchAllowanceMode?: "cupon" | "salary";
     lunchAllowanceDaysCount?: number;
   }
-  
+
+/** Calculated lunch allowance values only (no input data) */
+export interface LunchAllowanceResult {
+  /** Gross monthly amount */
+  gross: number;
+  /** Net amount after tax/SS on taxable portion */
+  net: number;
+  /** Portion subject to tax and social security */
+  taxable: number;
+  /** Portion exempt from tax and social security */
+  taxFree: number;
+}
 
 export interface DependentWorkerResult {
   taxableIncome: number;
-  grossIncome: number;
   tax: number;
   socialSecurity: number;
   socialSecurityTax: number;
-  netSalary: number;
-  yearlyNetSalary: number;
-  yearlyGrossSalary: number;
-  lunchAllowance: LunchAllowance;
+
+  gross: {
+    /** Total gross salary per month */
+    monthly: number;
+    /** Gross salary for the year (14 months) */
+    yearly: number;
+  };
+
+  net: {
+    /** Net income from base salary + twelfths (Rendimento líquido). Excludes lunch allowance. */
+    base: number;
+    /** Total net salary: base + lunch allowance (Salário líquido) */
+    salary: number;
+    /** Net salary for the year */
+    yearly: number;
+  };
+
+  /** Calculated lunch allowance values */
+  lunchAllowance: LunchAllowanceResult;
+
   bracket: {
     signal: "max" | "min";
     limit: number;

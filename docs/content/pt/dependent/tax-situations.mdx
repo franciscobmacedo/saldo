@@ -47,9 +47,9 @@ const marriedWithKids = simulateDependentWorker({
 });
 
 console.log('=== Exemplos TABLE1 ===');
-console.log(\`Solteiro - Líquido: €\${single.netSalary.toFixed(2)}\`);
-console.log(\`Casado 2 titulares - Líquido: €\${marriedTwoHolders.netSalary.toFixed(2)}\`);
-console.log(\`Casado com filhos - Líquido: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
+console.log(\`Solteiro - Líquido: €\${single.net.salary.toFixed(2)}\`);
+console.log(\`Casado 2 titulares - Líquido: €\${marriedTwoHolders.net.salary.toFixed(2)}\`);
+console.log(\`Casado com filhos - Líquido: €\${marriedWithKids.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS - Solteiro com Dependentes
 
@@ -68,7 +68,7 @@ const singleParent = simulateDependentWorker({
 });
 
 console.log('=== Exemplo TABLE2 ===');
-console.log(\`Pai/Mãe Solteiro(a) - Líquido: €\${singleParent.netSalary.toFixed(2)}\`);
+console.log(\`Pai/Mãe Solteiro(a) - Líquido: €\${singleParent.net.salary.toFixed(2)}\`);
 console.log(\`Benefícios Fiscais: €\${singleParent.bracket.deduction.toFixed(2)}\`);`} />
 
 ### TABLE3_MARRIED_1_HOLDER - Casado, Um Titular
@@ -97,8 +97,8 @@ const marriedWithKids = simulateDependentWorker({
 });
 
 console.log('=== Exemplos TABLE3 ===');
-console.log(\`Casado Rendimento Único - Líquido: €\${marriedSingleIncome.netSalary.toFixed(2)}\`);
-console.log(\`Casado com Filhos - Líquido: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
+console.log(\`Casado Rendimento Único - Líquido: €\${marriedSingleIncome.net.salary.toFixed(2)}\`);
+console.log(\`Casado com Filhos - Líquido: €\${marriedWithKids.net.salary.toFixed(2)}\`);`} />
 
 ## Situações de Deficiência
 
@@ -125,8 +125,8 @@ const marriedDisabled = simulateDependentWorker({
 });
 
 console.log('=== Exemplos TABLE4 ===');
-console.log(\`Solteiro com Deficiência - Líquido: €\${singleDisabled.netSalary.toFixed(2)}\`);
-console.log(\`Casado com Deficiência - Líquido: €\${marriedDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Solteiro com Deficiência - Líquido: €\${singleDisabled.net.salary.toFixed(2)}\`);
+console.log(\`Casado com Deficiência - Líquido: €\${marriedDisabled.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Solteiro com Dependentes e Deficiência
 
@@ -142,7 +142,7 @@ const singleParentDisabled = simulateDependentWorker({
 });
 
 console.log('=== Exemplo TABLE5 ===');
-console.log(\`Pai/Mãe Solteiro(a) com Deficiência - Líquido: €\${singleParentDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Pai/Mãe Solteiro(a) com Deficiência - Líquido: €\${singleParentDisabled.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Casado Dois Titulares com Dependentes e Deficiência
 
@@ -159,7 +159,7 @@ const marriedTwoHoldersDisabled = simulateDependentWorker({
 });
 
 console.log('=== Exemplo TABLE6 ===');
-console.log(\`Casado Dois Titulares com Deficiência - Líquido: €\${marriedTwoHoldersDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Casado Dois Titulares com Deficiência - Líquido: €\${marriedTwoHoldersDisabled.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY - Casado Um Titular com Deficiência
 
@@ -175,7 +175,7 @@ const marriedSingleIncomeDisabled = simulateDependentWorker({
 });
 
 console.log('=== Exemplo TABLE7 ===');
-console.log(\`Casado Rendimento Único com Deficiência - Líquido: €\${marriedSingleIncomeDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Casado Rendimento Único com Deficiência - Líquido: €\${marriedSingleIncomeDisabled.net.salary.toFixed(2)}\`);`} />
 
 ## Lógica de Determinação de Situação
 
@@ -227,7 +227,7 @@ const partnerDisabled = simulateDependentWorker({
 });
 
 console.log('=== Benefícios de Deficiência do Cônjuge ===');
-console.log(\`Salário Líquido: €\${partnerDisabled.netSalary.toFixed(2)}\`);
+console.log(\`Salário Líquido: €\${partnerDisabled.net.salary.toFixed(2)}\`);
 console.log(\`Dedução Adicional: €\${partnerDisabled.bracket.var2_deduction.toFixed(2)}\`);`} />
 
 ## Benefícios de Deficiência de Dependentes
@@ -244,7 +244,7 @@ const familyWithDisabledDependent = simulateDependentWorker({
 });
 
 console.log('=== Benefícios de Deficiência de Dependentes ===');
-console.log(\`Salário Líquido: €\${familyWithDisabledDependent.netSalary.toFixed(2)}\`);
+console.log(\`Salário Líquido: €\${familyWithDisabledDependent.net.salary.toFixed(2)}\`);
 console.log(\`Dedução de Dependente: €\${familyWithDisabledDependent.bracket.dependent_aditional_deduction.toFixed(2)}\`);`} />
 
 ## Notas Importantes

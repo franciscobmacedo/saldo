@@ -19,28 +19,26 @@ const result = simulateDependentWorker({
   married: false
 });
 
-console.log(\`Rendimento Bruto: €\${result.grossIncome.toFixed(2)}\`);
+console.log(\`Rendimento Bruto: €\${result.gross.monthly.toFixed(2)}\`);
 console.log(\`Rendimento Tributável: €\${result.taxableIncome.toFixed(2)}\`);
 console.log(\`IRS: €\${result.tax.toFixed(2)}\`);
 console.log(\`Segurança Social: €\${result.socialSecurity.toFixed(2)}\`);
-console.log(\`Salário Líquido: €\${result.netSalary.toFixed(2)}\`);
-console.log(\`Líquido Anual: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
+console.log(\`Salário Líquido: €\${result.net.salary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${result.net.yearly.toFixed(2)}\`);`} />
 
 ## Compreender o Resultado
 
 ```typescript
 interface DependentWorkerResult {
-  taxableIncome: number;        // Rendimento sujeito a imposto
-  grossIncome: number;          // Rendimento bruto mensal (tributável + subsídio de refeição isento)
-  tax: number;                  // IRS retido
-  socialSecurity: number;       // Segurança Social retida
-  socialSecurityTax: number;    // Taxa de SS aplicada
-  netSalary: number;            // Líquido mensal
-  yearlyNetSalary: number;      // Líquido em 14 meses
-  yearlyGrossSalary: number;    // Bruto em 14 meses (incl. subsídio de refeição)
-  lunchAllowance: LunchAllowance; // Divisão fiscal para cartões/dinheiro
-  bracket: Bracket;               // Escalão aplicado
-  taxRetentionTable: TaxRetentionTable; // Metadados completos da tabela
+  taxableIncome: number;
+  tax: number;
+  socialSecurity: number;
+  socialSecurityTax: number;
+  gross: { monthly: number; yearly: number };
+  net: { base: number; salary: number; yearly: number };
+  lunchAllowance: LunchAllowanceResult;  // gross, net, taxable, taxFree
+  bracket: Bracket;
+  taxRetentionTable: TaxRetentionTable;
 }
 ```
 
@@ -65,8 +63,8 @@ interface DependentWorkerResult {
 });
 
 console.log('=== Pessoa Solteira ===');
-console.log(\`Salário Líquido: €\${single.netSalary.toFixed(2)}\`);
-console.log(\`Líquido Anual: €\${single.yearlyNetSalary.toFixed(2)}\`);`} />
+console.log(\`Salário Líquido: €\${single.net.salary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${single.net.yearly.toFixed(2)}\`);`} />
 
 ### Casado com Filhos
 
@@ -79,7 +77,7 @@ console.log(\`Líquido Anual: €\${single.yearlyNetSalary.toFixed(2)}\`);`} />
 });
 
 console.log('=== Casado com Filhos ===');
-console.log(\`Salário Líquido: €\${marriedWithKids.netSalary.toFixed(2)}\`);
+console.log(\`Salário Líquido: €\${marriedWithKids.net.salary.toFixed(2)}\`);
 console.log(\`Benefícios Fiscais: €\${marriedWithKids.bracket.deduction.toFixed(2)}\`);`} />
 
 ### Trabalhador com Deficiência
@@ -91,7 +89,7 @@ console.log(\`Benefícios Fiscais: €\${marriedWithKids.bracket.deduction.toFix
 });
 
 console.log('=== Trabalhador com Deficiência ===');
-console.log(\`Salário Líquido: €\${disabledWorker.netSalary.toFixed(2)}\`);
+console.log(\`Salário Líquido: €\${disabledWorker.net.salary.toFixed(2)}\`);
 console.log(\`Deduções Adicionais: €\${disabledWorker.bracket.var1_deduction.toFixed(2)}\`);`} />
 
 ### Com Subsídio de Refeição
@@ -104,10 +102,10 @@ console.log(\`Deduções Adicionais: €\${disabledWorker.bracket.var1_deduction
   location: 'continent'
 });
 
-console.log('=== Com Subsídio de Refeição ===');
-console.log(\`Salário Líquido: €\${withLunch.netSalary.toFixed(2)}\`);
-console.log(\`Subsídio de Refeição: €\${withLunch.lunchAllowance.monthlyValue.toFixed(2)}\`);
-console.log(\`Subsídio de Refeição Isento: €\${withLunch.lunchAllowance.taxFreeMonthlyValue.toFixed(2)}\`);`} />
+console.log('=== Com Subsídio de Refeição (formato Doutor Finanças) ===');
+console.log(\`Rendimento líquido: €\${withLunch.net.base.toFixed(2)}\`);
+console.log(\`Subsídio de alimentação: €\${withLunch.lunchAllowance.gross.toFixed(2)}\`);
+console.log(\`Salário líquido: €\${withLunch.net.salary.toFixed(2)}\`);`} />
 
 ### Usando Enum Twelfths
 
@@ -131,9 +129,9 @@ const withBothHolidayAllowances = simulateDependentWorker({
 });
 
 console.log('=== Comparação de Twelfths ===');
-console.log(\`Sem Distribuição - Líquido Mensal: €\${withoutHolidayAllowance.netSalary.toFixed(2)}\`);
-console.log(\`Um Mês - Líquido Mensal: €\${withOneHolidayAllowance.netSalary.toFixed(2)}\`);
-console.log(\`Dois Meses - Líquido Mensal: €\${withBothHolidayAllowances.netSalary.toFixed(2)}\`);
+console.log(\`Sem Distribuição - Líquido Mensal: €\${withoutHolidayAllowance.net.salary.toFixed(2)}\`);
+console.log(\`Um Mês - Líquido Mensal: €\${withOneHolidayAllowance.net.salary.toFixed(2)}\`);
+console.log(\`Dois Meses - Líquido Mensal: €\${withBothHolidayAllowances.net.salary.toFixed(2)}\`);
 console.log(\`Dois Meses - Líquido Anual: €\${withBothHolidayAllowances.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ## Trabalhar com Tipos
@@ -145,7 +143,7 @@ import {
   Twelfths, 
   DependentWorkerResult,
   SimulateDependentWorkerOptions,
-  LunchAllowance
+  LunchAllowanceResult
 } from 'saldo';
 
 // Cálculo de trabalhador por conta de outrem com segurança de tipos
@@ -179,9 +177,9 @@ const madeira = simulateDependentWorker({
 });
 
 console.log('=== Comparação Regional (€1500 de rendimento) ===');
-console.log(\`Continente - Líquido: €\${continent.netSalary.toFixed(2)}\`);
-console.log(\`Açores - Líquido: €\${azores.netSalary.toFixed(2)}\`);
-console.log(\`Madeira - Líquido: €\${madeira.netSalary.toFixed(2)}\`);`} />
+console.log(\`Continente - Líquido: €\${continent.net.salary.toFixed(2)}\`);
+console.log(\`Açores - Líquido: €\${azores.net.salary.toFixed(2)}\`);
+console.log(\`Madeira - Líquido: €\${madeira.net.salary.toFixed(2)}\`);`} />
 
 ## Tratamento de Erros
 

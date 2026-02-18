@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { simulateDependentWorker } from "@/dependent-worker/simulator";
 import { Twelfths } from "@/dependent-worker/schemas";
-import { LunchAllowance } from "@/dependent-worker/lunch-allowance";
 
 // NO MOCKS - Testing the full integration
 describe("simulateDependentWorker - End-to-End", () => {
@@ -27,26 +26,23 @@ describe("simulateDependentWorker - End-to-End", () => {
 
       // Verify structure
       expect(result).toHaveProperty("taxableIncome");
-      expect(result).toHaveProperty("grossIncome");
+      expect(result).toHaveProperty("gross");
       expect(result).toHaveProperty("tax");
       expect(result).toHaveProperty("socialSecurity");
-      expect(result).toHaveProperty("netSalary");
-      expect(result).toHaveProperty("yearlyGrossSalary");
-      expect(result).toHaveProperty("yearlyNetSalary");
+      expect(result).toHaveProperty("net");
 
       // Verify reasonable values
-      console.log("result:", result);
       expect(result.taxableIncome).toBeGreaterThanOrEqual(900); // Default lunch allowance adds 0
-      expect(result.grossIncome).toBeGreaterThanOrEqual(result.taxableIncome);
+      expect(result.gross.monthly).toBeGreaterThanOrEqual(result.taxableIncome);
       expect(result.tax).toBeGreaterThanOrEqual(0);
       expect(result.socialSecurity).toBeCloseTo(
         result.taxableIncome * 0.11,
         2
-      ); // Social security calculated on taxableIncome, not grossIncome
-      expect(result.netSalary).toBeLessThan(result.grossIncome);
-      // Yearly gross should be income * 14 + yearly lunch allowance (Portuguese 14-month system)
-      expect(result.yearlyGrossSalary).toBe(
-        900 * 14 + result.lunchAllowance.yearlyValue
+      );
+      expect(result.net.salary).toBeLessThan(result.gross.monthly);
+      // Yearly gross = income * 14 + lunch allowance * 11 months
+      expect(result.gross.yearly).toBe(
+        900 * 14 + result.lunchAllowance.gross * 11
       );
     });
 
@@ -71,7 +67,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       expect(result.tax).toBeLessThan(singleResult.tax);
-      expect(result.netSalary).toBeGreaterThan(singleResult.netSalary);
+      expect(result.net.salary).toBeGreaterThan(singleResult.net.salary);
     });
 
     it("should apply disabled dependent deduction correctly", () => {
@@ -99,8 +95,8 @@ describe("simulateDependentWorker - End-to-End", () => {
       expect(withDisabledDependent.tax).toBeLessThan(
         withoutDisabledDependent.tax
       );
-      expect(withDisabledDependent.netSalary).toBeGreaterThan(
-        withoutDisabledDependent.netSalary
+      expect(withDisabledDependent.net.salary).toBeGreaterThan(
+        withoutDisabledDependent.net.salary
       );
     });
 
@@ -125,8 +121,8 @@ describe("simulateDependentWorker - End-to-End", () => {
 
       // Should have lower tax due to partner disability deduction (€135.71)
       expect(withDisabledPartner.tax).toBeLessThan(withoutDisabledPartner.tax);
-      expect(withDisabledPartner.netSalary).toBeGreaterThan(
-        withoutDisabledPartner.netSalary
+      expect(withDisabledPartner.net.salary).toBeGreaterThan(
+        withoutDisabledPartner.net.salary
       );
 
       // The difference should be close to the expected deduction impact
@@ -199,18 +195,12 @@ describe("simulateDependentWorker - End-to-End", () => {
       expect(oneMonth.tax).toBeGreaterThan(noTwelfths.tax);
 
       // More twelfths should result in higher monthly net salary (bonus distribution)
-      expect(twoMonths.netSalary).toBeGreaterThan(oneMonth.netSalary);
-      expect(oneMonth.netSalary).toBeGreaterThan(noTwelfths.netSalary);
+      expect(twoMonths.net.salary).toBeGreaterThan(oneMonth.net.salary);
+      expect(oneMonth.net.salary).toBeGreaterThan(noTwelfths.net.salary);
 
-      // 
-      // How is this possible?
-      // Fascinating discovery: ONE_MONTH gives the highest yearly net (tax optimization sweet spot)
-      expect(oneMonth.yearlyNetSalary).toBeCloseTo(
-        twoMonths.yearlyNetSalary
-      );
-      expect(noTwelfths.yearlyNetSalary).toBeCloseTo(
-        oneMonth.yearlyNetSalary
-      );
+      // ONE_MONTH gives the highest yearly net (tax optimization sweet spot)
+      expect(oneMonth.net.yearly).toBeCloseTo(twoMonths.net.yearly);
+      expect(noTwelfths.net.yearly).toBeCloseTo(oneMonth.net.yearly);
     });
   });
 
@@ -231,8 +221,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(withCustomLunch.lunchAllowance.dailyValue).toBe(12);
-      expect(withCustomLunch.lunchAllowance.monthlyValue).toBe(240);
+      expect(withCustomLunch.lunchAllowance.gross).toBe(240); // 12 * 20 days
       expect(withCustomLunch.taxableIncome).not.toBe(
         withDefaultLunch.taxableIncome
       );
@@ -290,7 +279,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       expect(minIncome.tax).toBeGreaterThanOrEqual(0);
-      expect(minIncome.netSalary).toBeGreaterThan(0);
+      expect(minIncome.net.salary).toBeGreaterThan(0);
     });
 
     it("should handle tax bracket boundaries", () => {
@@ -305,7 +294,7 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       expect(result.tax).toBeGreaterThanOrEqual(0);
-      expect(result.netSalary).toBeGreaterThan(0);
+      expect(result.net.salary).toBeGreaterThan(0);
     });
   });
 });

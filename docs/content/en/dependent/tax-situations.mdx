@@ -47,9 +47,9 @@ const marriedWithKids = simulateDependentWorker({
 });
 
 console.log('=== TABLE1 Examples ===');
-console.log(\`Single - Net: €\${single.netSalary.toFixed(2)}\`);
-console.log(\`Married 2 holders - Net: €\${marriedTwoHolders.netSalary.toFixed(2)}\`);
-console.log(\`Married with kids - Net: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
+console.log(\`Single - Net: €\${single.net.salary.toFixed(2)}\`);
+console.log(\`Married 2 holders - Net: €\${marriedTwoHolders.net.salary.toFixed(2)}\`);
+console.log(\`Married with kids - Net: €\${marriedWithKids.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS - Single with Dependents
 
@@ -68,7 +68,7 @@ const singleParent = simulateDependentWorker({
 });
 
 console.log('=== TABLE2 Example ===');
-console.log(\`Single Parent - Net: €\${singleParent.netSalary.toFixed(2)}\`);
+console.log(\`Single Parent - Net: €\${singleParent.net.salary.toFixed(2)}\`);
 console.log(\`Tax Benefits: €\${singleParent.bracket.deduction.toFixed(2)}\`);`} />
 
 ### TABLE3_MARRIED_1_HOLDER - Married, Single Holder
@@ -97,8 +97,8 @@ const marriedWithKids = simulateDependentWorker({
 });
 
 console.log('=== TABLE3 Examples ===');
-console.log(\`Married Single Income - Net: €\${marriedSingleIncome.netSalary.toFixed(2)}\`);
-console.log(\`Married with Kids - Net: €\${marriedWithKids.netSalary.toFixed(2)}\`);`} />
+console.log(\`Married Single Income - Net: €\${marriedSingleIncome.net.salary.toFixed(2)}\`);
+console.log(\`Married with Kids - Net: €\${marriedWithKids.net.salary.toFixed(2)}\`);`} />
 
 ## Disability Situations
 
@@ -125,8 +125,8 @@ const marriedDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE4 Examples ===');
-console.log(\`Single Disabled - Net: €\${singleDisabled.netSalary.toFixed(2)}\`);
-console.log(\`Married Disabled - Net: €\${marriedDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Single Disabled - Net: €\${singleDisabled.net.salary.toFixed(2)}\`);
+console.log(\`Married Disabled - Net: €\${marriedDisabled.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Single with Dependents and Disability
 
@@ -142,7 +142,7 @@ const singleParentDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE5 Example ===');
-console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Married Two Holders with Dependents and Disability
 
@@ -159,7 +159,7 @@ const marriedTwoHoldersDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE6 Example ===');
-console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisabled.net.salary.toFixed(2)}\`);`} />
 
 ### TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY - Married Single Holder with Disability
 
@@ -175,7 +175,7 @@ const marriedSingleIncomeDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE7 Example ===');
-console.log(\`Married Single Income Disabled - Net: €\${marriedSingleIncomeDisabled.netSalary.toFixed(2)}\`);`} />
+console.log(\`Married Single Income Disabled - Net: €\${marriedSingleIncomeDisabled.net.salary.toFixed(2)}\`);`} />
 
 ## Situation Determination Logic
 
@@ -227,7 +227,7 @@ const partnerDisabled = simulateDependentWorker({
 });
 
 console.log('=== Partner Disability Benefits ===');
-console.log(\`Net Salary: €\${partnerDisabled.netSalary.toFixed(2)}\`);
+console.log(\`Net Salary: €\${partnerDisabled.net.salary.toFixed(2)}\`);
 console.log(\`Additional Deduction: €\${partnerDisabled.bracket.var2_deduction.toFixed(2)}\`);`} />
 
 ## Dependent Disability Benefits
@@ -244,7 +244,7 @@ const familyWithDisabledDependent = simulateDependentWorker({
 });
 
 console.log('=== Dependent Disability Benefits ===');
-console.log(\`Net Salary: €\${familyWithDisabledDependent.netSalary.toFixed(2)}\`);
+console.log(\`Net Salary: €\${familyWithDisabledDependent.net.salary.toFixed(2)}\`);
 console.log(\`Dependent Deduction: €\${familyWithDisabledDependent.bracket.dependent_aditional_deduction.toFixed(2)}\`);`} />
 
 ## Important Notes

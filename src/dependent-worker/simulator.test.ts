@@ -108,9 +108,11 @@ describe("simulateDependentWorker", () => {
       baseIncome + defaultLunchAllowance.taxableMonthlyValue
     );
     expect(result.socialSecurityTax).toEqual(0.11);
-    expect(result.lunchAllowance).toEqual(
-      new LunchAllowance(10.2, "cupon", 22)
-    );
+    expect(result.lunchAllowance).toMatchObject({
+      gross: defaultLunchAllowance.monthlyValue,
+      taxFree: defaultLunchAllowance.taxFreeMonthlyValue,
+      taxable: defaultLunchAllowance.taxableMonthlyValue,
+    });
   });
 
   it("should calculate for a married individual, 1 holder, 2 dependents", () => {
@@ -140,7 +142,7 @@ describe("simulateDependentWorker", () => {
       lunchAllowanceDaysCount: 22,
     });
     expect(result).toBeDefined();
-    expect(result.lunchAllowance.dailyValue).toBe(8);
+    expect(result.lunchAllowance.gross).toBe(8 * 22); // 8/day * 22 days
     expect(result.taxableIncome).toBe(incomeVal + 44);
   });
 
@@ -157,7 +159,7 @@ describe("simulateDependentWorker", () => {
     const expectedTaxable =
       incomeVal + defaultLunchAllowance.taxableMonthlyValue;
     const expectedRetentionIncome = expectedTaxable + expectedTwelfthsIncome;
-    expect(result.grossIncome).toBe(
+    expect(result.gross.monthly).toBe(
       expectedRetentionIncome + defaultLunchAllowance.taxFreeMonthlyValue
     );
   });
@@ -205,8 +207,8 @@ describe("simulateDependentWorker", () => {
 
     const expectedYearlyNetSalary = 16413.6;
 
-    expect(result.yearlyGrossSalary).toBeCloseTo(expectedYearlyGrossSalary);
-    expect(result.yearlyNetSalary).toBeCloseTo(expectedYearlyNetSalary);
+    expect(result.gross.yearly).toBeCloseTo(expectedYearlyGrossSalary);
+    expect(result.net.yearly).toBeCloseTo(expectedYearlyNetSalary);
   });
 
   describe("period parameter", () => {

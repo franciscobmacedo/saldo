@@ -122,6 +122,21 @@ export function simulateDependentWorker({
   const socialSecurity = retentionIncome * socialSecurityTaxRate;
   const netSalary = grossIncome - tax - socialSecurity;
 
+  // Split per Doutor Finanças: Rendimento líquido (base+twelfths) | Subsídio de alimentação | Salário líquido (total)
+  const baseRetentionIncome = income + twelfthsIncome;
+  const netIncome =
+    retentionIncome === 0
+      ? baseRetentionIncome
+      : baseRetentionIncome -
+        (tax + socialSecurity) * (baseRetentionIncome / retentionIncome);
+
+  const lunchAllowanceNet =
+    retentionIncome === 0
+      ? lunchAllowance.monthlyValue
+      : lunchAllowance.monthlyValue -
+        (tax + socialSecurity) *
+          (lunchAllowance.taxableMonthlyValue / retentionIncome);
+
   const yearlyLunchAllowance = lunchAllowance.monthlyValue * 11;
 
   const yearlyGrossSalary = income * 14 + yearlyLunchAllowance;
@@ -152,15 +167,25 @@ export function simulateDependentWorker({
   const yearlyNetSalary = baseMonthlyNet * 14;
 
   return {
-    taxableIncome: taxableIncome,
-    grossIncome: grossIncome,
+    taxableIncome,
     tax,
-    socialSecurity: socialSecurity,
+    socialSecurity,
     socialSecurityTax: socialSecurityTaxRate,
-    netSalary: netSalary,
-    yearlyNetSalary: yearlyNetSalary,
-    yearlyGrossSalary: yearlyGrossSalary,
-    lunchAllowance: lunchAllowance,
+    gross: {
+      monthly: grossIncome,
+      yearly: yearlyGrossSalary,
+    },
+    net: {
+      base: netIncome,
+      salary: netSalary,
+      yearly: yearlyNetSalary,
+    },
+    lunchAllowance: {
+      gross: lunchAllowance.monthlyValue,
+      net: lunchAllowanceNet,
+      taxable: lunchAllowance.taxableMonthlyValue,
+      taxFree: lunchAllowance.taxFreeMonthlyValue,
+    },
     bracket: bracket.toJSON(),
     taxRetentionTable: taxRetentionTable.toJSON(),
   };

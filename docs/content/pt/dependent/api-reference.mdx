@@ -51,53 +51,36 @@ interface SimulateDependentWorkerOptions {
 ```typescript
 interface DependentWorkerResult {
   taxableIncome: number;
-  grossIncome: number;
   tax: number;
   socialSecurity: number;
   socialSecurityTax: number;
-  netSalary: number;
-  yearlyNetSalary: number;
-  yearlyGrossSalary: number;
-  lunchAllowance: LunchAllowance;
-  bracket: {
-    signal: "max" | "min";
-    limit: number;
-    max_marginal_rate: number;
-    deduction: number;
-    var1_deduction: number;
-    var2_deduction: number;
-    dependent_aditional_deduction: number;
-    effective_mensal_rate: number;
+  gross: {
+    monthly: number;  // Rendimento bruto mensal total
+    yearly: number;   // Rendimento bruto anual (14 meses)
   };
-  taxRetentionTable: {
-    situation: string;
-    description: string;
-    brackets: {
-      signal: "max" | "min";
-      limit: number;
-      max_marginal_rate: number;
-      deduction: number;
-      var1_deduction: number;
-      var2_deduction: number;
-      dependent_aditional_deduction: number;
-      effective_mensal_rate: number;
-    }[];
-    dependent_disabled_aditional_deduction?: number;
+  net: {
+    base: number;    // Rendimento líquido (base + duodécimos). Exclui subsídio de alimentação
+    salary: number;  // Salário líquido total: base + subsídio de alimentação
+    yearly: number;  // Salário líquido anual (14 meses)
   };
+  lunchAllowance: LunchAllowanceResult;  // Valores calculados apenas
+  bracket: { ... };
+  taxRetentionTable: { ... };
 }
 ```
 
 | Propriedade | Tipo | Descrição |
 |----------|------|-------------|
 | `taxableIncome` | `number` | Rendimento mensal sujeito a imposto |
-| `grossIncome` | `number` | Rendimento bruto mensal total incluindo subsídios |
 | `tax` | `number` | Valor mensal de imposto |
 | `socialSecurity` | `number` | Contribuição mensal de segurança social |
 | `socialSecurityTax` | `number` | Taxa de segurança social aplicada |
-| `netSalary` | `number` | Salário líquido mensal após deduções |
-| `yearlyNetSalary` | `number` | Salário líquido anual (14 meses) |
-| `yearlyGrossSalary` | `number` | Salário bruto anual (14 meses) |
-| `lunchAllowance` | `LunchAllowance` | Detalhamento do subsídio de refeição |
+| `gross.monthly` | `number` | Rendimento bruto mensal total incluindo subsídios |
+| `gross.yearly` | `number` | Salário bruto anual (14 meses) |
+| `net.base` | `number` | Rendimento líquido (base + duodécimos). Exclui subsídio de alimentação |
+| `net.salary` | `number` | Salário líquido mensal total após deduções (= net.base + subsídio de alimentação) |
+| `net.yearly` | `number` | Salário líquido anual (14 meses) |
+| `lunchAllowance` | `LunchAllowanceResult` | Valores calculados do subsídio: gross, net, taxable, taxFree |
 | `bracket` | `object` | Informação do escalão fiscal com taxas e deduções |
 | `taxRetentionTable` | `object` | Dados completos da tabela de retenção fiscal |
 
@@ -116,10 +99,10 @@ const result = simulateDependentWorker({
   twelfths: Twelfths.TWO_MONTHS
 });
 
-console.log(\`Salário Líquido: €\${result.netSalary.toFixed(2)}\`);
-console.log(\`IRS: €\${result.tax.toFixed(2)}\`);
-console.log(\`Segurança Social: €\${result.socialSecurity.toFixed(2)}\`);
-console.log(\`Subsídio de Refeição: €\${result.lunchAllowance.monthlyValue.toFixed(2)}\`);`} />
+// Formato Doutor Finanças:
+console.log(\`Rendimento líquido: €\${result.net.base.toFixed(2)}\`);
+console.log(\`Subsídio de alimentação: €\${result.lunchAllowance.gross.toFixed(2)}\`);
+console.log(\`Salário líquido: €\${result.net.salary.toFixed(2)}\`);`} />
 
 ## Tipos e Enums
 
@@ -140,32 +123,25 @@ enum Twelfths {
 }
 ```
 
-### `LunchAllowance`
+### `LunchAllowanceResult`
+
+O resultado contém apenas os valores calculados do subsídio de refeição (sem dados de entrada):
 
 ```typescript
-class LunchAllowance {
-  constructor(
-    public dailyValue: number,
-    public mode: "cupon" | "salary" | null,
-    public daysCount: number
-  ) {}
-
-  get monthlyValue(): number;
-  get taxableMonthlyValue(): number;
-  get taxFreeMonthlyValue(): number;
-  get yearlyValue(): number;
+interface LunchAllowanceResult {
+  gross: number;    // Valor bruto mensal
+  net: number;      // Valor líquido após IRS/SS sobre parte tributável
+  taxable: number;  // Porção sujeita a imposto e segurança social
+  taxFree: number;  // Porção isenta de imposto e segurança social
 }
 ```
 
 | Propriedade | Tipo | Descrição |
 |----------|------|-------------|
-| `dailyValue` | `number` | Valor diário do subsídio de refeição |
-| `mode` | `"cupon" \| "salary" \| null` | Tipo de subsídio de refeição |
-| `daysCount` | `number` | Número de dias úteis por mês |
-| `monthlyValue` | `number` | Subsídio de refeição mensal total |
-| `taxableMonthlyValue` | `number` | Porção sujeita a imposto |
-| `taxFreeMonthlyValue` | `number` | Porção isenta de imposto |
-| `yearlyValue` | `number` | Subsídio de refeição anual (11 meses) |
+| `gross` | `number` | Subsídio de refeição mensal total |
+| `net` | `number` | Valor líquido após imposto e segurança social na parte tributável |
+| `taxable` | `number` | Porção sujeita a imposto |
+| `taxFree` | `number` | Porção isenta de imposto |
 
 **Regras Fiscais**:
 - **Cartões de refeição** (`"cupon"`): Isento até €10,20/dia
@@ -318,8 +294,8 @@ try {
 });
 
 console.log('=== Cálculo Baseado em Período ===');
-console.log(\`Salário Líquido: €\${result.netSalary.toFixed(2)}\`);
-console.log(\`Líquido Anual: €\${result.yearlyNetSalary.toFixed(2)}\`);`} />
+console.log(\`Salário Líquido: €\${result.net.salary.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${result.net.yearly.toFixed(2)}\`);`} />
 
 ### Taxas de Segurança Social Personalizadas
 
@@ -360,6 +336,6 @@ const dependentDisability = simulateDependentWorker({
 });
 
 console.log('=== Comparação de Benefícios de Deficiência ===');
-console.log(\`Deficiência do Trabalhador - Líquido: €\${workerDisability.netSalary.toFixed(2)}\`);
-console.log(\`Deficiência do Cônjuge - Líquido: €\${partnerDisability.netSalary.toFixed(2)}\`);
-console.log(\`Deficiência do Dependente - Líquido: €\${dependentDisability.netSalary.toFixed(2)}\`);`} />
+console.log(\`Deficiência do Trabalhador - Líquido: €\${workerDisability.net.salary.toFixed(2)}\`);
+console.log(\`Deficiência do Cônjuge - Líquido: €\${partnerDisability.net.salary.toFixed(2)}\`);
+console.log(\`Deficiência do Dependente - Líquido: €\${dependentDisability.net.salary.toFixed(2)}\`);`} />

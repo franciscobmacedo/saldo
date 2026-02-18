@@ -7,6 +7,7 @@ import { TestComparator } from "./comparator";
 import { testScenarios } from "./scenarios";
 
 const DEFAULT_TOLERANCE = 1;
+const DEFAULT_SLEEP_SECONDS = 1;
 interface FailureDetails {
   scenarioName: string;
   saldoRequest: Parameters<typeof simulateDependentWorker>[0];
@@ -19,13 +20,15 @@ interface FailureDetails {
 
 export async function runComparisonTests(
   tolerance: number = DEFAULT_TOLERANCE,
-  verbose: boolean = false
+  verbose: boolean = false,
+  sleepSeconds: number = DEFAULT_SLEEP_SECONDS
 ): Promise<void> {
   console.log(
     "🧪 Starting comparison tests between Saldo and Doutor Finanças..."
   );
   console.log(`📊 Running ${testScenarios.length} test scenarios`);
-  console.log(`🎯 Tolerance: €${tolerance.toFixed(2)}\n`);
+  console.log(`🎯 Tolerance: €${tolerance.toFixed(2)}`);
+  console.log(`⏱️  Sleep between requests: ${sleepSeconds}s\n`);
 
   let passedTests = 0;
   let failedTests = 0;
@@ -66,7 +69,6 @@ export async function runComparisonTests(
       const comparisonResult = TestComparator.compareResults(
         saldoResult,
         doutorResult,
-        scenario,
         tolerance
       );
 
@@ -105,8 +107,11 @@ export async function runComparisonTests(
         });
       }
 
-      // Add delay between API calls to be respectful
-      // await new Promise(resolve => setTimeout(resolve, 1000));
+      if (sleepSeconds > 0 && i < testScenarios.length - 1) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, sleepSeconds * 1000)
+        );
+      }
     } catch (error) {
       failedTests++;
       
@@ -125,6 +130,12 @@ export async function runComparisonTests(
         doutorResult: null,
         error: error as Error,
       });
+
+      if (sleepSeconds > 0 && i < testScenarios.length - 1) {
+        await new Promise((resolve) =>
+          setTimeout(resolve, sleepSeconds * 1000)
+        );
+      }
     }
   }
   
@@ -204,6 +215,12 @@ if (require.main === module) {
   const tolerance = toleranceArg
     ? parseFloat(toleranceArg.split("=")[1])
     : DEFAULT_TOLERANCE;
+
+  const sleepArg = process.argv.find((arg) => arg.startsWith("--sleep="));
+  const sleepSeconds = sleepArg
+    ? parseFloat(sleepArg.split("=")[1])
+    : DEFAULT_SLEEP_SECONDS;
+
   const verbose =
     process.argv.includes("--verbose") || process.argv.includes("-v");
 
@@ -211,9 +228,17 @@ if (require.main === module) {
     console.error(
       "❌ Invalid tolerance value. Please provide a positive number."
     );
-    console.error("Usage: tsx index.ts --tolerance=0.79 [--verbose|-v]");
+    console.error(
+      "Usage: tsx index.ts --tolerance=0.79 [--sleep=1] [--verbose|-v]"
+    );
     process.exit(1);
   }
 
-  runComparisonTests(tolerance, verbose).catch(console.error);
+  if (isNaN(sleepSeconds) || sleepSeconds < 0) {
+    console.error("❌ Invalid sleep value. Please provide a non-negative number.");
+    console.error("Usage: tsx index.ts [--tolerance=1] --sleep=1 [--verbose|-v]");
+    process.exit(1);
+  }
+
+    runComparisonTests(tolerance, verbose, sleepSeconds).catch(console.error);
 }
