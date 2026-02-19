@@ -1,0 +1,89 @@
+{
+  "situation": "TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY",
+  "title": "Table V",
+  "table": "Table V",
+  "description": "Dependent work, Single with one or more dependents - Person with disability",
+  "brackets": [
+    {
+      "signal": "max",
+      "limit": 2345,
+      "max_marginal_rate": 0,
+      "deduction": 0,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 0,
+      "effective_mensal_rate": 0
+    },
+    {
+      "signal": "max",
+      "limit": 2591,
+      "max_marginal_rate": 0.1382,
+      "deduction": 324.08,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.013
+    },
+    {
+      "signal": "max",
+      "limit": 3622,
+      "max_marginal_rate": 0.1863,
+      "deduction": 448.71,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.062
+    },
+    {
+      "signal": "max",
+      "limit": 4668,
+      "max_marginal_rate": 0.2289,
+      "deduction": 603.01,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.1
+    },
+    {
+      "signal": "max",
+      "limit": 7066,
+      "max_marginal_rate": 0.2616,
+      "deduction": 755.66,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.155
+    },
+    {
+      "signal": "max",
+      "limit": 7168,
+      "max_marginal_rate": 0.2752,
+      "deduction": 851.76,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.156
+    },
+    {
+      "signal": "max",
+      "limit": 21625,
+      "max_marginal_rate": 0.3058,
+      "deduction": 1071.11,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0.256
+    },
+    {
+      "signal": "min",
+      "limit": 21625,
+      "max_marginal_rate": 0.3278,
+      "deduction": 1546.86,
+      "var1_deduction": 0,
+      "var2_deduction": 0,
+      "dependent_aditional_deduction": 42.86,
+      "effective_mensal_rate": 0
+    }
+  ],
+  "dependent_disabled_addition_deduction": 42.86
+}

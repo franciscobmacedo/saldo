@@ -94,6 +94,20 @@ import table4_single_or_married_2_holders_no_dependents_person_with_disability__
 import table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
 import table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
 import table7_married_1_holder_person_with_disability__2025_madeira_2025100120251231 from './retention-tax-tables/2025/madeira/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2026_continent_2026010120261231 from './retention-tax-tables/2026/continent/2026-01-01_2026-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
+import table1_single_or_married_2_holders__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS.json';
+import table2_single_one_or_more_dependents__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS.json';
+import table3_married_1_holder__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE3_MARRIED_1_HOLDER.json';
+import table4_single_or_married_2_holders_no_dependents_person_with_disability__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table5_single_one_or_more_dependents_person_with_disability__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table6_married_2_holders_one_or_more_dependents_person_with_disability__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY.json';
+import table7_married_1_holder_person_with_disability__2026_madeira_2026010120261231 from './retention-tax-tables/2026/madeira/2026-01-01_2026-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY.json';
 
 // --- END IMPORTS ---
 
@@ -166,6 +180,20 @@ export const taxTablesData: Record<string, TaxTableJsonData> = {
   "2025/madeira/2025-10-01_2025-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
   "2025/madeira/2025-10-01_2025-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
   "2025/madeira/2025-10-01_2025-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2025_madeira_2025100120251231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/continent/2026-01-01_2026-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2026_continent_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS": table1_single_or_married_2_holders__2026_madeira_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS": table2_single_one_or_more_dependents__2026_madeira_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE3_MARRIED_1_HOLDER": table3_married_1_holder__2026_madeira_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE4_SINGLE_OR_MARRIED_2_HOLDERS_NO_DEPENDENTS_PERSON_WITH_DISABILITY": table4_single_or_married_2_holders_no_dependents_person_with_disability__2026_madeira_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table5_single_one_or_more_dependents_person_with_disability__2026_madeira_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY": table6_married_2_holders_one_or_more_dependents_person_with_disability__2026_madeira_2026010120261231 as TaxTableJsonData,
+  "2026/madeira/2026-01-01_2026-12-31/TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY": table7_married_1_holder_person_with_disability__2026_madeira_2026010120261231 as TaxTableJsonData,
 
 };
 

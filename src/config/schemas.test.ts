@@ -11,11 +11,12 @@ import {
 
 describe("Period-related functionality", () => {
   describe("VALID_PERIODS", () => {
-    it("should contain correct periods for 2025", () => {
+    it("should contain correct periods for 2025 and 2026", () => {
       expect(VALID_PERIODS).toEqual([
         "2025-01-01_2025-07-31",
         "2025-08-01_2025-09-30",
-        "2025-10-01_2025-12-31"
+        "2025-10-01_2025-12-31",
+        "2026-01-01_2026-12-31",
       ]);
     });
 
@@ -33,6 +34,7 @@ describe("Period-related functionality", () => {
       expect(getYearFromPeriod("2025-01-01_2025-07-31")).toBe(2025);
       expect(getYearFromPeriod("2025-08-01_2025-09-30")).toBe(2025);
       expect(getYearFromPeriod("2025-10-01_2025-12-31")).toBe(2025);
+      expect(getYearFromPeriod("2026-01-01_2026-12-31")).toBe(2026);
     });
 
     it("should throw error for invalid period format", () => {
@@ -50,7 +52,7 @@ describe("Period-related functionality", () => {
 
   describe("year and month period resolution", () => {
     it("should expose available years from configured periods", () => {
-      expect(getAvailableYears()).toEqual([2025]);
+      expect(getAvailableYears()).toEqual([2025, 2026]);
     });
 
     it("should return all periods for a valid year", () => {
@@ -65,6 +67,12 @@ describe("Period-related functionality", () => {
       expect(getPeriodsForYear(2024)).toEqual([]);
     });
 
+    it("should return all periods for 2026", () => {
+      expect(getPeriodsForYear(2026)).toEqual([
+        "2026-01-01_2026-12-31",
+      ]);
+    });
+
     it("should resolve each month of 2025 to the correct period", () => {
       expect(getPeriodForMonth(2025, 0)).toBe("2025-01-01_2025-07-31");
       expect(getPeriodForMonth(2025, 6)).toBe("2025-01-01_2025-07-31");
@@ -72,6 +80,12 @@ describe("Period-related functionality", () => {
       expect(getPeriodForMonth(2025, 8)).toBe("2025-08-01_2025-09-30");
       expect(getPeriodForMonth(2025, 9)).toBe("2025-10-01_2025-12-31");
       expect(getPeriodForMonth(2025, 11)).toBe("2025-10-01_2025-12-31");
+    });
+
+    it("should resolve each month of 2026 to the yearly period", () => {
+      expect(getPeriodForMonth(2026, 0)).toBe("2026-01-01_2026-12-31");
+      expect(getPeriodForMonth(2026, 5)).toBe("2026-01-01_2026-12-31");
+      expect(getPeriodForMonth(2026, 11)).toBe("2026-01-01_2026-12-31");
     });
 
     it("should throw for invalid month index", () => {
@@ -124,7 +138,8 @@ describe("Period-related functionality", () => {
       const validPeriods: PeriodT[] = [
         "2025-01-01_2025-07-31",
         "2025-08-01_2025-09-30",
-        "2025-10-01_2025-12-31"
+        "2025-10-01_2025-12-31",
+        "2026-01-01_2026-12-31",
       ];
       
       validPeriods.forEach(period => {

@@ -28,4 +28,16 @@ export const YOUTH_IRS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: { [key
         9: { maxDiscountPercentage: 0.25, maxDiscountIasMultiplier: 55 },
         10: { maxDiscountPercentage: 0.25, maxDiscountIasMultiplier: 55 },
     },
+    2026: {
+        1: { maxDiscountPercentage: 1, maxDiscountIasMultiplier: 55 },
+        2: { maxDiscountPercentage: 0.75, maxDiscountIasMultiplier: 55 },
+        3: { maxDiscountPercentage: 0.75, maxDiscountIasMultiplier: 55 },
+        4: { maxDiscountPercentage: 0.75, maxDiscountIasMultiplier: 55 },
+        5: { maxDiscountPercentage: 0.50, maxDiscountIasMultiplier: 55 },
+        6: { maxDiscountPercentage: 0.50, maxDiscountIasMultiplier: 55 },
+        7: { maxDiscountPercentage: 0.50, maxDiscountIasMultiplier: 55 },
+        8: { maxDiscountPercentage: 0.25, maxDiscountIasMultiplier: 55 },
+        9: { maxDiscountPercentage: 0.25, maxDiscountIasMultiplier: 55 },
+        10: { maxDiscountPercentage: 0.25, maxDiscountIasMultiplier: 55 },
+    },
 };

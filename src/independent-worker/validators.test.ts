@@ -141,13 +141,14 @@ describe("Independent Worker Validators", () => {
       expect(() => validateCurrentTaxRankYear(2023)).not.toThrow();
       expect(() => validateCurrentTaxRankYear(2024)).not.toThrow();
       expect(() => validateCurrentTaxRankYear(2025)).not.toThrow();
+      expect(() => validateCurrentTaxRankYear(2026)).not.toThrow();
     });
 
     it("should throw for invalid years", () => {
       // @ts-expect-error: 2022 is not assignable to the expected type, but we want to test runtime validation
       expect(() => validateCurrentTaxRankYear(2022)).toThrow("Invalid tax rank year");
-      // @ts-expect-error: 2026 is not assignable to the expected type, but we want to test runtime validation
-      expect(() => validateCurrentTaxRankYear(2026)).toThrow("Invalid tax rank year");
+      // @ts-expect-error: 2027 is not assignable to the expected type, but we want to test runtime validation
+      expect(() => validateCurrentTaxRankYear(2027)).toThrow("Invalid tax rank year");
     });
   });
 
@@ -174,6 +175,12 @@ describe("Independent Worker Validators", () => {
       expect(() => validateYearOfYouthIrs(10, 2025)).not.toThrow();
     });
 
+    it("should pass for valid years in 2026", () => {
+      expect(() => validateYearOfYouthIrs(1, 2026)).not.toThrow();
+      expect(() => validateYearOfYouthIrs(5, 2026)).not.toThrow();
+      expect(() => validateYearOfYouthIrs(10, 2026)).not.toThrow();
+    });
+
     it("should pass for valid years in 2024", () => {
       expect(() => validateYearOfYouthIrs(1, 2024)).not.toThrow();
       expect(() => validateYearOfYouthIrs(5, 2024)).not.toThrow();
@@ -187,6 +194,7 @@ describe("Independent Worker Validators", () => {
     it("should throw for invalid years", () => {
       expect(() => validateYearOfYouthIrs(0, 2025)).toThrow("Year of youth IRS must be between 1 and 10");
       expect(() => validateYearOfYouthIrs(11, 2025)).toThrow("Year of youth IRS must be between 1 and 10");
+      expect(() => validateYearOfYouthIrs(11, 2026)).toThrow("Year of youth IRS must be between 1 and 10");
       expect(() => validateYearOfYouthIrs(6, 2024)).toThrow("Year of youth IRS must be between 1 and 5");
     });
 

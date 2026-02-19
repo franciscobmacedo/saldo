@@ -142,10 +142,15 @@ describe("simulateIndependentWorker - End-to-End", () => {
         income,
         currentTaxRankYear: 2025,
       });
+      const result2026 = simulateIndependentWorker({
+        income,
+        currentTaxRankYear: 2026,
+      });
 
       expect(result2023.currentIas).toBe(480.43);
       expect(result2024.currentIas).toBe(509.26);
       expect(result2025.currentIas).toBe(522.50);
+      expect(result2026.currentIas).toBe(537.13);
     });
 
     it("should handle custom expenses", () => {

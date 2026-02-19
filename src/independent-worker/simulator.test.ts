@@ -93,7 +93,7 @@ describe("simulateIndependentWorker", () => {
     expect(result.irsPay).toBeDefined();
     expect(result.netIncome).toBeDefined();
     expect(result.taxRank).toBeDefined();
-      expect(result.currentIas).toBe(522.50); // 2025 IAS value (default year)
+    expect(result.currentIas).toBe(537.13); // 2026 IAS value (default year)
     expect(result.ssTax).toBe(0.214);
     expect(result.maxExpensesTax).toBe(15);
     expect(result.workerWithinFirstFinancialYear).toBe(false);
@@ -214,10 +214,15 @@ describe("simulateIndependentWorker", () => {
       income: baseIncome,
       currentTaxRankYear: 2025,
     });
+    const result2026 = simulateIndependentWorker({
+      income: baseIncome,
+      currentTaxRankYear: 2026,
+    });
 
     expect(result2023.currentIas).toBe(480.43);
     expect(result2024.currentIas).toBe(509.26);
     expect(result2025.currentIas).toBe(522.50);
+    expect(result2026.currentIas).toBe(537.13);
   });
 
   it("should handle custom SS discount", () => {

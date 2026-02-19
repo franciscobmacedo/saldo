@@ -12,12 +12,14 @@ export type LocationT = "continent" | "azores" | "madeira";
 export type PeriodT = 
   | "2025-01-01_2025-07-31"
   | "2025-08-01_2025-09-30" 
-  | "2025-10-01_2025-12-31";
+  | "2025-10-01_2025-12-31"
+  | "2026-01-01_2026-12-31";
 
 export const VALID_PERIODS: readonly PeriodT[] = Object.freeze([
   "2025-01-01_2025-07-31",
   "2025-08-01_2025-09-30", 
-  "2025-10-01_2025-12-31"
+  "2025-10-01_2025-12-31",
+  "2026-01-01_2026-12-31",
 ] as const);
 
 export function getYearFromPeriod(period: PeriodT): number {

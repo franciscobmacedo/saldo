@@ -34,7 +34,18 @@ export const TAX_RANKS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: TaxRan
     { id: 8, min: 44987, max: 83696, normalTax: 0.45, averageTax: 0.35408 },
     { id: 9, min: 83696, normalTax: 0.48, max: null, averageTax: null },
   ],
+  2026: [
+    { id: 1, min: 0, max: 8342, normalTax: 0.125, averageTax: 0.125 },
+    { id: 2, min: 8342, max: 12587, normalTax: 0.157, averageTax: 0.1358 },
+    { id: 3, min: 12587, max: 17838, normalTax: 0.212, averageTax: 0.1583 },
+    { id: 4, min: 17838, max: 23089, normalTax: 0.241, averageTax: 0.1773 },
+    { id: 5, min: 23089, max: 29397, normalTax: 0.311, averageTax: 0.206 },
+    { id: 6, min: 29397, max: 43090, normalTax: 0.349, averageTax: 0.2509 },
+    { id: 7, min: 43090, max: 46566, normalTax: 0.431, averageTax: 0.2646 },
+    { id: 8, min: 46566, max: 86634, normalTax: 0.446, averageTax: 0.348 },
+    { id: 9, min: 86634, normalTax: 0.48, max: null, averageTax: null },
+  ]
 };
 
 
-export const SUPPORTED_TAX_RANK_YEARS = [2023, 2024, 2025] as const;
+export const SUPPORTED_TAX_RANK_YEARS = [2023, 2024, 2025, 2026] as const;

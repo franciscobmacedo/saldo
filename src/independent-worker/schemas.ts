@@ -55,11 +55,10 @@ export interface SimulateIndependentWorkerOptions {
   maxExpensesTax?: number;
   expenses?: number;
   ssTax?: number;
-  currentTaxRankYear?: 2023 | 2024 | 2025;
+  currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
   rnh?: boolean;
   rnhTax?: number;
   dateOfOpeningAcivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
 }
-

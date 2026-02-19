@@ -88,7 +88,7 @@ export function validateYearOfYouthIrs(
   year: number, 
   currentTaxRankYear: typeof SUPPORTED_TAX_RANK_YEARS[number]
 ): void {
-  const validRange = currentTaxRankYear === 2025 ? 10 : 5;
+  const validRange = currentTaxRankYear >= 2025 ? 10 : 5;
   if (year < 1 || year > validRange) {
     throw new Error(`Year of youth IRS must be between 1 and ${validRange} for tax year ${currentTaxRankYear}`);
   }

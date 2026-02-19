@@ -258,6 +258,18 @@ describe("simulateDependentWorker", () => {
     expect(october?.period).toBe("2025-10-01_2025-12-31");
   });
 
+  it("should map all 2026 months to the 2026 yearly period", () => {
+    const result = simulateDependentWorker({ year: 2026, income: 1200 });
+
+    const january = result.monthlyBreakdown.find((month) => month.month === "january");
+    const june = result.monthlyBreakdown.find((month) => month.month === "june");
+    const december = result.monthlyBreakdown.find((month) => month.month === "december");
+
+    expect(january?.period).toBe("2026-01-01_2026-12-31");
+    expect(june?.period).toBe("2026-01-01_2026-12-31");
+    expect(december?.period).toBe("2026-01-01_2026-12-31");
+  });
+
   it("should exclude June lunch allowance by default", () => {
     const result = simulateDependentWorker({ year: defaultYear, income: 1200 });
 
