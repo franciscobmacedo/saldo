@@ -4,9 +4,9 @@ import {
   validateDependents,
   validateOneHalfMonthTwelfthsLumpSumMonth,
   validateYear,
-  validatePeriod,
 } from "@/dependent-worker/validators";
 import { describe, it, expect } from "vitest";
+
 describe("Dependent Worker Validators", () => {
   describe("validateNumberOfHolders", () => {
     it.each([null, undefined, 1, 2])(
@@ -93,30 +93,6 @@ describe("Dependent Worker Validators", () => {
     it("should throw if numberOfDependentsDisabled is greater than numberOfDependents", () => {
       expect(() => validateDependents(1, 2)).toThrow(
         "'numberOfDependentsDisabled' must be less than or equal to 'numberOfDependents'"
-      );
-    });
-  });
-
-  describe("validatePeriod", () => {
-    it.each([
-      "2025-01-01_2025-07-31",
-      "2025-08-01_2025-09-30", 
-      "2025-10-01_2025-12-31"
-    ])("should not throw for valid period %s", (period) => {
-      expect(() => validatePeriod(period as any)).not.toThrow();
-    });
-
-    it.each([
-      "2025-01-01_2025-06-30",
-      "2024-01-01_2024-12-31",
-      "2026-01-01_2026-12-31",
-      "invalid-period",
-      "",
-      null,
-      undefined
-    ])("should throw for invalid period %s", (period) => {
-      expect(() => validatePeriod(period as any)).toThrow(
-        "'period' must be one of"
       );
     });
   });

@@ -2,11 +2,11 @@ import { describe, it, expect } from "vitest";
 import { 
   PeriodT, 
   VALID_PERIODS, 
+  buildRetentionTableIdentifier,
   getAvailableYears,
   getPeriodForMonth,
   getPeriodsForYear,
   getYearFromPeriod,
-  RetentionPathsSchema,
 } from "@/config/schemas";
 
 describe("Period-related functionality", () => {
@@ -87,55 +87,35 @@ describe("Period-related functionality", () => {
     });
   });
 
-  describe("RetentionPathsSchema", () => {
+  describe("buildRetentionTableIdentifier", () => {
     it("should generate correct identifier for continent location", () => {
-      const schema = new RetentionPathsSchema(
-        "2025-01-01_2025-07-31",
-        "continent",
-        "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS",
-        2025
-      );
-      expect(schema.identifier).toBe("2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS");
+      expect(
+        buildRetentionTableIdentifier(
+          "2025-01-01_2025-07-31",
+          "continent",
+          "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"
+        )
+      ).toBe("2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS");
     });
 
     it("should generate correct identifier for azores location", () => {
-      const schema = new RetentionPathsSchema(
-        "2025-08-01_2025-09-30",
-        "azores",
-        "TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS",
-        2025
-      );
-      expect(schema.identifier).toBe("2025/azores/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS");
+      expect(
+        buildRetentionTableIdentifier(
+          "2025-08-01_2025-09-30",
+          "azores",
+          "TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS"
+        )
+      ).toBe("2025/azores/2025-08-01_2025-09-30/TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS");
     });
 
     it("should generate correct identifier for madeira location", () => {
-      const schema = new RetentionPathsSchema(
-        "2025-10-01_2025-12-31",
-        "madeira",
-        "TABLE3_MARRIED_1_HOLDER",
-        2025
-      );
-      expect(schema.identifier).toBe("2025/madeira/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER");
-    });
-
-    it("should work with string year parameter", () => {
-      const schema = new RetentionPathsSchema(
-        "2025-01-01_2025-07-31",
-        "continent",
-        "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS",
-        "2025"
-      );
-      expect(schema.identifier).toBe("2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS");
-    });
-
-    it("should have path getter that returns identifier", () => {
-      const schema = new RetentionPathsSchema(
-        "2025-01-01_2025-07-31",
-        "continent",
-        "TABLE1_SINGLE_OR_MARRIED_2_HOLDERS",
-        2025
-      );
-      expect(schema.path).toBe(schema.identifier);
+      expect(
+        buildRetentionTableIdentifier(
+          "2025-10-01_2025-12-31",
+          "madeira",
+          "TABLE3_MARRIED_1_HOLDER"
+        )
+      ).toBe("2025/madeira/2025-10-01_2025-12-31/TABLE3_MARRIED_1_HOLDER");
     });
   });
 

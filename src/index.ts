@@ -6,4 +6,13 @@ export * from "./independent-worker/schemas";
 export * from "./independent-worker/calculations";
 export * from "./independent-worker/validators";
 export * from "./data/retention-tax-tables-data";
-export { LocationT, PeriodT, SituationCodesT, Situation, Condition, SituationUtils, Situations } from "./config/schemas";
+export {
+  LocationT,
+  PeriodT,
+  VALID_PERIODS,
+  SituationCodesT,
+  Situation,
+  Condition,
+  SituationUtils,
+  Situations,
+} from "./config/schemas";

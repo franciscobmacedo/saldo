@@ -54,6 +54,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         january.incomeSubjectToIrsAndSocialSecurity * 0.11,
         2
       );
+      expect(january.bracket).toBeDefined();
+      expect(january.taxRetentionTable).toBeDefined();
       expect(january.netIncome.totalAmount).toBeLessThan(
         january.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount
       );

@@ -122,6 +122,8 @@ describe("simulateDependentWorker", () => {
       taxExemptAmount: defaultLunchAllowance.taxFreeMonthlyValue,
       taxableAmount: defaultLunchAllowance.taxableMonthlyValue,
     });
+    expect(january?.bracket).toBeDefined();
+    expect(january?.taxRetentionTable).toBeDefined();
   });
 
   it("should calculate for a married individual, 1 holder, 2 dependents", () => {

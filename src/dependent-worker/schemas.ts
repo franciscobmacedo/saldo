@@ -68,6 +68,24 @@ export interface SubsidyTwelfthsAmountBreakdown {
   totalAmount: number;
 }
 
+export interface BracketResult {
+  signal: "max" | "min";
+  limit: number;
+  max_marginal_rate: number;
+  deduction: number;
+  var1_deduction: number;
+  var2_deduction: number;
+  dependent_aditional_deduction: number;
+  effective_mensal_rate: number;
+}
+
+export interface TaxRetentionTableResult {
+  situation: string;
+  description: string;
+  brackets: BracketResult[];
+  dependent_disabled_addition_deduction?: number;
+}
+
 export interface MonthlyBreakdownResult {
   month: MonthName;
   period: PeriodT;
@@ -79,6 +97,8 @@ export interface MonthlyBreakdownResult {
   netIncome: IncomeComponentAmountBreakdown;
   lunchAllowance: LunchAllowanceAmountBreakdown;
   subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
+  bracket: BracketResult;
+  taxRetentionTable: TaxRetentionTableResult;
 }
 
 export interface YearlyDependentWorkerSummary {

@@ -215,6 +215,8 @@ export function simulateDependentWorker({
         lumpSumAmount: monthTwelfthsLumpSum,
         totalAmount: monthTwelfthsTotal,
       },
+      bracket: monthBracket.toJSON(),
+      taxRetentionTable: taxRetentionTable.toJSON(),
     };
   });
 

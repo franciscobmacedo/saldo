@@ -390,25 +390,11 @@ export class SituationUtils {
   }
 }
 
-export class RetentionPathsSchema {
-  public identifier: string; // Renamed from yearPath, locationPath, etc. to a single identifier
-
-  constructor(
-    period: PeriodT,
-    location: LocationT,
-    situationCode: SituationCodesT,
-    year: number | string
-  ) {
-    const yearStr = String(year);
-
-    // Construct the identifier string matching the keys in taxTablesData
-    // e.g., "2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"
-    // Note: situationCode already comes without .json
-    this.identifier = `${yearStr}/${location}/${period}/${situationCode}`;
-  }
-
-  public get path(): string { // Keep 'path' getter name for compatibility if it's widely used,
-    // but it now returns the identifier.
-    return this.identifier;
-  }
+export function buildRetentionTableIdentifier(
+  period: PeriodT,
+  location: LocationT,
+  situationCode: SituationCodesT
+): string {
+  const year = getYearFromPeriod(period);
+  return `${year}/${location}/${period}/${situationCode}`;
 }
