@@ -98,11 +98,14 @@ describe("Dependent Worker Validators", () => {
   });
 
   describe("validateYear", () => {
-    it("should not throw for a valid supported year", () => {
-      expect(() => validateYear(2025)).not.toThrow();
-    });
+    it.each([2025, 2026])(
+      "should not throw for a valid supported year %p",
+      (year) => {
+        expect(() => validateYear(year)).not.toThrow();
+      }
+    );
 
-    it.each([2024, 2026])(
+    it.each([2024, 2099])(
       "should throw for unsupported year %p",
       (year) => {
         expect(() => validateYear(year)).toThrow(

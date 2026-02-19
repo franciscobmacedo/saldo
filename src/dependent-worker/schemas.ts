@@ -42,6 +42,26 @@ export interface SimulateDependentWorkerOptions {
   oneHalfMonthTwelfthsLumpSumMonth?: OneHalfMonthTwelfthsLumpSumMonth;
 }
 
+export type SimulateDependentWorkerMonthlyIncomeSweepOptions =
+  Omit<SimulateDependentWorkerOptions, "income"> & {
+    month: MonthName;
+  } & {
+  monthlyIncomes: number[];
+  yearlyIncomes?: never;
+};
+
+export type SimulateDependentWorkerYearlyIncomeSweepOptions =
+  Omit<SimulateDependentWorkerOptions, "income"> & {
+    month: MonthName;
+  } & {
+  yearlyIncomes: number[];
+  monthlyIncomes?: never;
+};
+
+export type SimulateDependentWorkerIncomeSweepOptions =
+  | SimulateDependentWorkerMonthlyIncomeSweepOptions
+  | SimulateDependentWorkerYearlyIncomeSweepOptions;
+
 export interface IncomeComponentAmountBreakdown {
   totalAmount: number;
   fromBaseSalaryAmount: number;
@@ -111,4 +131,18 @@ export interface DependentWorkerResult {
   yearly: YearlyDependentWorkerSummary;
   socialSecurityContributionRate: number;
   monthlyBreakdown: MonthlyBreakdownResult[];
+}
+
+export interface IncomeSweepPoint {
+  scope: "monthly" | "annual";
+  gross: number;
+  grossAnnual: number;
+  grossMonthly: number;
+  net: number;
+  totalTax: number;
+  netAnnual?: number;
+  totalTaxAnnual?: number;
+  overallTaxBurden: number;
+  effectiveBracketRate: number | null;
+  marginalRate: number;
 }
