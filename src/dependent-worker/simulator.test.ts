@@ -207,14 +207,13 @@ describe("simulateDependentWorker", () => {
     getSituationSpy.mockRestore();
   });
 
-  it("should calculate yearly gross and net salaries correctly based on (mocked) monthly values", () => {
+  it("should calculate yearly gross and reconcile yearly net with monthly breakdown", () => {
     const income = 1200;
     const twelfths = Twelfths.ONE_MONTH; // example
     const result = simulateDependentWorker({ income, twelfths });
 
     const expectedYearlyGrossSalary = 19268.4;
-
-    const expectedYearlyNetSalary = 16413.6;
+    const expectedYearlyNetSalary = 15740.4;
 
     expect(result.gross.yearly).toBeCloseTo(expectedYearlyGrossSalary);
     expect(result.net.yearly).toBeCloseTo(expectedYearlyNetSalary);

@@ -151,31 +151,6 @@ export function simulateDependentWorker({
 
   const yearlyGrossSalary = income * 14 + yearlyLunchAllowance;
 
-  // Calculate yearly net salary correctly by simulating what the base monthly salary would be
-  // without twelfths distribution and then multiplying by 14 months
-  const baseMonthlyTaxableIncome = income + lunchAllowance.taxableMonthlyValue;
-  const baseMonthlyGrossIncome = baseMonthlyTaxableIncome + lunchAllowance.taxFreeMonthlyValue;
-  
-  // Calculate tax for base monthly income (without twelfths distribution)
-  const baseBracket = taxRetentionTable.find_bracket(baseMonthlyTaxableIncome);
-  if (!baseBracket) {
-    throw new Error(
-      `Could not find tax bracket for base taxable income: ${baseMonthlyTaxableIncome}`
-    );
-  }
-  
-  const baseMonthlyTax = baseBracket.calculate_tax(
-    baseMonthlyTaxableIncome,
-    0, // No twelfths for base calculation
-    numberOfDependents || 0,
-    extraDeduction
-  );
-  
-  const baseMonthlySocialSecurity = baseMonthlyTaxableIncome * socialSecurityTaxRate;
-  const baseMonthlyNet = baseMonthlyGrossIncome - baseMonthlyTax - baseMonthlySocialSecurity;
-  
-  const yearlyNetSalary = baseMonthlyNet * 14;
-
   const twelfthsLumpSumByMonth = buildTwelfthsLumpSumByMonth(
     income,
     twelfths,
@@ -283,6 +258,11 @@ export function simulateDependentWorker({
       },
     };
   });
+
+  const yearlyNetSalary = monthlyBreakdown.reduce(
+    (total, month) => total + month.net.salary,
+    0
+  );
 
   return {
     taxableIncome,

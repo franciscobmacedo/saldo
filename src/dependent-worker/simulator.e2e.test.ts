@@ -226,6 +226,23 @@ describe("simulateDependentWorker - End-to-End", () => {
         withDefaultLunch.taxableIncome
       );
     });
+
+    it("should reconcile yearly net with sum of monthly net values when lunch allowance is taxable", () => {
+      const result = simulateDependentWorker({
+        income: 1200,
+        lunchAllowanceDailyValue: 12,
+        lunchAllowanceMode: "salary",
+        lunchAllowanceDaysCount: 22,
+        includeLunchAllowanceInJune: true,
+        twelfths: Twelfths.ONE_MONTH,
+        location: "continent",
+        period: "2025-01-01_2025-07-31",
+      });
+
+      const expectedYearlyNetSalary = 15956.920360360362;
+
+      expect(result.net.yearly).toBeCloseTo(expectedYearlyNetSalary);
+    });
   });
 
   describe("Date range transitions", () => {
