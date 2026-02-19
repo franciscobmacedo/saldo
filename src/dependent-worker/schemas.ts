@@ -24,97 +24,79 @@ export type MonthName =
   | "december";
 
 export interface SimulateDependentWorkerOptions {
-    income: number;
-    married?: boolean;
-    disabled?: boolean;
-    partnerDisabled?: boolean;
-    location?: LocationT;
-    numberOfHolders?: number | null;
-    numberOfDependents?: number | null;
-    numberOfDependentsDisabled?: number | null;
-    period?: PeriodT;
-    socialSecurityTaxRate?: number;
-    twelfths?: Twelfths;
-    lunchAllowanceDailyValue?: number;
-    lunchAllowanceMode?: "cupon" | "salary";
-    lunchAllowanceDaysCount?: number;
-    includeLunchAllowanceInJune?: boolean;
-    oneHalfMonthTwelfthsLumpSumMonth?: OneHalfMonthTwelfthsLumpSumMonth;
-  }
+  income: number;
+  married?: boolean;
+  disabled?: boolean;
+  partnerDisabled?: boolean;
+  location?: LocationT;
+  numberOfHolders?: number | null;
+  numberOfDependents?: number | null;
+  numberOfDependentsDisabled?: number | null;
+  period?: PeriodT;
+  socialSecurityContributionRate?: number;
+  twelfths?: Twelfths;
+  lunchAllowanceDailyValue?: number;
+  lunchAllowanceMode?: "cupon" | "salary";
+  lunchAllowanceDaysCount?: number;
+  includeLunchAllowanceInJune?: boolean;
+  oneHalfMonthTwelfthsLumpSumMonth?: OneHalfMonthTwelfthsLumpSumMonth;
+}
 
-/** Calculated lunch allowance values only (no input data) */
-export interface LunchAllowanceResult {
-  /** Gross monthly amount */
-  gross: number;
-  /** Net amount after tax/SS on taxable portion */
-  net: number;
-  /** Portion subject to tax and social security */
-  taxable: number;
-  /** Portion exempt from tax and social security */
-  taxFree: number;
+export interface IncomeComponentAmountBreakdown {
+  totalAmount: number;
+  fromBaseSalaryAmount: number;
+  fromLunchAllowanceAmount: number;
+  fromSubsidyTwelfthsAmount: number;
+}
+
+export interface GrossIncomeAmountBreakdown {
+  baseSalaryAmount: number;
+  baseSalaryAndLunchAllowanceAmount: number;
+  totalWithLunchAllowanceAndSubsidyTwelfthsAmount: number;
+}
+
+export interface LunchAllowanceAmountBreakdown {
+  grossAmount: number;
+  taxableAmount: number;
+  taxExemptAmount: number;
+  isPaidInThisMonth: boolean;
+}
+
+export interface SubsidyTwelfthsAmountBreakdown {
+  distributedMonthlyAmount: number;
+  lumpSumAmount: number;
+  totalAmount: number;
 }
 
 export interface MonthlyBreakdownResult {
   month: MonthName;
-  gross: number;
-  irsTax: {
-    total: number;
-    base: number;
-    lunchAllowance: number;
-    twelfths: number;
-  };
-  socialSecurityTax: {
-    total: number;
-    base: number;
-    lunchAllowance: number;
-    twelfths: number;
-  };
-  net: {
-    /** Base salary net only (excludes twelfths and lunch allowance) */
-    base: number;
-    /** Twelfths net only */
-    twelfths: number;
-    /** Lunch allowance net only */
-    lunchAllowance: number;
-    /** Total monthly net salary */
-    salary: number;
-  };
-  lunchAllowance: Omit<LunchAllowanceResult, "net"> & {
-    included: boolean;
-  };
-  twelfths: {
-    distributed: number;
-    lumpSum: number;
-    total: number;
-  };
+  taxableIncomeForIrsCalculation: number;
+  incomeSubjectToIrsAndSocialSecurity: number;
+  grossIncome: GrossIncomeAmountBreakdown;
+  irsWithholdingTax: IncomeComponentAmountBreakdown;
+  socialSecurityContribution: IncomeComponentAmountBreakdown;
+  netIncome: IncomeComponentAmountBreakdown;
+  lunchAllowance: LunchAllowanceAmountBreakdown;
+  subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
 }
 
+export interface YearlyDependentWorkerSummary {
+  totalGrossIncomeAmount: number;
+  totalNetIncomeAmount: number;
+  totalLunchAllowanceGrossAmount: number;
+}
+
+export type MonthlyDependentWorkerSummary = Omit<
+  MonthlyBreakdownResult,
+  "month"
+>;
+
 export interface DependentWorkerResult {
-  taxableIncome: number;
-  irsTax: number;
-  socialSecurityTax: number;
-  socialSecurityTaxRate: number;
-
-  gross: {
-    /** Total gross salary per month */
-    monthly: number;
-    /** Gross salary for the year (14 months) */
-    yearly: number;
-  };
-
-  net: {
-    /** Net income from base salary + twelfths (Rendimento líquido). Excludes lunch allowance. */
-    base: number;
-    /** Total net salary: base + lunch allowance (Salário líquido) */
-    salary: number;
-    /** Net salary for the year */
-    yearly: number;
-  };
-
+  /** Most complete month with all salary components (without month name) */
+  monthly: MonthlyDependentWorkerSummary;
+  yearly: YearlyDependentWorkerSummary;
+  socialSecurityContributionRate: number;
   monthlyBreakdown: MonthlyBreakdownResult[];
-
-  /** Calculated lunch allowance values */
-  lunchAllowance: LunchAllowanceResult;
 
   bracket: {
     signal: "max" | "min";

@@ -17,7 +17,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfDependentsDisabled: 0,
         period: "2025-01-01_2025-07-31",
   
-      socialSecurityTaxRate: 0.11,
+      socialSecurityContributionRate: 0.11,
         twelfths: Twelfths.NONE,
         lunchAllowanceDailyValue: 10.2,
         lunchAllowanceMode: "cupon",
@@ -25,24 +25,25 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Verify structure
-      expect(result).toHaveProperty("taxableIncome");
-      expect(result).toHaveProperty("gross");
-      expect(result).toHaveProperty("irsTax");
-      expect(result).toHaveProperty("socialSecurityTax");
-      expect(result).toHaveProperty("net");
+      expect(result).toHaveProperty("monthly");
+      expect(result).toHaveProperty("yearly");
+      expect(result).toHaveProperty("socialSecurityContributionRate");
+      expect(result).toHaveProperty("bracket");
+      expect(result).toHaveProperty("taxRetentionTable");
+      expect(result).toHaveProperty("monthlyBreakdown");
 
       // Verify reasonable values
-      expect(result.taxableIncome).toBeGreaterThanOrEqual(900); // Default lunch allowance adds 0
-      expect(result.gross.monthly).toBeGreaterThanOrEqual(result.taxableIncome);
-      expect(result.irsTax).toBeGreaterThanOrEqual(0);
-      expect(result.socialSecurityTax).toBeCloseTo(
-        result.taxableIncome * 0.11,
+      expect(result.monthly.taxableIncomeForIrsCalculation).toBeGreaterThanOrEqual(900);
+      expect(result.monthly.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount).toBeGreaterThanOrEqual(result.monthly.taxableIncomeForIrsCalculation);
+      expect(result.monthly.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
+      expect(result.monthly.socialSecurityContribution.totalAmount).toBeCloseTo(
+        result.monthly.incomeSubjectToIrsAndSocialSecurity * 0.11,
         2
       );
-      expect(result.net.salary).toBeLessThan(result.gross.monthly);
+      expect(result.monthly.netIncome.totalAmount).toBeLessThan(result.monthly.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount);
       // Yearly gross = income * 14 + lunch allowance * 11 months
-      expect(result.gross.yearly).toBe(
-        900 * 14 + result.lunchAllowance.gross * 11
+      expect(result.yearly.totalGrossIncomeAmount).toBe(
+        900 * 14 + result.monthly.lunchAllowance.grossAmount * 11
       );
     });
 
@@ -66,8 +67,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(result.irsTax).toBeLessThan(singleResult.irsTax);
-      expect(result.net.salary).toBeGreaterThan(singleResult.net.salary);
+      expect(result.monthly.irsWithholdingTax.totalAmount).toBeLessThan(singleResult.monthly.irsWithholdingTax.totalAmount);
+      expect(result.monthly.netIncome.totalAmount).toBeGreaterThan(singleResult.monthly.netIncome.totalAmount);
     });
 
     it("should apply disabled dependent deduction correctly", () => {
@@ -92,11 +93,11 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Should have lower tax due to disabled dependent deduction
-      expect(withDisabledDependent.irsTax).toBeLessThan(
-        withoutDisabledDependent.irsTax
+      expect(withDisabledDependent.monthly.irsWithholdingTax.totalAmount).toBeLessThan(
+        withoutDisabledDependent.monthly.irsWithholdingTax.totalAmount
       );
-      expect(withDisabledDependent.net.salary).toBeGreaterThan(
-        withoutDisabledDependent.net.salary
+      expect(withDisabledDependent.monthly.netIncome.totalAmount).toBeGreaterThan(
+        withoutDisabledDependent.monthly.netIncome.totalAmount
       );
     });
 
@@ -120,14 +121,17 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Should have lower tax due to partner disability deduction (€135.71)
-      expect(withDisabledPartner.irsTax).toBeLessThan(withoutDisabledPartner.irsTax);
-      expect(withDisabledPartner.net.salary).toBeGreaterThan(
-        withoutDisabledPartner.net.salary
+      expect(withDisabledPartner.monthly.irsWithholdingTax.totalAmount).toBeLessThan(
+        withoutDisabledPartner.monthly.irsWithholdingTax.totalAmount
+      );
+      expect(withDisabledPartner.monthly.netIncome.totalAmount).toBeGreaterThan(
+        withoutDisabledPartner.monthly.netIncome.totalAmount
       );
 
       // The difference should be close to the expected deduction impact
       const taxDifference =
-        withoutDisabledPartner.irsTax - withDisabledPartner.irsTax;
+        withoutDisabledPartner.monthly.irsWithholdingTax.totalAmount -
+        withDisabledPartner.monthly.irsWithholdingTax.totalAmount;
       expect(taxDifference).toBeGreaterThan(110); // Should save more than €110 in tax (€135.71 deduction taxed at marginal rate)
     });
   });
@@ -156,9 +160,17 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Tax rates should be different between regions
-      expect([continent.irsTax, azores.irsTax, madeira.irsTax]).toHaveLength(3);
+      expect([
+        continent.monthly.irsWithholdingTax.totalAmount,
+        azores.monthly.irsWithholdingTax.totalAmount,
+        madeira.monthly.irsWithholdingTax.totalAmount,
+      ]).toHaveLength(3);
       // At least one should be different
-      const uniqueTaxes = new Set([continent.irsTax, azores.irsTax, madeira.irsTax]);
+      const uniqueTaxes = new Set([
+        continent.monthly.irsWithholdingTax.totalAmount,
+        azores.monthly.irsWithholdingTax.totalAmount,
+        madeira.monthly.irsWithholdingTax.totalAmount,
+      ]);
       expect(uniqueTaxes.size).toBeGreaterThan(1);
     });
   });
@@ -177,30 +189,50 @@ describe("simulateDependentWorker - End-to-End", () => {
         ...baseParams,
         twelfths: Twelfths.NONE,
       });
-      console.log("noTwelfths:", noTwelfths);
 
       const oneMonth = simulateDependentWorker({
         ...baseParams,
         twelfths: Twelfths.ONE_MONTH,
       });
-      console.log("oneMonth:", oneMonth);
 
       const twoMonths = simulateDependentWorker({
         ...baseParams,
         twelfths: Twelfths.TWO_MONTHS,
       });
-      console.log("twoMonths:", twoMonths);
+
+      const noTwelfthsJanuary = noTwelfths.monthlyBreakdown.find(
+        (month) => month.month === "january"
+      );
+      const oneMonthJanuary = oneMonth.monthlyBreakdown.find(
+        (month) => month.month === "january"
+      );
+      const twoMonthsJanuary = twoMonths.monthlyBreakdown.find(
+        (month) => month.month === "january"
+      );
+
+      expect(noTwelfthsJanuary).toBeDefined();
+      expect(oneMonthJanuary).toBeDefined();
+      expect(twoMonthsJanuary).toBeDefined();
+
       // More twelfths should result in higher monthly tax (distributed bonus income)
-      expect(twoMonths.irsTax).toBeGreaterThan(oneMonth.irsTax);
-      expect(oneMonth.irsTax).toBeGreaterThan(noTwelfths.irsTax);
+      expect(twoMonthsJanuary!.irsWithholdingTax.totalAmount).toBeGreaterThan(
+        oneMonthJanuary!.irsWithholdingTax.totalAmount
+      );
+      expect(oneMonthJanuary!.irsWithholdingTax.totalAmount).toBeGreaterThan(
+        noTwelfthsJanuary!.irsWithholdingTax.totalAmount
+      );
 
       // More twelfths should result in higher monthly net salary (bonus distribution)
-      expect(twoMonths.net.salary).toBeGreaterThan(oneMonth.net.salary);
-      expect(oneMonth.net.salary).toBeGreaterThan(noTwelfths.net.salary);
+      expect(twoMonthsJanuary!.netIncome.totalAmount).toBeGreaterThan(
+        oneMonthJanuary!.netIncome.totalAmount
+      );
+      expect(oneMonthJanuary!.netIncome.totalAmount).toBeGreaterThan(
+        noTwelfthsJanuary!.netIncome.totalAmount
+      );
 
       // ONE_MONTH gives the highest yearly net (tax optimization sweet spot)
-      expect(oneMonth.net.yearly).toBeCloseTo(twoMonths.net.yearly);
-      expect(noTwelfths.net.yearly).toBeCloseTo(oneMonth.net.yearly);
+      expect(oneMonth.yearly.totalNetIncomeAmount).toBeCloseTo(twoMonths.yearly.totalNetIncomeAmount);
+      expect(noTwelfths.yearly.totalNetIncomeAmount).toBeCloseTo(oneMonth.yearly.totalNetIncomeAmount);
     });
   });
 
@@ -221,9 +253,9 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(withCustomLunch.lunchAllowance.gross).toBe(240); // 12 * 20 days
-      expect(withCustomLunch.taxableIncome).not.toBe(
-        withDefaultLunch.taxableIncome
+      expect(withCustomLunch.monthly.lunchAllowance.grossAmount).toBe(240); // 12 * 20 days
+      expect(withCustomLunch.monthly.taxableIncomeForIrsCalculation).not.toBe(
+        withDefaultLunch.monthly.taxableIncomeForIrsCalculation
       );
     });
 
@@ -241,7 +273,7 @@ describe("simulateDependentWorker - End-to-End", () => {
 
       const expectedYearlyNetSalary = 15956.920360360362;
 
-      expect(result.net.yearly).toBeCloseTo(expectedYearlyNetSalary);
+      expect(result.yearly.totalNetIncomeAmount).toBeCloseTo(expectedYearlyNetSalary);
     });
   });
 
@@ -280,8 +312,10 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Should be in highest tax bracket
-      expect(highIncome.irsTax).toBeGreaterThan(3000);
-      expect(highIncome.irsTax / highIncome.taxableIncome).toBeGreaterThan(0.3); // Effective rate > 30%
+      expect(highIncome.monthly.irsWithholdingTax.totalAmount).toBeGreaterThan(3000);
+      expect(
+        highIncome.monthly.irsWithholdingTax.totalAmount / highIncome.monthly.taxableIncomeForIrsCalculation
+      ).toBeGreaterThan(0.3); // Effective rate > 30%
     });
   });
 
@@ -295,8 +329,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(minIncome.irsTax).toBeGreaterThanOrEqual(0);
-      expect(minIncome.net.salary).toBeGreaterThan(0);
+      expect(minIncome.monthly.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
+      expect(minIncome.monthly.netIncome.totalAmount).toBeGreaterThan(0);
     });
 
     it("should handle tax bracket boundaries", () => {
@@ -310,8 +344,8 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(result.irsTax).toBeGreaterThanOrEqual(0);
-      expect(result.net.salary).toBeGreaterThan(0);
+      expect(result.monthly.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
+      expect(result.monthly.netIncome.totalAmount).toBeGreaterThan(0);
     });
   });
 });

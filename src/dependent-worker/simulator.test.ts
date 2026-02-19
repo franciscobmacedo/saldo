@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { simulateDependentWorker } from "@/dependent-worker/simulator";
 import { Twelfths } from "@/dependent-worker/schemas";
 import { LunchAllowance } from "@/dependent-worker/lunch-allowance";
@@ -104,15 +104,16 @@ describe("simulateDependentWorker", () => {
   it("should calculate for a basic scenario with defaults", () => {
     const result = simulateDependentWorker({ income: baseIncome });
     expect(result).toBeDefined();
-    expect(result.taxableIncome).toBe(
+    expect(result.monthly.taxableIncomeForIrsCalculation).toBe(
       baseIncome + defaultLunchAllowance.taxableMonthlyValue
     );
-    expect(result.socialSecurityTaxRate).toEqual(0.11);
-    expect(result.lunchAllowance).toMatchObject({
-      gross: defaultLunchAllowance.monthlyValue,
-      taxFree: defaultLunchAllowance.taxFreeMonthlyValue,
-      taxable: defaultLunchAllowance.taxableMonthlyValue,
+    expect(result.socialSecurityContributionRate).toEqual(0.11);
+    expect(result.monthly.lunchAllowance).toMatchObject({
+      grossAmount: defaultLunchAllowance.monthlyValue,
+      taxExemptAmount: defaultLunchAllowance.taxFreeMonthlyValue,
+      taxableAmount: defaultLunchAllowance.taxableMonthlyValue,
     });
+    expect(result.monthly).not.toHaveProperty("month");
   });
 
   it("should calculate for a married individual, 1 holder, 2 dependents", () => {
@@ -126,7 +127,7 @@ describe("simulateDependentWorker", () => {
     });
 
     expect(result).toBeDefined();
-    expect(result.taxableIncome).toBe(
+    expect(result.monthly.taxableIncomeForIrsCalculation).toBe(
       incomeVal + defaultLunchAllowance.taxableMonthlyValue
     );
   });
@@ -142,8 +143,8 @@ describe("simulateDependentWorker", () => {
       lunchAllowanceDaysCount: 22,
     });
     expect(result).toBeDefined();
-    expect(result.lunchAllowance.gross).toBe(8 * 22); // 8/day * 22 days
-    expect(result.taxableIncome).toBe(incomeVal + 44);
+    expect(result.monthly.lunchAllowance.grossAmount).toBe(8 * 22); // 8/day * 22 days
+    expect(result.monthly.taxableIncomeForIrsCalculation).toBe(incomeVal + 44);
   });
 
   it("should calculate for 'azores' location and no twelfths", () => {
@@ -159,7 +160,8 @@ describe("simulateDependentWorker", () => {
     const expectedTaxable =
       incomeVal + defaultLunchAllowance.taxableMonthlyValue;
     const expectedRetentionIncome = expectedTaxable + expectedTwelfthsIncome;
-    expect(result.gross.monthly).toBe(
+    const january = result.monthlyBreakdown.find((month) => month.month === "january");
+    expect(january?.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount).toBe(
       expectedRetentionIncome + defaultLunchAllowance.taxFreeMonthlyValue
     );
   });
@@ -215,8 +217,8 @@ describe("simulateDependentWorker", () => {
     const expectedYearlyGrossSalary = 19268.4;
     const expectedYearlyNetSalary = 15740.4;
 
-    expect(result.gross.yearly).toBeCloseTo(expectedYearlyGrossSalary);
-    expect(result.net.yearly).toBeCloseTo(expectedYearlyNetSalary);
+    expect(result.yearly.totalGrossIncomeAmount).toBeCloseTo(expectedYearlyGrossSalary);
+    expect(result.yearly.totalNetIncomeAmount).toBeCloseTo(expectedYearlyNetSalary);
   });
 
   it("should include a 12-month breakdown and exclude June lunch allowance by default", () => {
@@ -228,8 +230,8 @@ describe("simulateDependentWorker", () => {
 
     const june = result.monthlyBreakdown.find((month) => month.month === "june");
     expect(june).toBeDefined();
-    expect(june?.lunchAllowance.included).toBe(false);
-    expect(june?.lunchAllowance.gross).toBe(0);
+    expect(june?.lunchAllowance.isPaidInThisMonth).toBe(false);
+    expect(june?.lunchAllowance.grossAmount).toBe(0);
   });
 
   it("should include June lunch allowance when includeLunchAllowanceInJune is true", () => {
@@ -240,8 +242,8 @@ describe("simulateDependentWorker", () => {
 
     const june = result.monthlyBreakdown.find((month) => month.month === "june");
     expect(june).toBeDefined();
-    expect(june?.lunchAllowance.included).toBe(true);
-    expect(june?.lunchAllowance.gross).toBe(defaultLunchAllowance.monthlyValue);
+    expect(june?.lunchAllowance.isPaidInThisMonth).toBe(true);
+    expect(june?.lunchAllowance.grossAmount).toBe(defaultLunchAllowance.monthlyValue);
   });
 
   it("should expose monthly component nets and tax splits that reconcile with totals", () => {
@@ -257,26 +259,26 @@ describe("simulateDependentWorker", () => {
     const january = result.monthlyBreakdown.find((month) => month.month === "january");
     expect(january).toBeDefined();
 
-    expect(january?.net.base).toBeTypeOf("number");
-    expect(january?.net.lunchAllowance).toBeTypeOf("number");
-    expect(january?.net.twelfths).toBeTypeOf("number");
+    expect(january?.netIncome.fromBaseSalaryAmount).toBeTypeOf("number");
+    expect(january?.netIncome.fromLunchAllowanceAmount).toBeTypeOf("number");
+    expect(january?.netIncome.fromSubsidyTwelfthsAmount).toBeTypeOf("number");
 
-    expect(january?.irsTax.total).toBeCloseTo(
-      (january?.irsTax.base || 0) +
-      (january?.irsTax.lunchAllowance || 0) +
-      (january?.irsTax.twelfths || 0)
+    expect(january?.irsWithholdingTax.totalAmount).toBeCloseTo(
+      (january?.irsWithholdingTax.fromBaseSalaryAmount || 0) +
+      (january?.irsWithholdingTax.fromLunchAllowanceAmount || 0) +
+      (january?.irsWithholdingTax.fromSubsidyTwelfthsAmount || 0)
     );
 
-    expect(january?.socialSecurityTax.total).toBeCloseTo(
-      (january?.socialSecurityTax.base || 0) +
-      (january?.socialSecurityTax.lunchAllowance || 0) +
-      (january?.socialSecurityTax.twelfths || 0)
+    expect(january?.socialSecurityContribution.totalAmount).toBeCloseTo(
+      (january?.socialSecurityContribution.fromBaseSalaryAmount || 0) +
+      (january?.socialSecurityContribution.fromLunchAllowanceAmount || 0) +
+      (january?.socialSecurityContribution.fromSubsidyTwelfthsAmount || 0)
     );
 
-    expect(january?.net.salary).toBeCloseTo(
-      (january?.net.base || 0) +
-      (january?.net.lunchAllowance || 0) +
-      (january?.net.twelfths || 0)
+    expect(january?.netIncome.totalAmount).toBeCloseTo(
+      (january?.netIncome.fromBaseSalaryAmount || 0) +
+      (january?.netIncome.fromLunchAllowanceAmount || 0) +
+      (january?.netIncome.fromSubsidyTwelfthsAmount || 0)
     );
   });
 
@@ -288,8 +290,8 @@ describe("simulateDependentWorker", () => {
 
     const june = withTwelfths.monthlyBreakdown.find((month) => month.month === "june");
     expect(june).toBeDefined();
-    expect(june?.net.twelfths).toBeGreaterThan(0);
-    expect(june?.net.base).toBeCloseTo(june?.net.salary! - june?.net.twelfths! - june?.net.lunchAllowance!);
+    expect(june?.netIncome.fromSubsidyTwelfthsAmount).toBeGreaterThan(0);
+    expect(june?.netIncome.fromBaseSalaryAmount).toBeCloseTo(june?.netIncome.totalAmount! - june?.netIncome.fromSubsidyTwelfthsAmount! - june?.netIncome.fromLunchAllowanceAmount!);
   });
 
   it("should allow choosing where the ONE_HALF_MONTH lump-sum remainder is paid", () => {
@@ -318,17 +320,17 @@ describe("simulateDependentWorker", () => {
       (month) => month.month === "december"
     );
 
-    expect(defaultJune?.twelfths.lumpSum).toBeCloseTo(income);
-    expect(defaultDecember?.twelfths.lumpSum).toBeCloseTo(income * 0.5);
-    expect(juneJune?.twelfths.lumpSum).toBeCloseTo(income * 0.5);
-    expect(juneDecember?.twelfths.lumpSum).toBeCloseTo(income);
+    expect(defaultJune?.subsidyTwelfths.lumpSumAmount).toBeCloseTo(income);
+    expect(defaultDecember?.subsidyTwelfths.lumpSumAmount).toBeCloseTo(income * 0.5);
+    expect(juneJune?.subsidyTwelfths.lumpSumAmount).toBeCloseTo(income * 0.5);
+    expect(juneDecember?.subsidyTwelfths.lumpSumAmount).toBeCloseTo(income);
   });
 
   describe("period parameter", () => {
     it("should use default period when not specified", () => {
       const result = simulateDependentWorker({ income: 1000 });
       expect(result).toBeDefined();
-      expect(result.taxableIncome).toBe(
+      expect(result.monthly.taxableIncomeForIrsCalculation).toBe(
         1000 + defaultLunchAllowance.taxableMonthlyValue
       );
     });
@@ -339,7 +341,7 @@ describe("simulateDependentWorker", () => {
         period: "2025-01-01_2025-07-31"
       });
       expect(result).toBeDefined();
-      expect(result.taxableIncome).toBe(
+      expect(result.monthly.taxableIncomeForIrsCalculation).toBe(
         1000 + defaultLunchAllowance.taxableMonthlyValue
       );
     });
@@ -350,7 +352,7 @@ describe("simulateDependentWorker", () => {
         period: "2025-08-01_2025-09-30"
       });
       expect(result).toBeDefined();
-      expect(result.taxableIncome).toBe(
+      expect(result.monthly.taxableIncomeForIrsCalculation).toBe(
         1000 + defaultLunchAllowance.taxableMonthlyValue
       );
     });
@@ -361,7 +363,7 @@ describe("simulateDependentWorker", () => {
         period: "2025-10-01_2025-12-31"
       });
       expect(result).toBeDefined();
-      expect(result.taxableIncome).toBe(
+      expect(result.monthly.taxableIncomeForIrsCalculation).toBe(
         1000 + defaultLunchAllowance.taxableMonthlyValue
       );
     });

@@ -29,6 +29,31 @@ import {
   buildTwelfthsLumpSumByMonth,
 } from "@/dependent-worker/monthly-breakdown";
 
+function getMonthCompletenessScore(month: MonthlyBreakdownResult): number {
+  let score = 0;
+
+  if (month.lunchAllowance.isPaidInThisMonth) {
+    score += 4;
+  }
+  if (month.lunchAllowance.grossAmount > 0) {
+    score += 2;
+  }
+  if (month.subsidyTwelfths.totalAmount > 0) {
+    score += 2;
+  }
+  if (month.subsidyTwelfths.lumpSumAmount > 0) {
+    score += 3;
+  }
+  if (month.subsidyTwelfths.distributedMonthlyAmount > 0) {
+    score += 1;
+  }
+  if (month.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount > 0) {
+    score += 1;
+  }
+
+  return score;
+}
+
 export function simulateDependentWorker({
   income,
   married = false,
@@ -39,7 +64,7 @@ export function simulateDependentWorker({
   numberOfDependents = null,
   numberOfDependentsDisabled = null,
   period = "2025-01-01_2025-07-31", // Default to first period of 2025
-  socialSecurityTaxRate = 0.11,
+  socialSecurityContributionRate = 0.11,
   twelfths = Twelfths.TWO_MONTHS,
   lunchAllowanceDailyValue = 10.2,
   lunchAllowanceMode = "cupon",
@@ -60,7 +85,6 @@ export function simulateDependentWorker({
   validateLunchAllowanceMode(lunchAllowanceMode);
   validateOneHalfMonthTwelfthsLumpSumMonth(oneHalfMonthTwelfthsLumpSumMonth);
   validatePeriod(period);
-  
 
   // Partner with disability results in extra deduction
   let extraDeduction = getPartnerExtraDeduction(
@@ -71,15 +95,6 @@ export function simulateDependentWorker({
 
   // Holidays and Christmas income distributed over the year
   const twelfthsIncome = getTwelfthsIncome(income, twelfths);
-
-  // Income for tax calculation
-  const taxableIncome = income + lunchAllowance.taxableMonthlyValue;
-
-  // Income for gross salary and social security
-  const retentionIncome = taxableIncome + twelfthsIncome;
-
-  // Gross salary per month
-  const grossIncome = retentionIncome + lunchAllowance.taxFreeMonthlyValue;
 
   // The situation to determine the tax bracket
   // Use disability tables if either the worker or their partner is disabled
@@ -105,16 +120,6 @@ export function simulateDependentWorker({
     situation.code,
     year
   );
-  // console.log('taxRetentionTable', taxRetentionTable);
-
-  // Find the tax bracket for the taxable income
-  const bracket = taxRetentionTable.find_bracket(taxableIncome);
-  // console.log('bracket', bracket);
-  if (!bracket) {
-    throw new Error(
-      `Could not find tax bracket for taxable income: ${taxableIncome} in table ${situation.code} for location ${location}`
-    );
-  }
 
   // Extra deduction for dependents with disability
   extraDeduction += getDisabledDependentExtraDeduction(
@@ -122,32 +127,8 @@ export function simulateDependentWorker({
     numberOfDependentsDisabled || 0
   );
 
-  // Calculate IRS, social security tax and net salary
-  const irsTax = bracket.calculate_tax(
-    taxableIncome,
-    twelfthsIncome,
-    numberOfDependents || 0,
-    extraDeduction
-  );
-  const socialSecurityTax = retentionIncome * socialSecurityTaxRate;
-  const netSalary = grossIncome - irsTax - socialSecurityTax;
-
-  // Split per Doutor Finanças: Rendimento líquido (base+twelfths) | Subsídio de alimentação | Salário líquido (total)
-  const baseRetentionIncome = income + twelfthsIncome;
-  const netIncome =
-    retentionIncome === 0
-      ? baseRetentionIncome
-      : baseRetentionIncome -
-        (irsTax + socialSecurityTax) * (baseRetentionIncome / retentionIncome);
-
-  const lunchAllowanceNet =
-    retentionIncome === 0
-      ? lunchAllowance.monthlyValue
-      : lunchAllowance.monthlyValue -
-        (irsTax + socialSecurityTax) *
-          (lunchAllowance.taxableMonthlyValue / retentionIncome);
-
-  const yearlyLunchAllowance = lunchAllowance.monthlyValue * (includeLunchAllowanceInJune ? 12 : 11);
+  const yearlyLunchAllowance =
+    lunchAllowance.monthlyValue * (includeLunchAllowanceInJune ? 12 : 11);
 
   const yearlyGrossSalary = income * 14 + yearlyLunchAllowance;
 
@@ -176,6 +157,8 @@ export function simulateDependentWorker({
 
     const monthRetentionIncome = monthTaxableIncome + monthTwelfthsTotal;
     const monthGrossIncome = monthRetentionIncome + monthLunchTaxFree;
+    const monthGrossBaseSalary = income;
+    const monthGrossBaseSalaryAndLunchAllowance = income + monthLunchGross;
 
     const monthBracket = taxRetentionTable.find_bracket(monthTaxableIncome);
     if (!monthBracket) {
@@ -191,10 +174,11 @@ export function simulateDependentWorker({
       extraDeduction
     );
 
-    const monthSocialSecurityBase = income * socialSecurityTaxRate;
+    const monthSocialSecurityBase = income * socialSecurityContributionRate;
     const monthSocialSecurityLunchAllowance =
-      monthLunchTaxable * socialSecurityTaxRate;
-    const monthSocialSecurityTwelfths = monthTwelfthsTotal * socialSecurityTaxRate;
+      monthLunchTaxable * socialSecurityContributionRate;
+    const monthSocialSecurityTwelfths =
+      monthTwelfthsTotal * socialSecurityContributionRate;
     const monthSocialSecurity =
       monthSocialSecurityBase +
       monthSocialSecurityLunchAllowance +
@@ -226,65 +210,108 @@ export function simulateDependentWorker({
 
     return {
       month,
-      gross: monthGrossIncome,
-      irsTax: {
-        total: monthTax,
-        base: monthIrsBase,
-        lunchAllowance: monthIrsLunchAllowance,
-        twelfths: monthIrsTwelfths,
+      taxableIncomeForIrsCalculation: monthTaxableIncome,
+      incomeSubjectToIrsAndSocialSecurity: monthRetentionIncome,
+      grossIncome: {
+        baseSalaryAmount: monthGrossBaseSalary,
+        baseSalaryAndLunchAllowanceAmount: monthGrossBaseSalaryAndLunchAllowance,
+        totalWithLunchAllowanceAndSubsidyTwelfthsAmount: monthGrossIncome,
       },
-      socialSecurityTax: {
-        total: monthSocialSecurity,
-        base: monthSocialSecurityBase,
-        lunchAllowance: monthSocialSecurityLunchAllowance,
-        twelfths: monthSocialSecurityTwelfths,
+      irsWithholdingTax: {
+        totalAmount: monthTax,
+        fromBaseSalaryAmount: monthIrsBase,
+        fromLunchAllowanceAmount: monthIrsLunchAllowance,
+        fromSubsidyTwelfthsAmount: monthIrsTwelfths,
       },
-      net: {
-        base: monthBaseNetIncome,
-        twelfths: monthTwelfthsNet,
-        lunchAllowance: monthLunchAllowanceNet,
-        salary: monthNetSalary,
+      socialSecurityContribution: {
+        totalAmount: monthSocialSecurity,
+        fromBaseSalaryAmount: monthSocialSecurityBase,
+        fromLunchAllowanceAmount: monthSocialSecurityLunchAllowance,
+        fromSubsidyTwelfthsAmount: monthSocialSecurityTwelfths,
+      },
+      netIncome: {
+        totalAmount: monthNetSalary,
+        fromBaseSalaryAmount: monthBaseNetIncome,
+        fromLunchAllowanceAmount: monthLunchAllowanceNet,
+        fromSubsidyTwelfthsAmount: monthTwelfthsNet,
       },
       lunchAllowance: {
-        gross: monthLunchGross,
-        taxable: monthLunchTaxable,
-        taxFree: monthLunchTaxFree,
-        included: includeLunchAllowance,
+        grossAmount: monthLunchGross,
+        taxableAmount: monthLunchTaxable,
+        taxExemptAmount: monthLunchTaxFree,
+        isPaidInThisMonth: includeLunchAllowance,
       },
-      twelfths: {
-        distributed: monthTwelfthsDistributed,
-        lumpSum: monthTwelfthsLumpSum,
-        total: monthTwelfthsTotal,
+      subsidyTwelfths: {
+        distributedMonthlyAmount: monthTwelfthsDistributed,
+        lumpSumAmount: monthTwelfthsLumpSum,
+        totalAmount: monthTwelfthsTotal,
       },
     };
   });
 
   const yearlyNetSalary = monthlyBreakdown.reduce(
-    (total, month) => total + month.net.salary,
+    (total, month) => total + month.netIncome.totalAmount,
     0
   );
 
+  const [firstMonth, ...otherMonths] = monthlyBreakdown;
+  if (!firstMonth) {
+    throw new Error("Could not build monthly breakdown.");
+  }
+
+  const monthIndexByName = Object.fromEntries(
+    MONTHS.map((month, index) => [month, index])
+  ) as Record<MonthlyBreakdownResult["month"], number>;
+
+  const mostCompleteMonth = otherMonths.reduce((bestMonth, currentMonth) => {
+    const bestScore = getMonthCompletenessScore(bestMonth);
+    const currentScore = getMonthCompletenessScore(currentMonth);
+
+    if (currentScore > bestScore) {
+      return currentMonth;
+    }
+    if (currentScore < bestScore) {
+      return bestMonth;
+    }
+    if (
+      currentMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount >
+      bestMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount
+    ) {
+      return currentMonth;
+    }
+    if (
+      currentMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount <
+      bestMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount
+    ) {
+      return bestMonth;
+    }
+
+    return monthIndexByName[currentMonth.month] >
+      monthIndexByName[bestMonth.month]
+      ? currentMonth
+      : bestMonth;
+  }, firstMonth);
+
+  const { month: _, ...monthly } = mostCompleteMonth;
+
+  const bracket = taxRetentionTable.find_bracket(
+    monthly.taxableIncomeForIrsCalculation
+  );
+  if (!bracket) {
+    throw new Error(
+      `Could not find tax bracket for monthly taxable income: ${monthly.taxableIncomeForIrsCalculation} in table ${situation.code} for location ${location}`
+    );
+  }
+
   return {
-    taxableIncome,
-    irsTax: irsTax,
-    socialSecurityTax,
-    socialSecurityTaxRate,
-    gross: {
-      monthly: grossIncome,
-      yearly: yearlyGrossSalary,
+    monthly,
+    yearly: {
+      totalGrossIncomeAmount: yearlyGrossSalary,
+      totalNetIncomeAmount: yearlyNetSalary,
+      totalLunchAllowanceGrossAmount: yearlyLunchAllowance,
     },
-    net: {
-      base: netIncome,
-      salary: netSalary,
-      yearly: yearlyNetSalary,
-    },
+    socialSecurityContributionRate,
     monthlyBreakdown,
-    lunchAllowance: {
-      gross: lunchAllowance.monthlyValue,
-      net: lunchAllowanceNet,
-      taxable: lunchAllowance.taxableMonthlyValue,
-      taxFree: lunchAllowance.taxFreeMonthlyValue,
-    },
     bracket: bracket.toJSON(),
     taxRetentionTable: taxRetentionTable.toJSON(),
   };
