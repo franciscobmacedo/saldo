@@ -28,7 +28,7 @@ export function getYearFromPeriod(period: PeriodT): number {
   }
   
   const yearStr = period.substring(0, 4);
-  const year = parseInt(yearStr);
+  const year = parseInt(yearStr, 10);
   
   // Validate that the year part is actually numeric
   if (isNaN(year)) {
@@ -36,6 +36,79 @@ export function getYearFromPeriod(period: PeriodT): number {
   }
   
   return year;
+}
+
+interface ParsedPeriod {
+  period: PeriodT;
+  year: number;
+  startUtcMs: number;
+  endUtcMs: number;
+}
+
+function parsePeriod(period: PeriodT): ParsedPeriod {
+  const [startDate, endDate] = period.split("_");
+  if (!startDate || !endDate) {
+    throw new Error(`Could not parse period boundaries: ${period}`);
+  }
+
+  const [startYear, startMonth, startDay] = startDate
+    .split("-")
+    .map((part) => parseInt(part, 10));
+  const [endYear, endMonth, endDay] = endDate
+    .split("-")
+    .map((part) => parseInt(part, 10));
+
+  if (
+    [startYear, startMonth, startDay, endYear, endMonth, endDay].some((value) =>
+      Number.isNaN(value)
+    )
+  ) {
+    throw new Error(`Could not parse period boundaries: ${period}`);
+  }
+
+  return {
+    period,
+    year: startYear,
+    startUtcMs: Date.UTC(startYear, startMonth - 1, startDay),
+    endUtcMs: Date.UTC(endYear, endMonth - 1, endDay),
+  };
+}
+
+export function getAvailableYears(): number[] {
+  const years = new Set<number>(VALID_PERIODS.map(getYearFromPeriod));
+  return Array.from(years).sort((a, b) => a - b);
+}
+
+export function getPeriodsForYear(year: number): PeriodT[] {
+  return VALID_PERIODS.filter((period) => getYearFromPeriod(period) === year);
+}
+
+export function getPeriodForMonth(
+  year: number,
+  monthIndexZeroBased: number
+): PeriodT {
+  if (!Number.isInteger(monthIndexZeroBased) || monthIndexZeroBased < 0 || monthIndexZeroBased > 11) {
+    throw new Error(`'monthIndexZeroBased' must be an integer between 0 and 11. Provided: ${monthIndexZeroBased}`);
+  }
+
+  const periods = getPeriodsForYear(year).map(parsePeriod);
+  if (periods.length === 0) {
+    throw new Error(`No retention tax periods found for year: ${year}`);
+  }
+
+  const monthStart = Date.UTC(year, monthIndexZeroBased, 1);
+  const period = periods.find(
+    (candidate) =>
+      monthStart >= candidate.startUtcMs && monthStart <= candidate.endUtcMs
+  );
+
+  if (!period) {
+    throw new Error(
+      `Could not find retention tax period for year ${year} and month index ${monthIndexZeroBased}`
+    );
+  }
+
+  return period.period;
 }
 
 export interface Condition {

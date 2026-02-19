@@ -2,10 +2,11 @@ import { describe, it, expect } from "vitest";
 import { 
   PeriodT, 
   VALID_PERIODS, 
+  getAvailableYears,
+  getPeriodForMonth,
+  getPeriodsForYear,
   getYearFromPeriod,
   RetentionPathsSchema,
-  LocationT,
-  SituationCodesT
 } from "@/config/schemas";
 
 describe("Period-related functionality", () => {
@@ -43,6 +44,45 @@ describe("Period-related functionality", () => {
     it("should throw error for period with non-numeric year", () => {
       expect(() => getYearFromPeriod("abcd-01-01_abcd-12-31" as PeriodT)).toThrow(
         "Could not extract year from period: abcd-01-01_abcd-12-31"
+      );
+    });
+  });
+
+  describe("year and month period resolution", () => {
+    it("should expose available years from configured periods", () => {
+      expect(getAvailableYears()).toEqual([2025]);
+    });
+
+    it("should return all periods for a valid year", () => {
+      expect(getPeriodsForYear(2025)).toEqual([
+        "2025-01-01_2025-07-31",
+        "2025-08-01_2025-09-30",
+        "2025-10-01_2025-12-31",
+      ]);
+    });
+
+    it("should return no periods for an unsupported year", () => {
+      expect(getPeriodsForYear(2024)).toEqual([]);
+    });
+
+    it("should resolve each month of 2025 to the correct period", () => {
+      expect(getPeriodForMonth(2025, 0)).toBe("2025-01-01_2025-07-31");
+      expect(getPeriodForMonth(2025, 6)).toBe("2025-01-01_2025-07-31");
+      expect(getPeriodForMonth(2025, 7)).toBe("2025-08-01_2025-09-30");
+      expect(getPeriodForMonth(2025, 8)).toBe("2025-08-01_2025-09-30");
+      expect(getPeriodForMonth(2025, 9)).toBe("2025-10-01_2025-12-31");
+      expect(getPeriodForMonth(2025, 11)).toBe("2025-10-01_2025-12-31");
+    });
+
+    it("should throw for invalid month index", () => {
+      expect(() => getPeriodForMonth(2025, 12)).toThrow(
+        "'monthIndexZeroBased' must be an integer between 0 and 11. Provided: 12"
+      );
+    });
+
+    it("should throw for unsupported years", () => {
+      expect(() => getPeriodForMonth(2024, 0)).toThrow(
+        "No retention tax periods found for year: 2024"
       );
     });
   });

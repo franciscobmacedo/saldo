@@ -1,4 +1,4 @@
-import { SituationUtils, getYearFromPeriod } from "@/config/schemas";
+import { SituationUtils, getPeriodForMonth } from "@/config/schemas";
 import { TaxRetentionTable } from "@/tables/tax-retention";
 import {
   validateNumberOfHolders,
@@ -7,7 +7,7 @@ import {
   validatePartnerDisabled,
   validateLunchAllowanceMode,
   validateOneHalfMonthTwelfthsLumpSumMonth,
-  validatePeriod,
+  validateYear,
 } from "@/dependent-worker/validators";
 import {
   Twelfths,
@@ -29,32 +29,8 @@ import {
   buildTwelfthsLumpSumByMonth,
 } from "@/dependent-worker/monthly-breakdown";
 
-function getMonthCompletenessScore(month: MonthlyBreakdownResult): number {
-  let score = 0;
-
-  if (month.lunchAllowance.isPaidInThisMonth) {
-    score += 4;
-  }
-  if (month.lunchAllowance.grossAmount > 0) {
-    score += 2;
-  }
-  if (month.subsidyTwelfths.totalAmount > 0) {
-    score += 2;
-  }
-  if (month.subsidyTwelfths.lumpSumAmount > 0) {
-    score += 3;
-  }
-  if (month.subsidyTwelfths.distributedMonthlyAmount > 0) {
-    score += 1;
-  }
-  if (month.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount > 0) {
-    score += 1;
-  }
-
-  return score;
-}
-
 export function simulateDependentWorker({
+  year,
   income,
   married = false,
   disabled = false,
@@ -63,7 +39,6 @@ export function simulateDependentWorker({
   numberOfHolders = null,
   numberOfDependents = null,
   numberOfDependentsDisabled = null,
-  period = "2025-01-01_2025-07-31", // Default to first period of 2025
   socialSecurityContributionRate = 0.11,
   twelfths = Twelfths.TWO_MONTHS,
   lunchAllowanceDailyValue = 10.2,
@@ -84,10 +59,10 @@ export function simulateDependentWorker({
   validateDependents(numberOfDependents, numberOfDependentsDisabled);
   validateLunchAllowanceMode(lunchAllowanceMode);
   validateOneHalfMonthTwelfthsLumpSumMonth(oneHalfMonthTwelfthsLumpSumMonth);
-  validatePeriod(period);
+  validateYear(year);
 
   // Partner with disability results in extra deduction
-  let extraDeduction = getPartnerExtraDeduction(
+  const partnerExtraDeduction = getPartnerExtraDeduction(
     married,
     numberOfHolders,
     partnerDisabled
@@ -112,21 +87,6 @@ export function simulateDependentWorker({
     );
   }
 
-  // Load the corresponding tax retention table
-  const year = getYearFromPeriod(period);
-  const taxRetentionTable = TaxRetentionTable.load(
-    period,
-    location,
-    situation.code,
-    year
-  );
-
-  // Extra deduction for dependents with disability
-  extraDeduction += getDisabledDependentExtraDeduction(
-    taxRetentionTable,
-    numberOfDependentsDisabled || 0
-  );
-
   const yearlyLunchAllowance =
     lunchAllowance.monthlyValue * (includeLunchAllowanceInJune ? 12 : 11);
 
@@ -138,7 +98,20 @@ export function simulateDependentWorker({
     oneHalfMonthTwelfthsLumpSumMonth
   );
 
-  const monthlyBreakdown: MonthlyBreakdownResult[] = MONTHS.map((month) => {
+  const monthlyBreakdown: MonthlyBreakdownResult[] = MONTHS.map((month, monthIndex) => {
+    const period = getPeriodForMonth(year, monthIndex);
+    const taxRetentionTable = TaxRetentionTable.load(
+      period,
+      location,
+      situation.code
+    );
+    const monthExtraDeduction =
+      partnerExtraDeduction +
+      getDisabledDependentExtraDeduction(
+        taxRetentionTable,
+        numberOfDependentsDisabled || 0
+      );
+
     const includeLunchAllowance =
       month !== HOLIDAY_ALLOWANCE_MONTH || includeLunchAllowanceInJune;
 
@@ -161,17 +134,12 @@ export function simulateDependentWorker({
     const monthGrossBaseSalaryAndLunchAllowance = income + monthLunchGross;
 
     const monthBracket = taxRetentionTable.find_bracket(monthTaxableIncome);
-    if (!monthBracket) {
-      throw new Error(
-        `Could not find tax bracket for monthly taxable income: ${monthTaxableIncome}`
-      );
-    }
 
     const monthTax = monthBracket.calculate_tax(
       monthTaxableIncome,
       monthTwelfthsTotal,
       numberOfDependents || 0,
-      extraDeduction
+      monthExtraDeduction
     );
 
     const monthSocialSecurityBase = income * socialSecurityContributionRate;
@@ -210,6 +178,7 @@ export function simulateDependentWorker({
 
     return {
       month,
+      period,
       taxableIncomeForIrsCalculation: monthTaxableIncome,
       incomeSubjectToIrsAndSocialSecurity: monthRetentionIncome,
       grossIncome: {
@@ -254,57 +223,7 @@ export function simulateDependentWorker({
     0
   );
 
-  const [firstMonth, ...otherMonths] = monthlyBreakdown;
-  if (!firstMonth) {
-    throw new Error("Could not build monthly breakdown.");
-  }
-
-  const monthIndexByName = Object.fromEntries(
-    MONTHS.map((month, index) => [month, index])
-  ) as Record<MonthlyBreakdownResult["month"], number>;
-
-  const mostCompleteMonth = otherMonths.reduce((bestMonth, currentMonth) => {
-    const bestScore = getMonthCompletenessScore(bestMonth);
-    const currentScore = getMonthCompletenessScore(currentMonth);
-
-    if (currentScore > bestScore) {
-      return currentMonth;
-    }
-    if (currentScore < bestScore) {
-      return bestMonth;
-    }
-    if (
-      currentMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount >
-      bestMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount
-    ) {
-      return currentMonth;
-    }
-    if (
-      currentMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount <
-      bestMonth.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount
-    ) {
-      return bestMonth;
-    }
-
-    return monthIndexByName[currentMonth.month] >
-      monthIndexByName[bestMonth.month]
-      ? currentMonth
-      : bestMonth;
-  }, firstMonth);
-
-  const { month: _, ...monthly } = mostCompleteMonth;
-
-  const bracket = taxRetentionTable.find_bracket(
-    monthly.taxableIncomeForIrsCalculation
-  );
-  if (!bracket) {
-    throw new Error(
-      `Could not find tax bracket for monthly taxable income: ${monthly.taxableIncomeForIrsCalculation} in table ${situation.code} for location ${location}`
-    );
-  }
-
   return {
-    monthly,
     yearly: {
       totalGrossIncomeAmount: yearlyGrossSalary,
       totalNetIncomeAmount: yearlyNetSalary,
@@ -312,7 +231,5 @@ export function simulateDependentWorker({
     },
     socialSecurityContributionRate,
     monthlyBreakdown,
-    bracket: bracket.toJSON(),
-    taxRetentionTable: taxRetentionTable.toJSON(),
   };
 }

@@ -24,6 +24,7 @@ export type MonthName =
   | "december";
 
 export interface SimulateDependentWorkerOptions {
+  year: number;
   income: number;
   married?: boolean;
   disabled?: boolean;
@@ -32,7 +33,6 @@ export interface SimulateDependentWorkerOptions {
   numberOfHolders?: number | null;
   numberOfDependents?: number | null;
   numberOfDependentsDisabled?: number | null;
-  period?: PeriodT;
   socialSecurityContributionRate?: number;
   twelfths?: Twelfths;
   lunchAllowanceDailyValue?: number;
@@ -70,6 +70,7 @@ export interface SubsidyTwelfthsAmountBreakdown {
 
 export interface MonthlyBreakdownResult {
   month: MonthName;
+  period: PeriodT;
   taxableIncomeForIrsCalculation: number;
   incomeSubjectToIrsAndSocialSecurity: number;
   grossIncome: GrossIncomeAmountBreakdown;
@@ -86,41 +87,8 @@ export interface YearlyDependentWorkerSummary {
   totalLunchAllowanceGrossAmount: number;
 }
 
-export type MonthlyDependentWorkerSummary = Omit<
-  MonthlyBreakdownResult,
-  "month"
->;
-
 export interface DependentWorkerResult {
-  /** Most complete month with all salary components (without month name) */
-  monthly: MonthlyDependentWorkerSummary;
   yearly: YearlyDependentWorkerSummary;
   socialSecurityContributionRate: number;
   monthlyBreakdown: MonthlyBreakdownResult[];
-
-  bracket: {
-    signal: "max" | "min";
-    limit: number;
-    max_marginal_rate: number;
-    deduction: number;
-    var1_deduction: number;
-    var2_deduction: number;
-    dependent_aditional_deduction: number;
-    effective_mensal_rate: number;
-  };
-  taxRetentionTable: {
-    situation: string;
-    description: string;
-    brackets: {
-      signal: "max" | "min";
-      limit: number;
-      max_marginal_rate: number;
-      deduction: number;
-      var1_deduction: number;
-      var2_deduction: number;
-      dependent_aditional_deduction: number;
-      effective_mensal_rate: number;
-    }[];
-    dependent_disabled_addition_deduction?: number;
-  };
 }

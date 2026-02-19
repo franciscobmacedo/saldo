@@ -1,4 +1,4 @@
-import { LocationT, RetentionPathsSchema, SituationCodesT, PeriodT } from "@/config/schemas";
+import { LocationT, RetentionPathsSchema, SituationCodesT, PeriodT, getYearFromPeriod } from "@/config/schemas";
 import { taxTablesData } from "@/data/retention-tax-tables-data"; // Import the pre-loaded JSON data
 
 // Interface for the raw data structure of a tax bracket
@@ -153,10 +153,9 @@ class TaxRetentionTable {
     static load(
         period: PeriodT,
         location: LocationT,
-        situation_code: SituationCodesT,
-        year: number | string
+        situation_code: SituationCodesT
     ): TaxRetentionTable {
-        const yearStr = String(year);
+        const yearStr = String(getYearFromPeriod(period));
 
         const retentionTablePathGenerator = new RetentionPathsSchema(
             period,

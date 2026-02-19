@@ -1,12 +1,25 @@
 import { describe, it, expect } from "vitest";
 import { simulateDependentWorker } from "@/dependent-worker/simulator";
-import { Twelfths } from "@/dependent-worker/schemas";
+import { Twelfths, MonthName } from "@/dependent-worker/schemas";
 
-// NO MOCKS - Testing the full integration
+const defaultYear = 2025;
+
+function getMonth(
+  result: ReturnType<typeof simulateDependentWorker>,
+  monthName: MonthName
+) {
+  const month = result.monthlyBreakdown.find((item) => item.month === monthName);
+  if (!month) {
+    throw new Error(`Month not found in breakdown: ${monthName}`);
+  }
+  return month;
+}
+
 describe("simulateDependentWorker - End-to-End", () => {
   describe("Real tax calculations with actual data", () => {
     it("should calculate correctly for single person in continent with €900 income", () => {
       const result = simulateDependentWorker({
+        year: defaultYear,
         income: 900,
         married: false,
         disabled: false,
@@ -15,129 +28,141 @@ describe("simulateDependentWorker - End-to-End", () => {
         numberOfHolders: 1,
         numberOfDependents: 0,
         numberOfDependentsDisabled: 0,
-        period: "2025-01-01_2025-07-31",
-  
-      socialSecurityContributionRate: 0.11,
+        socialSecurityContributionRate: 0.11,
         twelfths: Twelfths.NONE,
         lunchAllowanceDailyValue: 10.2,
         lunchAllowanceMode: "cupon",
         lunchAllowanceDaysCount: 22,
       });
 
-      // Verify structure
-      expect(result).toHaveProperty("monthly");
+      const january = getMonth(result, "january");
+
+      expect(result).not.toHaveProperty("monthly");
+      expect(result).not.toHaveProperty("bracket");
+      expect(result).not.toHaveProperty("taxRetentionTable");
       expect(result).toHaveProperty("yearly");
       expect(result).toHaveProperty("socialSecurityContributionRate");
-      expect(result).toHaveProperty("bracket");
-      expect(result).toHaveProperty("taxRetentionTable");
       expect(result).toHaveProperty("monthlyBreakdown");
 
-      // Verify reasonable values
-      expect(result.monthly.taxableIncomeForIrsCalculation).toBeGreaterThanOrEqual(900);
-      expect(result.monthly.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount).toBeGreaterThanOrEqual(result.monthly.taxableIncomeForIrsCalculation);
-      expect(result.monthly.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
-      expect(result.monthly.socialSecurityContribution.totalAmount).toBeCloseTo(
-        result.monthly.incomeSubjectToIrsAndSocialSecurity * 0.11,
+      expect(january.period).toBe("2025-01-01_2025-07-31");
+      expect(january.taxableIncomeForIrsCalculation).toBeGreaterThanOrEqual(900);
+      expect(january.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount).toBeGreaterThanOrEqual(
+        january.taxableIncomeForIrsCalculation
+      );
+      expect(january.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
+      expect(january.socialSecurityContribution.totalAmount).toBeCloseTo(
+        january.incomeSubjectToIrsAndSocialSecurity * 0.11,
         2
       );
-      expect(result.monthly.netIncome.totalAmount).toBeLessThan(result.monthly.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount);
-      // Yearly gross = income * 14 + lunch allowance * 11 months
+      expect(january.netIncome.totalAmount).toBeLessThan(
+        january.grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount
+      );
       expect(result.yearly.totalGrossIncomeAmount).toBe(
-        900 * 14 + result.monthly.lunchAllowance.grossAmount * 11
+        900 * 14 + january.lunchAllowance.grossAmount * 11
       );
     });
 
     it("should calculate correctly for married couple with dependents", () => {
       const result = simulateDependentWorker({
+        year: defaultYear,
         income: 2000,
         married: true,
         numberOfHolders: 1,
         numberOfDependents: 2,
         disabled: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      // Tax should be lower due to dependents
       const singleResult = simulateDependentWorker({
+        year: defaultYear,
         income: 2000,
         married: false,
         disabled: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      expect(result.monthly.irsWithholdingTax.totalAmount).toBeLessThan(singleResult.monthly.irsWithholdingTax.totalAmount);
-      expect(result.monthly.netIncome.totalAmount).toBeGreaterThan(singleResult.monthly.netIncome.totalAmount);
+      const resultJanuary = getMonth(result, "january");
+      const singleJanuary = getMonth(singleResult, "january");
+
+      expect(resultJanuary.irsWithholdingTax.totalAmount).toBeLessThan(
+        singleJanuary.irsWithholdingTax.totalAmount
+      );
+      expect(resultJanuary.netIncome.totalAmount).toBeGreaterThan(
+        singleJanuary.netIncome.totalAmount
+      );
     });
 
     it("should apply disabled dependent deduction correctly", () => {
       const withDisabledDependent = simulateDependentWorker({
+        year: defaultYear,
         income: 1500,
         married: true,
         numberOfHolders: 1,
         numberOfDependents: 2,
         numberOfDependentsDisabled: 1,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
       const withoutDisabledDependent = simulateDependentWorker({
+        year: defaultYear,
         income: 1500,
         married: true,
         numberOfHolders: 1,
         numberOfDependents: 2,
         numberOfDependentsDisabled: 0,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      // Should have lower tax due to disabled dependent deduction
-      expect(withDisabledDependent.monthly.irsWithholdingTax.totalAmount).toBeLessThan(
-        withoutDisabledDependent.monthly.irsWithholdingTax.totalAmount
+      const withDisabledJanuary = getMonth(withDisabledDependent, "january");
+      const withoutDisabledJanuary = getMonth(withoutDisabledDependent, "january");
+
+      expect(withDisabledJanuary.irsWithholdingTax.totalAmount).toBeLessThan(
+        withoutDisabledJanuary.irsWithholdingTax.totalAmount
       );
-      expect(withDisabledDependent.monthly.netIncome.totalAmount).toBeGreaterThan(
-        withoutDisabledDependent.monthly.netIncome.totalAmount
+      expect(withDisabledJanuary.netIncome.totalAmount).toBeGreaterThan(
+        withoutDisabledJanuary.netIncome.totalAmount
       );
     });
 
     it("should apply partner disability deduction correctly", () => {
       const withDisabledPartner = simulateDependentWorker({
+        year: defaultYear,
         income: 1500,
         married: true,
         numberOfHolders: 1,
         partnerDisabled: true,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
       const withoutDisabledPartner = simulateDependentWorker({
+        year: defaultYear,
         income: 1500,
         married: true,
         numberOfHolders: 1,
         partnerDisabled: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      // Should have lower tax due to partner disability deduction (€135.71)
-      expect(withDisabledPartner.monthly.irsWithholdingTax.totalAmount).toBeLessThan(
-        withoutDisabledPartner.monthly.irsWithholdingTax.totalAmount
+      const withDisabledJanuary = getMonth(withDisabledPartner, "january");
+      const withoutDisabledJanuary = getMonth(withoutDisabledPartner, "january");
+
+      expect(withDisabledJanuary.irsWithholdingTax.totalAmount).toBeLessThan(
+        withoutDisabledJanuary.irsWithholdingTax.totalAmount
       );
-      expect(withDisabledPartner.monthly.netIncome.totalAmount).toBeGreaterThan(
-        withoutDisabledPartner.monthly.netIncome.totalAmount
+      expect(withDisabledJanuary.netIncome.totalAmount).toBeGreaterThan(
+        withoutDisabledJanuary.netIncome.totalAmount
       );
 
-      // The difference should be close to the expected deduction impact
       const taxDifference =
-        withoutDisabledPartner.monthly.irsWithholdingTax.totalAmount -
-        withDisabledPartner.monthly.irsWithholdingTax.totalAmount;
-      expect(taxDifference).toBeGreaterThan(110); // Should save more than €110 in tax (€135.71 deduction taxed at marginal rate)
+        withoutDisabledJanuary.irsWithholdingTax.totalAmount -
+        withDisabledJanuary.irsWithholdingTax.totalAmount;
+      expect(taxDifference).toBeGreaterThan(110);
     });
   });
 
   describe("Regional variations", () => {
     const baseParams = {
+      year: defaultYear,
       income: 1500,
       married: false,
       disabled: false,
@@ -159,29 +184,27 @@ describe("simulateDependentWorker - End-to-End", () => {
         location: "madeira" as const,
       });
 
-      // Tax rates should be different between regions
-      expect([
-        continent.monthly.irsWithholdingTax.totalAmount,
-        azores.monthly.irsWithholdingTax.totalAmount,
-        madeira.monthly.irsWithholdingTax.totalAmount,
-      ]).toHaveLength(3);
-      // At least one should be different
+      const continentJanuary = getMonth(continent, "january");
+      const azoresJanuary = getMonth(azores, "january");
+      const madeiraJanuary = getMonth(madeira, "january");
+
       const uniqueTaxes = new Set([
-        continent.monthly.irsWithholdingTax.totalAmount,
-        azores.monthly.irsWithholdingTax.totalAmount,
-        madeira.monthly.irsWithholdingTax.totalAmount,
+        continentJanuary.irsWithholdingTax.totalAmount,
+        azoresJanuary.irsWithholdingTax.totalAmount,
+        madeiraJanuary.irsWithholdingTax.totalAmount,
       ]);
+
       expect(uniqueTaxes.size).toBeGreaterThan(1);
     });
   });
 
   describe("Twelfths impact", () => {
     const baseParams = {
+      year: defaultYear,
       income: 1800,
       married: false,
       disabled: false,
       location: "continent" as const,
- // July 31st
     };
 
     it("should show different tax burden based on twelfths", () => {
@@ -200,67 +223,64 @@ describe("simulateDependentWorker - End-to-End", () => {
         twelfths: Twelfths.TWO_MONTHS,
       });
 
-      const noTwelfthsJanuary = noTwelfths.monthlyBreakdown.find(
-        (month) => month.month === "january"
+      const noTwelfthsJanuary = getMonth(noTwelfths, "january");
+      const oneMonthJanuary = getMonth(oneMonth, "january");
+      const twoMonthsJanuary = getMonth(twoMonths, "january");
+
+      expect(twoMonthsJanuary.irsWithholdingTax.totalAmount).toBeGreaterThan(
+        oneMonthJanuary.irsWithholdingTax.totalAmount
       );
-      const oneMonthJanuary = oneMonth.monthlyBreakdown.find(
-        (month) => month.month === "january"
-      );
-      const twoMonthsJanuary = twoMonths.monthlyBreakdown.find(
-        (month) => month.month === "january"
+      expect(oneMonthJanuary.irsWithholdingTax.totalAmount).toBeGreaterThan(
+        noTwelfthsJanuary.irsWithholdingTax.totalAmount
       );
 
-      expect(noTwelfthsJanuary).toBeDefined();
-      expect(oneMonthJanuary).toBeDefined();
-      expect(twoMonthsJanuary).toBeDefined();
-
-      // More twelfths should result in higher monthly tax (distributed bonus income)
-      expect(twoMonthsJanuary!.irsWithholdingTax.totalAmount).toBeGreaterThan(
-        oneMonthJanuary!.irsWithholdingTax.totalAmount
+      expect(twoMonthsJanuary.netIncome.totalAmount).toBeGreaterThan(
+        oneMonthJanuary.netIncome.totalAmount
       );
-      expect(oneMonthJanuary!.irsWithholdingTax.totalAmount).toBeGreaterThan(
-        noTwelfthsJanuary!.irsWithholdingTax.totalAmount
+      expect(oneMonthJanuary.netIncome.totalAmount).toBeGreaterThan(
+        noTwelfthsJanuary.netIncome.totalAmount
       );
 
-      // More twelfths should result in higher monthly net salary (bonus distribution)
-      expect(twoMonthsJanuary!.netIncome.totalAmount).toBeGreaterThan(
-        oneMonthJanuary!.netIncome.totalAmount
-      );
-      expect(oneMonthJanuary!.netIncome.totalAmount).toBeGreaterThan(
-        noTwelfthsJanuary!.netIncome.totalAmount
-      );
+      const yearlyNets = [
+        noTwelfths.yearly.totalNetIncomeAmount,
+        oneMonth.yearly.totalNetIncomeAmount,
+        twoMonths.yearly.totalNetIncomeAmount,
+      ];
 
-      // ONE_MONTH gives the highest yearly net (tax optimization sweet spot)
-      expect(oneMonth.yearly.totalNetIncomeAmount).toBeCloseTo(twoMonths.yearly.totalNetIncomeAmount);
-      expect(noTwelfths.yearly.totalNetIncomeAmount).toBeCloseTo(oneMonth.yearly.totalNetIncomeAmount);
+      expect(yearlyNets.every((value) => value > 0)).toBe(true);
+      expect(new Set(yearlyNets).size).toBeGreaterThan(1);
     });
   });
 
   describe("Custom lunch allowance", () => {
     it("should handle custom lunch allowance correctly", () => {
       const withCustomLunch = simulateDependentWorker({
+        year: defaultYear,
         income: 1200,
         lunchAllowanceDailyValue: 12,
         lunchAllowanceMode: "cupon",
         lunchAllowanceDaysCount: 20,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
       const withDefaultLunch = simulateDependentWorker({
+        year: defaultYear,
         income: 1200,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      expect(withCustomLunch.monthly.lunchAllowance.grossAmount).toBe(240); // 12 * 20 days
-      expect(withCustomLunch.monthly.taxableIncomeForIrsCalculation).not.toBe(
-        withDefaultLunch.monthly.taxableIncomeForIrsCalculation
+      const customJanuary = getMonth(withCustomLunch, "january");
+      const defaultJanuary = getMonth(withDefaultLunch, "january");
+
+      expect(customJanuary.lunchAllowance.grossAmount).toBe(240);
+      expect(customJanuary.taxableIncomeForIrsCalculation).not.toBe(
+        defaultJanuary.taxableIncomeForIrsCalculation
       );
     });
 
     it("should reconcile yearly net with sum of monthly net values when lunch allowance is taxable", () => {
       const result = simulateDependentWorker({
+        year: defaultYear,
         income: 1200,
         lunchAllowanceDailyValue: 12,
         lunchAllowanceMode: "salary",
@@ -268,84 +288,86 @@ describe("simulateDependentWorker - End-to-End", () => {
         includeLunchAllowanceInJune: true,
         twelfths: Twelfths.ONE_MONTH,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      const expectedYearlyNetSalary = 15956.920360360362;
-
-      expect(result.yearly.totalNetIncomeAmount).toBeCloseTo(expectedYearlyNetSalary);
+      const expectedYearlyNetSalary = result.monthlyBreakdown.reduce(
+        (sum, month) => sum + month.netIncome.totalAmount,
+        0
+      );
+      expect(result.yearly.totalNetIncomeAmount).toBeCloseTo(
+        expectedYearlyNetSalary
+      );
     });
   });
 
-  describe("Date range transitions", () => {
-    it("should use different tax tables for different date ranges", () => {
-      const earlyYear = simulateDependentWorker({
+  describe("Year-based period transitions", () => {
+    it("should assign each month to the correct 2025 retention period", () => {
+      const result = simulateDependentWorker({
+        year: defaultYear,
         income: 1500,
         married: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31", // January
- // July
       });
 
-      const lateYear = simulateDependentWorker({
-        income: 1500,
-        married: false,
-        location: "continent",
-        period: "2025-10-01_2025-12-31",
-      });
-
-      // Tax calculations might differ due to different table periods
-      // (this depends on whether your tax tables actually change between periods)
-      expect(earlyYear).toBeDefined();
-      expect(lateYear).toBeDefined();
+      expect(getMonth(result, "january").period).toBe("2025-01-01_2025-07-31");
+      expect(getMonth(result, "july").period).toBe("2025-01-01_2025-07-31");
+      expect(getMonth(result, "august").period).toBe("2025-08-01_2025-09-30");
+      expect(getMonth(result, "september").period).toBe("2025-08-01_2025-09-30");
+      expect(getMonth(result, "october").period).toBe("2025-10-01_2025-12-31");
+      expect(getMonth(result, "december").period).toBe("2025-10-01_2025-12-31");
     });
   });
 
   describe("High income brackets", () => {
     it("should handle high income correctly", () => {
       const highIncome = simulateDependentWorker({
+        year: defaultYear,
         income: 10000,
         married: false,
         disabled: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      // Should be in highest tax bracket
-      expect(highIncome.monthly.irsWithholdingTax.totalAmount).toBeGreaterThan(3000);
+      const january = getMonth(highIncome, "january");
+
+      expect(january.irsWithholdingTax.totalAmount).toBeGreaterThan(3000);
       expect(
-        highIncome.monthly.irsWithholdingTax.totalAmount / highIncome.monthly.taxableIncomeForIrsCalculation
-      ).toBeGreaterThan(0.3); // Effective rate > 30%
+        january.irsWithholdingTax.totalAmount /
+          january.taxableIncomeForIrsCalculation
+      ).toBeGreaterThan(0.3);
     });
   });
 
   describe("Edge cases and boundary conditions", () => {
     it("should handle minimum income correctly", () => {
       const minIncome = simulateDependentWorker({
+        year: defaultYear,
         income: 500,
         married: false,
         disabled: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      expect(minIncome.monthly.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
-      expect(minIncome.monthly.netIncome.totalAmount).toBeGreaterThan(0);
+      const january = getMonth(minIncome, "january");
+
+      expect(january.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
+      expect(january.netIncome.totalAmount).toBeGreaterThan(0);
     });
 
     it("should handle tax bracket boundaries", () => {
-      // Test income right at a bracket boundary (from CAS1.json: 857.0)
       const result = simulateDependentWorker({
+        year: defaultYear,
         income: 857,
         married: true,
         numberOfHolders: 1,
         disabled: false,
         location: "continent",
-        period: "2025-01-01_2025-07-31",
       });
 
-      expect(result.monthly.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
-      expect(result.monthly.netIncome.totalAmount).toBeGreaterThan(0);
+      const january = getMonth(result, "january");
+
+      expect(january.irsWithholdingTax.totalAmount).toBeGreaterThanOrEqual(0);
+      expect(january.netIncome.totalAmount).toBeGreaterThan(0);
     });
   });
 });

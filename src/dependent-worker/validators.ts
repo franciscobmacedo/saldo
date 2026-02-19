@@ -1,4 +1,4 @@
-import { VALID_PERIODS, PeriodT } from "@/config/schemas";
+import { VALID_PERIODS, PeriodT, getPeriodsForYear } from "@/config/schemas";
 
 export const validateNumberOfHolders = (numberOfHolders?: number | null): void => {
     if (numberOfHolders !== null && numberOfHolders !== undefined && (numberOfHolders !== 1 && numberOfHolders !== 2)) {
@@ -68,6 +68,16 @@ export const validateOneHalfMonthTwelfthsLumpSumMonth = (
       `'oneHalfMonthTwelfthsLumpSumMonth' must be 'june' or 'december'. Provided: ${oneHalfMonthTwelfthsLumpSumMonth}`
     );
   }
+};
+
+export const validateYear = (year: number): void => {
+    if (!Number.isInteger(year)) {
+        throw new Error(`'year' must be an integer. Provided: ${year}`);
+    }
+
+    if (getPeriodsForYear(year).length === 0) {
+        throw new Error(`No retention tax periods found for year: ${year}`);
+    }
 };
 
 export const validatePeriod = (period: PeriodT): void => {

@@ -3,6 +3,7 @@ import {
   validateMarriedAndNumberOfHolders,
   validateDependents,
   validateOneHalfMonthTwelfthsLumpSumMonth,
+  validateYear,
   validatePeriod,
 } from "@/dependent-worker/validators";
 import { describe, it, expect } from "vitest";
@@ -118,6 +119,28 @@ describe("Dependent Worker Validators", () => {
         "'period' must be one of"
       );
     });
+  });
+
+  describe("validateYear", () => {
+    it("should not throw for a valid supported year", () => {
+      expect(() => validateYear(2025)).not.toThrow();
+    });
+
+    it.each([2024, 2026])(
+      "should throw for unsupported year %p",
+      (year) => {
+        expect(() => validateYear(year)).toThrow(
+          `No retention tax periods found for year: ${year}`
+        );
+      }
+    );
+
+    it.each([2025.5, NaN, Infinity])(
+      "should throw for non-integer year %p",
+      (year) => {
+        expect(() => validateYear(year)).toThrow("'year' must be an integer");
+      }
+    );
   });
 
   describe("validateOneHalfMonthTwelfthsLumpSumMonth", () => {
