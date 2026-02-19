@@ -51,9 +51,9 @@ interface SimulateDependentWorkerOptions {
 ```typescript
 interface DependentWorkerResult {
   taxableIncome: number;
-  tax: number;
-  socialSecurity: number;
+  IrsTax: number;
   socialSecurityTax: number;
+  socialSecurityTaxRate: number;
   gross: {
     monthly: number;  // Rendimento bruto mensal total
     yearly: number;   // Rendimento bruto anual (14 meses)
@@ -72,9 +72,9 @@ interface DependentWorkerResult {
 | Propriedade | Tipo | Descrição |
 |----------|------|-------------|
 | `taxableIncome` | `number` | Rendimento mensal sujeito a imposto |
-| `tax` | `number` | Valor mensal de imposto |
-| `socialSecurity` | `number` | Contribuição mensal de segurança social |
-| `socialSecurityTax` | `number` | Taxa de segurança social aplicada |
+| `IrsTax` | `number` | Valor mensal de imposto |
+| `socialSecurityTax` | `number` | Contribuição mensal de segurança social |
+| `socialSecurityTaxRate` | `number` | Taxa de segurança social aplicada |
 | `gross.monthly` | `number` | Rendimento bruto mensal total incluindo subsídios |
 | `gross.yearly` | `number` | Salário bruto anual (14 meses) |
 | `net.base` | `number` | Rendimento líquido (base + duodécimos). Exclui subsídio de alimentação |
@@ -306,8 +306,8 @@ console.log(\`Líquido Anual: €\${result.net.yearly.toFixed(2)}\`);`} />
 });
 
 console.log('=== Taxa de Segurança Social Personalizada ===');
-console.log(\`Segurança Social: €\${result.socialSecurity.toFixed(2)}\`);
-console.log(\`Taxa Aplicada: \${(result.socialSecurityTax * 100).toFixed(1)}%\`);`} />
+console.log(\`Segurança Social: €\${result.socialSecurityTax.toFixed(2)}\`);
+console.log(\`Taxa Aplicada: \${(result.socialSecurityTaxRate * 100).toFixed(1)}%\`);`} />
 
 ### Benefícios de Deficiência
 

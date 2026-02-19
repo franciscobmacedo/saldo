@@ -2,6 +2,7 @@ import {
   validateNumberOfHolders,
   validateMarriedAndNumberOfHolders,
   validateDependents,
+  validateOneHalfMonthTwelfthsLumpSumMonth,
   validatePeriod,
 } from "@/dependent-worker/validators";
 import { describe, it, expect } from "vitest";
@@ -117,5 +118,25 @@ describe("Dependent Worker Validators", () => {
         "'period' must be one of"
       );
     });
+  });
+
+  describe("validateOneHalfMonthTwelfthsLumpSumMonth", () => {
+    it.each(["june", "december"])(
+      "should not throw for valid month %s",
+      (month) => {
+        expect(() =>
+          validateOneHalfMonthTwelfthsLumpSumMonth(month as "june" | "december")
+        ).not.toThrow();
+      }
+    );
+
+    it.each(["july", "", null, undefined])(
+      "should throw for invalid month %s",
+      (month) => {
+        expect(() =>
+          validateOneHalfMonthTwelfthsLumpSumMonth(month as any)
+        ).toThrow("'oneHalfMonthTwelfthsLumpSumMonth' must be 'june' or 'december'");
+      }
+    );
   });
 });

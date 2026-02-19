@@ -7,6 +7,21 @@ export enum Twelfths {
   TWO_MONTHS = 2, // 2x100% - Two allowances at 100% each (two months total)
 }
 
+export type OneHalfMonthTwelfthsLumpSumMonth = "june" | "december";
+
+export type MonthName =
+  | "january"
+  | "february"
+  | "march"
+  | "april"
+  | "may"
+  | "june"
+  | "july"
+  | "august"
+  | "september"
+  | "october"
+  | "november"
+  | "december";
 
 export interface SimulateDependentWorkerOptions {
     income: number;
@@ -23,6 +38,8 @@ export interface SimulateDependentWorkerOptions {
     lunchAllowanceDailyValue?: number;
     lunchAllowanceMode?: "cupon" | "salary";
     lunchAllowanceDaysCount?: number;
+    includeLunchAllowanceInJune?: boolean;
+    oneHalfMonthTwelfthsLumpSumMonth?: OneHalfMonthTwelfthsLumpSumMonth;
   }
 
 /** Calculated lunch allowance values only (no input data) */
@@ -37,11 +54,46 @@ export interface LunchAllowanceResult {
   taxFree: number;
 }
 
+export interface MonthlyBreakdownResult {
+  month: MonthName;
+  gross: number;
+  irsTax: {
+    total: number;
+    base: number;
+    lunchAllowance: number;
+    twelfths: number;
+  };
+  socialSecurityTax: {
+    total: number;
+    base: number;
+    lunchAllowance: number;
+    twelfths: number;
+  };
+  net: {
+    /** Base salary net only (excludes twelfths and lunch allowance) */
+    base: number;
+    /** Twelfths net only */
+    twelfths: number;
+    /** Lunch allowance net only */
+    lunchAllowance: number;
+    /** Total monthly net salary */
+    salary: number;
+  };
+  lunchAllowance: Omit<LunchAllowanceResult, "net"> & {
+    included: boolean;
+  };
+  twelfths: {
+    distributed: number;
+    lumpSum: number;
+    total: number;
+  };
+}
+
 export interface DependentWorkerResult {
   taxableIncome: number;
-  tax: number;
-  socialSecurity: number;
+  irsTax: number;
   socialSecurityTax: number;
+  socialSecurityTaxRate: number;
 
   gross: {
     /** Total gross salary per month */
@@ -58,6 +110,8 @@ export interface DependentWorkerResult {
     /** Net salary for the year */
     yearly: number;
   };
+
+  monthlyBreakdown: MonthlyBreakdownResult[];
 
   /** Calculated lunch allowance values */
   lunchAllowance: LunchAllowanceResult;

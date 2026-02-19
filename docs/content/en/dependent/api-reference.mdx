@@ -51,9 +51,9 @@ interface SimulateDependentWorkerOptions {
 ```typescript
 interface DependentWorkerResult {
   taxableIncome: number;
-  tax: number;
-  socialSecurity: number;
+  IrsTax: number;
   socialSecurityTax: number;
+  socialSecurityTaxRate: number;
   gross: {
     monthly: number;  // Total gross salary per month
     yearly: number;   // Gross salary for the year (14 months)
@@ -72,9 +72,9 @@ interface DependentWorkerResult {
 | Property | Type | Description |
 |----------|------|-------------|
 | `taxableIncome` | `number` | Monthly income subject to tax |
-| `tax` | `number` | Monthly tax amount |
-| `socialSecurity` | `number` | Monthly social security contribution |
-| `socialSecurityTax` | `number` | Social security tax rate applied |
+| `IrsTax` | `number` | Monthly tax amount |
+| `socialSecurityTax` | `number` | Monthly social security contribution |
+| `socialSecurityTaxRate` | `number` | Social security tax rate applied |
 | `gross.monthly` | `number` | Total monthly gross income including allowances |
 | `gross.yearly` | `number` | Annual gross salary (14 months) |
 | `net.base` | `number` | Net income from base salary + twelfths (Rendimento líquido). Excludes lunch allowance |
@@ -306,8 +306,8 @@ console.log(\`Yearly Net: €\${result.net.yearly.toFixed(2)}\`);`} />
 });
 
 console.log('=== Custom Social Security Rate ===');
-console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
-console.log(\`Rate Applied: \${(result.socialSecurityTax * 100).toFixed(1)}%\`);`} />
+console.log(\`Social Security: €\${result.socialSecurityTax.toFixed(2)}\`);
+console.log(\`Rate Applied: \${(result.socialSecurityTaxRate * 100).toFixed(1)}%\`);`} />
 
 ### Disability Benefits
 

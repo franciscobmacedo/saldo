@@ -13,8 +13,8 @@ Cenários de trabalhador por conta de outrem. Para casos de trabalhadores por co
 
 console.log('=== Trabalhador com Salário Mínimo ===');
 console.log(\`Rendimento Bruto: €\${minimumWageWorker.grossIncome.toFixed(2)}\`);
-console.log(\`IRS: €\${minimumWageWorker.tax.toFixed(2)}\`);
-console.log(\`Segurança Social: €\${minimumWageWorker.socialSecurity.toFixed(2)}\`);
+console.log(\`IRS: €\${minimumWageWorker.IrsTax.toFixed(2)}\`);
+console.log(\`Segurança Social: €\${minimumWageWorker.socialSecurityTax.toFixed(2)}\`);
 console.log(\`Salário Líquido: €\${minimumWageWorker.net.salary.toFixed(2)}\`);
 console.log(\`Líquido Anual: €\${minimumWageWorker.yearlyNetSalary.toFixed(2)}\`);`} />
 
@@ -28,7 +28,7 @@ console.log(\`Líquido Anual: €\${minimumWageWorker.yearlyNetSalary.toFixed(2)
 console.log('=== Trabalhador Médio ===');
 console.log(\`Líquido Mensal: €\${averageWorker.net.salary.toFixed(2)}\`);
 console.log(\`Líquido Anual: €\${averageWorker.yearlyNetSalary.toFixed(2)}\`);
-console.log(\`Taxa Efetiva de Imposto: \${(averageWorker.tax / averageWorker.taxableIncome * 100).toFixed(1)}%\`);`} />
+console.log(\`Taxa Efetiva de Imposto: \${(averageWorker.IrsTax / averageWorker.taxableIncome * 100).toFixed(1)}%\`);`} />
 
 ## Situações Familiares
 
@@ -50,7 +50,7 @@ const noDependents = simulateDependentWorker({
   location: 'continent' 
 });
 
-console.log(\`Poupança Fiscal com dependentes: €\${(noDependents.tax - singleParent.tax).toFixed(2)}\`);`} />
+console.log(\`Poupança Fiscal com dependentes: €\${(noDependents.IrsTax - singleParent.IrsTax).toFixed(2)}\`);`} />
 
 ### Casado com Rendimento Único (1 Titular)
 
@@ -216,9 +216,9 @@ console.log(\`Líquido Anual (Dois Meses): €\${twoTwelfths.yearlyNetSalary.toF
 
 console.log('=== Salário Executivo ===');
 console.log(\`Bruto: €\${executive.grossIncome.toFixed(2)}\`);
-console.log(\`IRS: €\${executive.tax.toFixed(2)}\`);
+console.log(\`IRS: €\${executive.IrsTax.toFixed(2)}\`);
 console.log(\`Líquido: €\${executive.net.salary.toFixed(2)}\`);
-console.log(\`Taxa Efetiva: \${(executive.tax / executive.taxableIncome * 100).toFixed(1)}%\`);
+console.log(\`Taxa Efetiva: \${(executive.IrsTax / executive.taxableIncome * 100).toFixed(1)}%\`);
 console.log(\`Líquido Anual: €\${executive.yearlyNetSalary.toFixed(2)}\`);`} />
 
 ## Cenários Complexos

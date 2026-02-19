@@ -27,15 +27,15 @@ describe("simulateDependentWorker - End-to-End", () => {
       // Verify structure
       expect(result).toHaveProperty("taxableIncome");
       expect(result).toHaveProperty("gross");
-      expect(result).toHaveProperty("tax");
-      expect(result).toHaveProperty("socialSecurity");
+      expect(result).toHaveProperty("irsTax");
+      expect(result).toHaveProperty("socialSecurityTax");
       expect(result).toHaveProperty("net");
 
       // Verify reasonable values
       expect(result.taxableIncome).toBeGreaterThanOrEqual(900); // Default lunch allowance adds 0
       expect(result.gross.monthly).toBeGreaterThanOrEqual(result.taxableIncome);
-      expect(result.tax).toBeGreaterThanOrEqual(0);
-      expect(result.socialSecurity).toBeCloseTo(
+      expect(result.irsTax).toBeGreaterThanOrEqual(0);
+      expect(result.socialSecurityTax).toBeCloseTo(
         result.taxableIncome * 0.11,
         2
       );
@@ -66,7 +66,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(result.tax).toBeLessThan(singleResult.tax);
+      expect(result.irsTax).toBeLessThan(singleResult.irsTax);
       expect(result.net.salary).toBeGreaterThan(singleResult.net.salary);
     });
 
@@ -92,8 +92,8 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Should have lower tax due to disabled dependent deduction
-      expect(withDisabledDependent.tax).toBeLessThan(
-        withoutDisabledDependent.tax
+      expect(withDisabledDependent.irsTax).toBeLessThan(
+        withoutDisabledDependent.irsTax
       );
       expect(withDisabledDependent.net.salary).toBeGreaterThan(
         withoutDisabledDependent.net.salary
@@ -120,14 +120,14 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Should have lower tax due to partner disability deduction (€135.71)
-      expect(withDisabledPartner.tax).toBeLessThan(withoutDisabledPartner.tax);
+      expect(withDisabledPartner.irsTax).toBeLessThan(withoutDisabledPartner.irsTax);
       expect(withDisabledPartner.net.salary).toBeGreaterThan(
         withoutDisabledPartner.net.salary
       );
 
       // The difference should be close to the expected deduction impact
       const taxDifference =
-        withoutDisabledPartner.tax - withDisabledPartner.tax;
+        withoutDisabledPartner.irsTax - withDisabledPartner.irsTax;
       expect(taxDifference).toBeGreaterThan(110); // Should save more than €110 in tax (€135.71 deduction taxed at marginal rate)
     });
   });
@@ -156,9 +156,9 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Tax rates should be different between regions
-      expect([continent.tax, azores.tax, madeira.tax]).toHaveLength(3);
+      expect([continent.irsTax, azores.irsTax, madeira.irsTax]).toHaveLength(3);
       // At least one should be different
-      const uniqueTaxes = new Set([continent.tax, azores.tax, madeira.tax]);
+      const uniqueTaxes = new Set([continent.irsTax, azores.irsTax, madeira.irsTax]);
       expect(uniqueTaxes.size).toBeGreaterThan(1);
     });
   });
@@ -191,8 +191,8 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
       console.log("twoMonths:", twoMonths);
       // More twelfths should result in higher monthly tax (distributed bonus income)
-      expect(twoMonths.tax).toBeGreaterThan(oneMonth.tax);
-      expect(oneMonth.tax).toBeGreaterThan(noTwelfths.tax);
+      expect(twoMonths.irsTax).toBeGreaterThan(oneMonth.irsTax);
+      expect(oneMonth.irsTax).toBeGreaterThan(noTwelfths.irsTax);
 
       // More twelfths should result in higher monthly net salary (bonus distribution)
       expect(twoMonths.net.salary).toBeGreaterThan(oneMonth.net.salary);
@@ -263,8 +263,8 @@ describe("simulateDependentWorker - End-to-End", () => {
       });
 
       // Should be in highest tax bracket
-      expect(highIncome.tax).toBeGreaterThan(3000);
-      expect(highIncome.tax / highIncome.taxableIncome).toBeGreaterThan(0.3); // Effective rate > 30%
+      expect(highIncome.irsTax).toBeGreaterThan(3000);
+      expect(highIncome.irsTax / highIncome.taxableIncome).toBeGreaterThan(0.3); // Effective rate > 30%
     });
   });
 
@@ -278,7 +278,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(minIncome.tax).toBeGreaterThanOrEqual(0);
+      expect(minIncome.irsTax).toBeGreaterThanOrEqual(0);
       expect(minIncome.net.salary).toBeGreaterThan(0);
     });
 
@@ -293,7 +293,7 @@ describe("simulateDependentWorker - End-to-End", () => {
         period: "2025-01-01_2025-07-31",
       });
 
-      expect(result.tax).toBeGreaterThanOrEqual(0);
+      expect(result.irsTax).toBeGreaterThanOrEqual(0);
       expect(result.net.salary).toBeGreaterThan(0);
     });
   });

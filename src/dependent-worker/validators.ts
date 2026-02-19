@@ -57,6 +57,19 @@ export const validateLunchAllowanceMode = (lunchAllowanceMode: "cupon" | "salary
     }
 };
 
+export const validateOneHalfMonthTwelfthsLumpSumMonth = (
+  oneHalfMonthTwelfthsLumpSumMonth: "june" | "december"
+): void => {
+  if (
+    oneHalfMonthTwelfthsLumpSumMonth !== "june" &&
+    oneHalfMonthTwelfthsLumpSumMonth !== "december"
+  ) {
+    throw new Error(
+      `'oneHalfMonthTwelfthsLumpSumMonth' must be 'june' or 'december'. Provided: ${oneHalfMonthTwelfthsLumpSumMonth}`
+    );
+  }
+};
+
 export const validatePeriod = (period: PeriodT): void => {
     if (!VALID_PERIODS.includes(period)) {
         throw new Error(`'period' must be one of ${VALID_PERIODS.join(', ')}. Provided: ${period}`);

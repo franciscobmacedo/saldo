@@ -107,7 +107,7 @@ describe("simulateDependentWorker", () => {
     expect(result.taxableIncome).toBe(
       baseIncome + defaultLunchAllowance.taxableMonthlyValue
     );
-    expect(result.socialSecurityTax).toEqual(0.11);
+    expect(result.socialSecurityTaxRate).toEqual(0.11);
     expect(result.lunchAllowance).toMatchObject({
       gross: defaultLunchAllowance.monthlyValue,
       taxFree: defaultLunchAllowance.taxFreeMonthlyValue,
@@ -174,6 +174,15 @@ describe("simulateDependentWorker", () => {
     }).toThrow("'numberOfHolders' is required for married workers");
   });
 
+  it("should throw error for invalid oneHalfMonthTwelfthsLumpSumMonth", () => {
+    expect(() => {
+      simulateDependentWorker({
+        income: 1000,
+        oneHalfMonthTwelfthsLumpSumMonth: "july" as any,
+      });
+    }).toThrow("'oneHalfMonthTwelfthsLumpSumMonth' must be 'june' or 'december'");
+  });
+
   it("should throw error if situation cannot be determined", () => {
     // Spy on SituationUtils.getSituation and make it return undefined for this test
     const getSituationSpy = vi.spyOn(
@@ -209,6 +218,111 @@ describe("simulateDependentWorker", () => {
 
     expect(result.gross.yearly).toBeCloseTo(expectedYearlyGrossSalary);
     expect(result.net.yearly).toBeCloseTo(expectedYearlyNetSalary);
+  });
+
+  it("should include a 12-month breakdown and exclude June lunch allowance by default", () => {
+    const result = simulateDependentWorker({ income: 1200 });
+
+    expect(result.monthlyBreakdown).toHaveLength(12);
+    expect(result.monthlyBreakdown[0].month).toBe("january");
+    expect(result.monthlyBreakdown[11].month).toBe("december");
+
+    const june = result.monthlyBreakdown.find((month) => month.month === "june");
+    expect(june).toBeDefined();
+    expect(june?.lunchAllowance.included).toBe(false);
+    expect(june?.lunchAllowance.gross).toBe(0);
+  });
+
+  it("should include June lunch allowance when includeLunchAllowanceInJune is true", () => {
+    const result = simulateDependentWorker({
+      income: 1200,
+      includeLunchAllowanceInJune: true,
+    });
+
+    const june = result.monthlyBreakdown.find((month) => month.month === "june");
+    expect(june).toBeDefined();
+    expect(june?.lunchAllowance.included).toBe(true);
+    expect(june?.lunchAllowance.gross).toBe(defaultLunchAllowance.monthlyValue);
+  });
+
+  it("should expose monthly component nets and tax splits that reconcile with totals", () => {
+    const result = simulateDependentWorker({
+      income: 1200,
+      twelfths: Twelfths.ONE_MONTH,
+      lunchAllowanceDailyValue: 12,
+      lunchAllowanceMode: "salary",
+      lunchAllowanceDaysCount: 22,
+      includeLunchAllowanceInJune: true,
+    });
+
+    const january = result.monthlyBreakdown.find((month) => month.month === "january");
+    expect(january).toBeDefined();
+
+    expect(january?.net.base).toBeTypeOf("number");
+    expect(january?.net.lunchAllowance).toBeTypeOf("number");
+    expect(january?.net.twelfths).toBeTypeOf("number");
+
+    expect(january?.irsTax.total).toBeCloseTo(
+      (january?.irsTax.base || 0) +
+      (january?.irsTax.lunchAllowance || 0) +
+      (january?.irsTax.twelfths || 0)
+    );
+
+    expect(january?.socialSecurityTax.total).toBeCloseTo(
+      (january?.socialSecurityTax.base || 0) +
+      (january?.socialSecurityTax.lunchAllowance || 0) +
+      (january?.socialSecurityTax.twelfths || 0)
+    );
+
+    expect(january?.net.salary).toBeCloseTo(
+      (january?.net.base || 0) +
+      (january?.net.lunchAllowance || 0) +
+      (january?.net.twelfths || 0)
+    );
+  });
+
+  it("should keep monthly net.base segregated from twelfths", () => {
+    const withTwelfths = simulateDependentWorker({
+      income: 1200,
+      twelfths: Twelfths.ONE_MONTH,
+    });
+
+    const june = withTwelfths.monthlyBreakdown.find((month) => month.month === "june");
+    expect(june).toBeDefined();
+    expect(june?.net.twelfths).toBeGreaterThan(0);
+    expect(june?.net.base).toBeCloseTo(june?.net.salary! - june?.net.twelfths! - june?.net.lunchAllowance!);
+  });
+
+  it("should allow choosing where the ONE_HALF_MONTH lump-sum remainder is paid", () => {
+    const income = 1200;
+
+    const defaultPlacement = simulateDependentWorker({
+      income,
+      twelfths: Twelfths.ONE_HALF_MONTH,
+    });
+    const junePlacement = simulateDependentWorker({
+      income,
+      twelfths: Twelfths.ONE_HALF_MONTH,
+      oneHalfMonthTwelfthsLumpSumMonth: "june",
+    });
+
+    const defaultJune = defaultPlacement.monthlyBreakdown.find(
+      (month) => month.month === "june"
+    );
+    const defaultDecember = defaultPlacement.monthlyBreakdown.find(
+      (month) => month.month === "december"
+    );
+    const juneJune = junePlacement.monthlyBreakdown.find(
+      (month) => month.month === "june"
+    );
+    const juneDecember = junePlacement.monthlyBreakdown.find(
+      (month) => month.month === "december"
+    );
+
+    expect(defaultJune?.twelfths.lumpSum).toBeCloseTo(income);
+    expect(defaultDecember?.twelfths.lumpSum).toBeCloseTo(income * 0.5);
+    expect(juneJune?.twelfths.lumpSum).toBeCloseTo(income * 0.5);
+    expect(juneDecember?.twelfths.lumpSum).toBeCloseTo(income);
   });
 
   describe("period parameter", () => {

@@ -21,8 +21,8 @@ const result = simulateDependentWorker({
 
 console.log(\`Gross Income: €\${result.gross.monthly.toFixed(2)}\`);
 console.log(\`Taxable Income: €\${result.taxableIncome.toFixed(2)}\`);
-console.log(\`Tax: €\${result.tax.toFixed(2)}\`);
-console.log(\`Social Security: €\${result.socialSecurity.toFixed(2)}\`);
+console.log(\`Tax: €\${result.IrsTax.toFixed(2)}\`);
+console.log(\`Social Security: €\${result.socialSecurityTax.toFixed(2)}\`);
 console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);
 console.log(\`Yearly Net: €\${result.net.yearly.toFixed(2)}\`);`} />
 
@@ -31,9 +31,9 @@ console.log(\`Yearly Net: €\${result.net.yearly.toFixed(2)}\`);`} />
 ```typescript
 interface DependentWorkerResult {
   taxableIncome: number;
-  tax: number;
-  socialSecurity: number;
+  IrsTax: number;
   socialSecurityTax: number;
+  socialSecurityTaxRate: number;
   gross: { monthly: number; yearly: number };
   net: { base: number; salary: number; yearly: number };
   lunchAllowance: LunchAllowanceResult;  // gross, net, taxable, taxFree
