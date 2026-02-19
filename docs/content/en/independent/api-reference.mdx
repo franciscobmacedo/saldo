@@ -22,7 +22,7 @@ interface SimulateIndependentWorkerOptions {
   currentTaxRankYear?: 2023 | 2024 | 2025;
   rnh?: boolean;
   rnhTax?: number;
-  dateOfOpeningAcivity?: Date | null;
+  dateOfOpeningActivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
 }
@@ -40,7 +40,7 @@ interface SimulateIndependentWorkerOptions {
 | `currentTaxRankYear` | `2023 \| 2024 \| 2025` | `2025` | IRS progressive table year |
 | `rnh` | `boolean` | `false` | Apply RNH flat tax instead of progressive brackets |
 | `rnhTax` | `number` | `0.2` | RNH flat tax rate |
-| `dateOfOpeningAcivity` | `Date \| null` | `null` | Sets first/second financial year multipliers and first-12-month SS exemption |
+| `dateOfOpeningActivity` | `Date \| null` | `null` | Sets first/second financial year multipliers and first-12-month SS exemption |
 | `benefitsOfYouthIrs` | `boolean` | `false` | Apply youth IRS discount |
 | `yearOfYouthIrs` | `number` | `1` | Youth IRS benefit year (1-10 for 2025 tables) |
 
@@ -149,7 +149,7 @@ Represents a progressive IRS bracket for independent workers (tables for 2023, 2
 <RunCode defaultCode={`// First financial year: 37.5% factor + SS exemption for first 12 months
 const firstYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(new Date().getFullYear(), 0, 15),
+  dateOfOpeningActivity: new Date(new Date().getFullYear(), 0, 15),
   benefitsOfYouthIrs: true,
   yearOfYouthIrs: 1,
 });
@@ -157,7 +157,7 @@ const firstYear = simulateIndependentWorker({
 // Second financial year: 56.25% factor, SS payable
 const secondYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(new Date().getFullYear() - 1, 3, 1),
+  dateOfOpeningActivity: new Date(new Date().getFullYear() - 1, 3, 1),
   benefitsOfYouthIrs: true,
   yearOfYouthIrs: 2,
 });

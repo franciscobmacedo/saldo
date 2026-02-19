@@ -64,7 +64,7 @@ interface IndependentWorkerResult {
 - **`currentTaxRankYear`**: Tabelas IRS `2023 | 2024 | 2025`
 - **`maxExpensesTax`**: Percentagem do regime simplificado (predefinição `15`)
 - **`expenses`**: Despesas declaradas (0 por predefinição)
-- **`dateOfOpeningAcivity`**: Determina fatores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses
+- **`dateOfOpeningActivity`**: Determina fatores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses
 - **`rnh`** / **`rnhTax`**: Aplicar imposto fixo RNH em vez de escalões progressivos
 - **`benefitsOfYouthIrs`** + **`yearOfYouthIrs`**: Descontos IRS de juventude com limites IAS (1–10 anos dependendo do ano fiscal)
 
@@ -103,12 +103,12 @@ console.log(\`Desconto IRS de juventude: €\${standard.youthIrsDiscount.toFixed
 
 const firstYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(now.getFullYear(), 0, 15), // mesmo ano -> primeiro ano fiscal
+  dateOfOpeningActivity: new Date(now.getFullYear(), 0, 15), // mesmo ano -> primeiro ano fiscal
 });
 
 const older = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(now.getFullYear() - 2, 0, 15),
+  dateOfOpeningActivity: new Date(now.getFullYear() - 2, 0, 15),
 });
 
 console.log('=== Comparação de Isenção SS ===');

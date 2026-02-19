@@ -64,7 +64,7 @@ interface IndependentWorkerResult {
 - **`currentTaxRankYear`**: `2023 | 2024 | 2025` IRS tables
 - **`maxExpensesTax`**: Simplified regime percentage (default `15`)
 - **`expenses`**: Declared expenses (0 by default)
-- **`dateOfOpeningAcivity`**: Determines first/second financial year factors and SS exemption in first 12 months
+- **`dateOfOpeningActivity`**: Determines first/second financial year factors and SS exemption in first 12 months
 - **`rnh`** / **`rnhTax`**: Apply RNH flat tax instead of progressive brackets
 - **`benefitsOfYouthIrs`** + **`yearOfYouthIrs`**: Youth IRS discounts with IAS caps (1–10 years depending on tax year)
 
@@ -103,12 +103,12 @@ console.log(\`Youth IRS discount: €\${standard.youthIrsDiscount.toFixed(2)}\`)
 
 const firstYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(now.getFullYear(), 0, 15), // same year -> first financial year
+  dateOfOpeningActivity: new Date(now.getFullYear(), 0, 15), // same year -> first financial year
 });
 
 const older = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(now.getFullYear() - 2, 0, 15),
+  dateOfOpeningActivity: new Date(now.getFullYear() - 2, 0, 15),
 });
 
 console.log('=== SS Exemption Comparison ===');

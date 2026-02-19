@@ -48,9 +48,9 @@ export class IndependentWorkerComparator {
     params.set('yearOfYouthIrs', (options.yearOfYouthIrs || 0).toString());
     
     // Map date-based parameters
-    if (options.dateOfOpeningAcivity) {
+    if (options.dateOfOpeningActivity) {
       const now = new Date();
-      const openingYear = options.dateOfOpeningAcivity.getFullYear();
+      const openingYear = options.dateOfOpeningActivity.getFullYear();
       const currentYear = now.getFullYear();
       
       params.set('firstYear', (openingYear === currentYear).toString());
@@ -58,7 +58,7 @@ export class IndependentWorkerComparator {
       
       // Check if within first 12 months for SS discount
       const twelveMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 12, now.getDate());
-      params.set('ssFirstYear', (options.dateOfOpeningAcivity >= twelveMonthsAgo).toString());
+      params.set('ssFirstYear', (options.dateOfOpeningActivity >= twelveMonthsAgo).toString());
     } else {
       params.set('firstYear', 'false');
       params.set('secondYear', 'false');

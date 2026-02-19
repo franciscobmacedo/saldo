@@ -164,7 +164,7 @@ Key parameters:
 - `ssTax`: Social security rate (default 21.4%), `ssDiscount`: adjustment range -25%..25%
 - `currentTaxRankYear`: 2023/2024/2025 progressive IRS tables
 - `maxExpensesTax`: Simplified regime percentage (default 15%) and `expenses`: declared expenses
-- `dateOfOpeningAcivity`: Determines first/second year factors and first-12-month SS exemption
+- `dateOfOpeningActivity`: Determines first/second year factors and first-12-month SS exemption
 - `rnh` / `rnhTax`: Apply RNH flat rate instead of progressive brackets
 - `benefitsOfYouthIrs` + `yearOfYouthIrs`: Youth IRS discount with IAS caps (up to 10 years in 2025 tables)
 

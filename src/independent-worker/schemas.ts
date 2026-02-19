@@ -23,6 +23,66 @@ export interface CurrencyByFrequency {
   day: number;
 }
 
+export type IndependentMonthName =
+  | "january"
+  | "february"
+  | "march"
+  | "april"
+  | "may"
+  | "june"
+  | "july"
+  | "august"
+  | "september"
+  | "october"
+  | "november"
+  | "december";
+
+export interface IndependentWorkerMonthlyBreakdownResult {
+  month: IndependentMonthName;
+  grossIncome: number;
+  taxableIncome: number;
+  irsPay: number;
+  ssPay: number;
+  netIncome: number;
+  totalTax: number;
+  overallTaxBurden: number;
+  effectiveBracketRate: number | null;
+  marginalRate: number;
+}
+
+export interface IndependentWorkerNormalizedInternals {
+  effectiveBusinessDays: number;
+  normalization: {
+    inputIncome: number;
+    inputFrequency: FrequencyChoices;
+    normalizedGrossIncome: CurrencyByFrequency;
+  };
+  socialSecurity: {
+    firstYearExemptionApplied: boolean;
+    baseMonthlyBeforeDiscountAndCap: number;
+    baseMonthlyAfterDiscountBeforeCap: number;
+    baseMonthlyAfterCap: number;
+    contributionMonthlyBeforeMinimum: number;
+    contributionMonthlyAfterMinimum: number;
+    contributionAnnualAfterMinimum: number;
+    minimumContributionApplied: boolean;
+  };
+  taxableIncome: {
+    coefficientApplied: number;
+    baseAnnualAfterYouthIrsDiscount: number;
+    expensesMissing: number;
+    valueFromCoefficient: number;
+    valueFromExpensesMissing: number;
+  };
+  irs: {
+    rnhApplied: boolean;
+    averageRateApplied: number;
+    marginalRateApplied: number;
+    taxableIncomeAtAverageRate: number;
+    taxableIncomeAtMarginalRate: number;
+  };
+}
+
 export interface IndependentWorkerResult {
   grossIncome: CurrencyByFrequency;
   taxableIncome: number;
@@ -33,6 +93,7 @@ export interface IndependentWorkerResult {
   youthIrsDiscount: number;
   irsPay: CurrencyByFrequency;
   netIncome: CurrencyByFrequency;
+  taxTableUsed: TaxRank[];
   taxRank: TaxRank;
   currentIas: number;
   maxSsIncome: number;
@@ -45,6 +106,8 @@ export interface IndependentWorkerResult {
   rnhTax: number;
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
+  monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
+  normalizedInternals: IndependentWorkerNormalizedInternals;
 }
 
 export interface SimulateIndependentWorkerOptions {
@@ -58,7 +121,37 @@ export interface SimulateIndependentWorkerOptions {
   currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
   rnh?: boolean;
   rnhTax?: number;
-  dateOfOpeningAcivity?: Date | null;
+  dateOfOpeningActivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
+}
+
+export type SimulateIndependentWorkerMonthlyIncomeSweepOptions =
+  Omit<SimulateIndependentWorkerOptions, "income" | "incomeFrequency"> & {
+    monthlyIncomes: number[];
+    yearlyIncomes?: never;
+  };
+
+export type SimulateIndependentWorkerYearlyIncomeSweepOptions =
+  Omit<SimulateIndependentWorkerOptions, "income" | "incomeFrequency"> & {
+    yearlyIncomes: number[];
+    monthlyIncomes?: never;
+  };
+
+export type SimulateIndependentWorkerIncomeSweepOptions =
+  | SimulateIndependentWorkerMonthlyIncomeSweepOptions
+  | SimulateIndependentWorkerYearlyIncomeSweepOptions;
+
+export interface IndependentWorkerIncomeSweepPoint {
+  scope: "monthly" | "annual";
+  gross: number;
+  grossAnnual: number;
+  grossMonthly: number;
+  net: number;
+  totalTax: number;
+  netAnnual?: number;
+  totalTaxAnnual?: number;
+  overallTaxBurden: number;
+  effectiveBracketRate: number | null;
+  marginalRate: number;
 }

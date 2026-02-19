@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { simulateIndependentWorker } from "@/independent-worker/simulator";
 import { FrequencyChoices } from "@/independent-worker/schemas";
+import { TAX_RANKS } from "@/data/tax-ranks-data";
 
 // Mock the calculation functions to control their output for tests
 vi.mock("@/independent-worker/calculations", () => ({
@@ -68,6 +69,18 @@ vi.mock("@/independent-worker/calculations", () => ({
       day: Math.max(yearIRS, 0) / (248 - nrDaysOff)
     };
   }),
+  calculateTaxIncomeAvg: vi.fn((taxRank: any, taxableIncome: number) => {
+    if (taxRank.id <= 1) {
+      return taxableIncome;
+    }
+    return taxRank.max ?? taxRank.min;
+  }),
+  calculateTaxIncomeNormal: vi.fn((taxRank: any, taxableIncome: number) => {
+    if (taxRank.id <= 1) {
+      return 0;
+    }
+    return taxableIncome - (taxRank.max ?? taxRank.min);
+  }),
   calculateNetIncome: vi.fn((grossIncome: any, irsPay: any, ssPay: any) => {
     return {
       year: grossIncome.year - irsPay.year - ssPay.year,
@@ -92,7 +105,12 @@ describe("simulateIndependentWorker", () => {
     expect(result.ssPay).toBeDefined();
     expect(result.irsPay).toBeDefined();
     expect(result.netIncome).toBeDefined();
+    expect(result.taxTableUsed).toBeDefined();
+    expect(result.taxTableUsed.length).toBeGreaterThan(0);
     expect(result.taxRank).toBeDefined();
+    expect(result.monthlyBreakdown).toBeDefined();
+    expect(result.monthlyBreakdown).toHaveLength(12);
+    expect(result.normalizedInternals).toBeDefined();
     expect(result.currentIas).toBe(537.13); // 2026 IAS value (default year)
     expect(result.ssTax).toBe(0.214);
     expect(result.maxExpensesTax).toBe(15);
@@ -103,6 +121,59 @@ describe("simulateIndependentWorker", () => {
     expect(result.rnhTax).toBe(0.2);
     expect(result.benefitsOfYouthIrs).toBe(false);
     expect(result.yearOfYouthIrs).toBe(1);
+    expect(result.normalizedInternals.effectiveBusinessDays).toBe(248);
+  });
+
+  it("should expose a month-by-month breakdown consistent with monthly totals", () => {
+    const result = simulateIndependentWorker({ income: baseIncome });
+
+    const january = result.monthlyBreakdown.find((item) => item.month === "january");
+    expect(january).toBeDefined();
+    expect(january?.grossIncome).toBeCloseTo(result.grossIncome.month);
+    expect(january?.taxableIncome).toBeCloseTo(result.taxableIncome / 12);
+    expect(january?.irsPay).toBeCloseTo(result.irsPay.month);
+    expect(january?.ssPay).toBeCloseTo(result.ssPay.month);
+    expect(january?.netIncome).toBeCloseTo(result.netIncome.month);
+    expect(january?.totalTax).toBeCloseTo(result.irsPay.month + result.ssPay.month);
+    expect(january?.overallTaxBurden).toBeCloseTo(
+      (result.irsPay.month + result.ssPay.month) / result.grossIncome.month
+    );
+  });
+
+  it("should expose normalized internals for SS and taxable-income composition", () => {
+    const result = simulateIndependentWorker({
+      income: baseIncome,
+      ssDiscount: 0.1,
+      nrDaysOff: 8,
+      expenses: 100,
+    });
+
+    expect(result.normalizedInternals.effectiveBusinessDays).toBe(240);
+    expect(result.normalizedInternals.normalization.inputIncome).toBe(baseIncome);
+    expect(result.normalizedInternals.normalization.inputFrequency).toBe(
+      FrequencyChoices.Year
+    );
+
+    expect(
+      result.normalizedInternals.socialSecurity.baseMonthlyBeforeDiscountAndCap
+    ).toBeCloseTo(result.grossIncome.month * 0.7);
+    expect(
+      result.normalizedInternals.socialSecurity.baseMonthlyAfterDiscountBeforeCap
+    ).toBeCloseTo(result.grossIncome.month * 0.7 * 1.1);
+    expect(
+      result.normalizedInternals.socialSecurity.contributionMonthlyBeforeMinimum
+    ).toBeCloseTo(
+      result.normalizedInternals.socialSecurity.baseMonthlyAfterCap * result.ssTax
+    );
+
+    expect(result.normalizedInternals.taxableIncome.coefficientApplied).toBe(0.75);
+    expect(
+      result.normalizedInternals.taxableIncome.baseAnnualAfterYouthIrsDiscount
+    ).toBeCloseTo(result.grossIncome.year - result.youthIrsDiscount);
+    expect(
+      result.normalizedInternals.taxableIncome.valueFromCoefficient +
+        result.normalizedInternals.taxableIncome.valueFromExpensesMissing
+    ).toBeCloseTo(result.taxableIncome);
   });
 
   it("should calculate for monthly income frequency", () => {
@@ -130,11 +201,11 @@ describe("simulateIndependentWorker", () => {
   });
 
   it("should handle first year scenario", () => {
-    // Set dateOfOpeningAcivity to a date in the current year
+    // Set dateOfOpeningActivity to a date in the current year
     const dateInCurrentYear = new Date();
     const result = simulateIndependentWorker({
       income: baseIncome,
-      dateOfOpeningAcivity: dateInCurrentYear,
+      dateOfOpeningActivity: dateInCurrentYear,
     });
 
     expect(result.workerWithinFirstFinancialYear).toBe(true);
@@ -142,11 +213,11 @@ describe("simulateIndependentWorker", () => {
   });
 
   it("should handle second year scenario", () => {
-    // Set dateOfOpeningAcivity to a date in the previous year
+    // Set dateOfOpeningActivity to a date in the previous year
     const dateInPreviousYear = new Date(new Date().getFullYear() - 1, 6, 1);
     const result = simulateIndependentWorker({
       income: baseIncome,
-      dateOfOpeningAcivity: dateInPreviousYear,
+      dateOfOpeningActivity: dateInPreviousYear,
     });
 
     expect(result.workerWithinFirstFinancialYear).toBe(false);
@@ -176,11 +247,11 @@ describe("simulateIndependentWorker", () => {
   });
 
   it("should handle SS first year exemption", () => {
-    // Set dateOfOpeningAcivity to a date within the last 12 months
+    // Set dateOfOpeningActivity to a date within the last 12 months
     const dateWithinLast12Months = new Date();
     const result = simulateIndependentWorker({
       income: baseIncome,
-      dateOfOpeningAcivity: dateWithinLast12Months,
+      dateOfOpeningActivity: dateWithinLast12Months,
     });
 
     expect(result.workerWithinFirst12Months).toBe(true);
@@ -223,6 +294,10 @@ describe("simulateIndependentWorker", () => {
     expect(result2024.currentIas).toBe(509.26);
     expect(result2025.currentIas).toBe(522.50);
     expect(result2026.currentIas).toBe(537.13);
+    expect(result2023.taxTableUsed).toEqual(TAX_RANKS[2023]);
+    expect(result2024.taxTableUsed).toEqual(TAX_RANKS[2024]);
+    expect(result2025.taxTableUsed).toEqual(TAX_RANKS[2025]);
+    expect(result2026.taxTableUsed).toEqual(TAX_RANKS[2026]);
   });
 
   it("should handle custom SS discount", () => {

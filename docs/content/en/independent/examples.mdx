@@ -43,12 +43,12 @@ console.log(\`Youth IRS discount: €\${standard.youthIrsDiscount.toFixed(2)}\`)
 
 const firstYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(now.getFullYear(), 0, 15), // same year -> first financial year
+  dateOfOpeningActivity: new Date(now.getFullYear(), 0, 15), // same year -> first financial year
 });
 
 const older = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(now.getFullYear() - 2, 0, 15),
+  dateOfOpeningActivity: new Date(now.getFullYear() - 2, 0, 15),
 });
 
 console.log('=== SS Exemption Comparison ===');

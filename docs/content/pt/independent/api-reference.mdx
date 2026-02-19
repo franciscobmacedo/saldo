@@ -22,7 +22,7 @@ interface SimulateIndependentWorkerOptions {
   currentTaxRankYear?: 2023 | 2024 | 2025;
   rnh?: boolean;
   rnhTax?: number;
-  dateOfOpeningAcivity?: Date | null;
+  dateOfOpeningActivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
 }
@@ -40,7 +40,7 @@ interface SimulateIndependentWorkerOptions {
 | `currentTaxRankYear` | `2023 \| 2024 \| 2025` | `2025` | Ano da tabela IRS progressiva |
 | `rnh` | `boolean` | `false` | Aplicar imposto fixo RNH em vez de escalões progressivos |
 | `rnhTax` | `number` | `0.2` | Taxa de imposto fixo RNH |
-| `dateOfOpeningAcivity` | `Date \| null` | `null` | Define multiplicadores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses |
+| `dateOfOpeningActivity` | `Date \| null` | `null` | Define multiplicadores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses |
 | `benefitsOfYouthIrs` | `boolean` | `false` | Aplicar desconto IRS de juventude |
 | `yearOfYouthIrs` | `number` | `1` | Ano de benefício IRS de juventude (1-10 para tabelas 2025) |
 
@@ -149,7 +149,7 @@ Representa um escalão IRS progressivo para trabalhadores independentes (tabelas
 <RunCode defaultCode={`// Primeiro ano fiscal: fator 37.5% + isenção SS nos primeiros 12 meses
 const firstYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(new Date().getFullYear(), 0, 15),
+  dateOfOpeningActivity: new Date(new Date().getFullYear(), 0, 15),
   benefitsOfYouthIrs: true,
   yearOfYouthIrs: 1,
 });
@@ -157,7 +157,7 @@ const firstYear = simulateIndependentWorker({
 // Segundo ano fiscal: fator 56.25%, SS a pagar
 const secondYear = simulateIndependentWorker({
   income: 28000,
-  dateOfOpeningAcivity: new Date(new Date().getFullYear() - 1, 3, 1),
+  dateOfOpeningActivity: new Date(new Date().getFullYear() - 1, 3, 1),
   benefitsOfYouthIrs: true,
   yearOfYouthIrs: 2,
 });

@@ -17,7 +17,7 @@ describe("simulateIndependentWorker - End-to-End", () => {
         currentTaxRankYear: 2025,
         rnh: false,
         rnhTax: 0.2,
-        dateOfOpeningAcivity: null,
+        dateOfOpeningActivity: null,
         benefitsOfYouthIrs: false,
         yearOfYouthIrs: 1,
       });
@@ -32,6 +32,7 @@ describe("simulateIndependentWorker - End-to-End", () => {
       expect(result).toHaveProperty("youthIrsDiscount");
       expect(result).toHaveProperty("irsPay");
       expect(result).toHaveProperty("netIncome");
+      expect(result).toHaveProperty("taxTableUsed");
       expect(result).toHaveProperty("taxRank");
       expect(result).toHaveProperty("currentIas");
       expect(result).toHaveProperty("maxSsIncome");
@@ -44,6 +45,8 @@ describe("simulateIndependentWorker - End-to-End", () => {
       expect(result).toHaveProperty("rnhTax");
       expect(result).toHaveProperty("benefitsOfYouthIrs");
       expect(result).toHaveProperty("yearOfYouthIrs");
+      expect(result).toHaveProperty("monthlyBreakdown");
+      expect(result).toHaveProperty("normalizedInternals");
 
       // Verify reasonable values
       console.log("result:", result);
@@ -55,15 +58,26 @@ describe("simulateIndependentWorker - End-to-End", () => {
       expect(result.netIncome.year).toBeLessThan(result.grossIncome.year);
       expect(result.currentIas).toBe(522.50);
       expect(result.maxSsIncome).toBe(12 * 522.50);
+      expect(result.monthlyBreakdown).toHaveLength(12);
+      expect(result.monthlyBreakdown[0].month).toBe("january");
+      expect(result.monthlyBreakdown[11].month).toBe("december");
+      expect(result.taxTableUsed.length).toBeGreaterThan(0);
+      expect(result.taxTableUsed.some((rank) => rank.id === result.taxRank.id)).toBe(
+        true
+      );
+      expect(result.normalizedInternals.effectiveBusinessDays).toBe(248);
+      expect(result.normalizedInternals.socialSecurity.baseMonthlyBeforeDiscountAndCap)
+        .toBeCloseTo(result.grossIncome.month * 0.7);
+      expect(result.normalizedInternals.taxableIncome.coefficientApplied).toBe(0.75);
     });
 
     it("should calculate correctly for €50,000 yearly income with first year benefits", () => {
-      // Set dateOfOpeningAcivity to a date in the current year
+      // Set dateOfOpeningActivity to a date in the current year
       const dateInCurrentYear = new Date();
       const result = simulateIndependentWorker({
         income: 50000,
         incomeFrequency: FrequencyChoices.Year,
-        dateOfOpeningAcivity: dateInCurrentYear,
+        dateOfOpeningActivity: dateInCurrentYear,
         benefitsOfYouthIrs: true,
         yearOfYouthIrs: 1,
       });
@@ -112,11 +126,11 @@ describe("simulateIndependentWorker - End-to-End", () => {
     });
 
     it("should handle SS first year exemption", () => {
-      // Set dateOfOpeningAcivity to a date within the last 12 months
+      // Set dateOfOpeningActivity to a date within the last 12 months
       const dateWithinLast12Months = new Date();
       const result = simulateIndependentWorker({
         income: 40000,
-        dateOfOpeningAcivity: dateWithinLast12Months,
+        dateOfOpeningActivity: dateWithinLast12Months,
       });
 
       expect(result.workerWithinFirst12Months).toBe(true);
@@ -174,11 +188,11 @@ describe("simulateIndependentWorker - End-to-End", () => {
     });
 
     it("should handle second year scenario", () => {
-      // Set dateOfOpeningAcivity to a date in the previous year
+      // Set dateOfOpeningActivity to a date in the previous year
       const dateInPreviousYear = new Date(new Date().getFullYear() - 1, 6, 1);
       const result = simulateIndependentWorker({
         income: 45000,
-        dateOfOpeningAcivity: dateInPreviousYear,
+        dateOfOpeningActivity: dateInPreviousYear,
       });
 
       expect(result.workerWithinFirstFinancialYear).toBe(false);

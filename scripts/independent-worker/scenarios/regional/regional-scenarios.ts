@@ -20,7 +20,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: null,
+      dateOfOpeningActivity: null,
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -39,7 +39,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: null,
+      dateOfOpeningActivity: null,
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -58,7 +58,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -83,7 +83,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -102,7 +102,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 15), // January 15, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 15), // January 15, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -121,7 +121,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 10), // January 10, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 10), // January 10, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -140,7 +140,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -159,7 +159,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -178,7 +178,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -203,7 +203,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -222,7 +222,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 15), // August 15, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 15), // August 15, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -241,7 +241,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 10), // August 10, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 10), // August 10, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -260,7 +260,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -279,7 +279,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -298,7 +298,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -322,7 +322,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 3, 1), // April 1, 2025
+      dateOfOpeningActivity: new Date(2025, 3, 1), // April 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -341,7 +341,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 4, 15), // May 15, 2025
+      dateOfOpeningActivity: new Date(2025, 4, 15), // May 15, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -360,7 +360,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 5, 1), // June 1, 2025
+      dateOfOpeningActivity: new Date(2025, 5, 1), // June 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -379,7 +379,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 6, 1), // July 1, 2025
+      dateOfOpeningActivity: new Date(2025, 6, 1), // July 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -398,7 +398,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 8, 1), // September 1, 2025
+      dateOfOpeningActivity: new Date(2025, 8, 1), // September 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -417,7 +417,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 9, 15), // October 15, 2025
+      dateOfOpeningActivity: new Date(2025, 9, 15), // October 15, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -441,7 +441,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 10, 1), // November 1, 2025
+      dateOfOpeningActivity: new Date(2025, 10, 1), // November 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -460,7 +460,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 10, 15), // November 15, 2025
+      dateOfOpeningActivity: new Date(2025, 10, 15), // November 15, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -479,7 +479,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 11, 1), // December 1, 2025
+      dateOfOpeningActivity: new Date(2025, 11, 1), // December 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -498,7 +498,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 11, 15), // December 15, 2025
+      dateOfOpeningActivity: new Date(2025, 11, 15), // December 15, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -517,7 +517,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 11, 31), // December 31, 2025
+      dateOfOpeningActivity: new Date(2025, 11, 31), // December 31, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -541,7 +541,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -560,7 +560,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -584,7 +584,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: true,
       yearOfYouthIrs: 2,
     },
@@ -603,7 +603,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: false,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: true,
       yearOfYouthIrs: 1,
     },
@@ -627,7 +627,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: true,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 0, 1), // January 1, 2025
+      dateOfOpeningActivity: new Date(2025, 0, 1), // January 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },
@@ -646,7 +646,7 @@ export const regionalScenarios: IndependentWorkerTestScenario[] = [
       currentTaxRankYear: 2025,
       rnh: true,
       rnhTax: 0.2,
-      dateOfOpeningAcivity: new Date(2025, 7, 1), // August 1, 2025
+      dateOfOpeningActivity: new Date(2025, 7, 1), // August 1, 2025
       benefitsOfYouthIrs: false,
       yearOfYouthIrs: 1,
     },

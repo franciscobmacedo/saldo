@@ -259,7 +259,7 @@ async function main() {
       currentTaxRankYear: args.currentTaxRankYear ?? 2025,
       rnh: args.rnh ?? false,
       rnhTax: args.rnhTax,
-      dateOfOpeningAcivity: args.dateOfOpeningActivity ? new Date(args.dateOfOpeningActivity) : null,
+      dateOfOpeningActivity: args.dateOfOpeningActivity ? new Date(args.dateOfOpeningActivity) : null,
       benefitsOfYouthIrs: args.benefitsOfYouthIrs ?? false,
       yearOfYouthIrs: args.yearOfYouthIrs,
     };
