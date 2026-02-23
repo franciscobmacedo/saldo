@@ -15,11 +15,19 @@ import { TAX_RANKS } from "@/data/tax-ranks-data";
 import { IAS_PER_YEAR } from "@/data/ias-data";
 import { YOUTH_IRS } from "@/data/youth-irs-data";
 import { FrequencyChoices, TaxRank } from "@/independent-worker/schemas";
+import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "@/independent-worker/consts";
 
 describe("Independent Worker Calculations", () => {
+  const yearBusinessDays = YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2026];
+
   describe("calculateGrossIncome", () => {
     it("should calculate yearly income correctly", () => {
-      const result = calculateGrossIncome(30000, FrequencyChoices.Year, 0);
+      const result = calculateGrossIncome(
+        30000,
+        FrequencyChoices.Year,
+        0,
+        yearBusinessDays
+      );
       
       expect(result.year).toBe(30000);
       expect(result.month).toBe(2500);
@@ -27,7 +35,12 @@ describe("Independent Worker Calculations", () => {
     });
 
     it("should calculate monthly income correctly", () => {
-      const result = calculateGrossIncome(2500, FrequencyChoices.Month, 0);
+      const result = calculateGrossIncome(
+        2500,
+        FrequencyChoices.Month,
+        0,
+        yearBusinessDays
+      );
       
       expect(result.year).toBe(30000);
       expect(result.month).toBe(2500);
@@ -35,7 +48,12 @@ describe("Independent Worker Calculations", () => {
     });
 
     it("should calculate daily income correctly", () => {
-      const result = calculateGrossIncome(120.97, FrequencyChoices.Day, 0);
+      const result = calculateGrossIncome(
+        120.97,
+        FrequencyChoices.Day,
+        0,
+        yearBusinessDays
+      );
       
       expect(result.year).toBeCloseTo(30000, -1); // Allow more precision for floating point
       expect(result.month).toBeCloseTo(2500, 0);
@@ -43,7 +61,12 @@ describe("Independent Worker Calculations", () => {
     });
 
     it("should handle days off correctly", () => {
-      const result = calculateGrossIncome(30000, FrequencyChoices.Year, 5);
+      const result = calculateGrossIncome(
+        30000,
+        FrequencyChoices.Year,
+        5,
+        yearBusinessDays
+      );
       
       expect(result.year).toBe(30000);
       expect(result.month).toBe(2500);
@@ -56,7 +79,15 @@ describe("Independent Worker Calculations", () => {
     const maxSsIncome = 12 * 522.50; // 2025 IAS
 
     it("should calculate SS pay correctly", () => {
-      const result = calculateSsPay(grossIncome, 0.214, 0, maxSsIncome, false, 0);
+      const result = calculateSsPay(
+        grossIncome,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays
+      );
       
       expect(result.year).toBeGreaterThan(0);
       expect(result.month).toBeGreaterThanOrEqual(20);
@@ -64,7 +95,15 @@ describe("Independent Worker Calculations", () => {
     });
 
     it("should return zero for SS first year", () => {
-      const result = calculateSsPay(grossIncome, 0.214, 0, maxSsIncome, true, 0);
+      const result = calculateSsPay(
+        grossIncome,
+        0.214,
+        0,
+        maxSsIncome,
+        true,
+        0,
+        yearBusinessDays
+      );
       
       expect(result.year).toBe(0);
       expect(result.month).toBe(0);
@@ -72,7 +111,15 @@ describe("Independent Worker Calculations", () => {
     });
 
     it("should handle SS discount", () => {
-      const result = calculateSsPay(grossIncome, 0.214, 0.1, maxSsIncome, false, 0);
+      const result = calculateSsPay(
+        grossIncome,
+        0.214,
+        0.1,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays
+      );
       
       expect(result.year).toBeGreaterThan(0);
     });
@@ -197,7 +244,15 @@ describe("Independent Worker Calculations", () => {
     const mockTaxRanks: TaxRank[] = [taxRank];
 
     it("should calculate IRS pay for regular scenario", () => {
-      const result = calculateIrsPay(10000, taxRank, false, 0.2, 0, mockTaxRanks);
+      const result = calculateIrsPay(
+        10000,
+        taxRank,
+        false,
+        0.2,
+        0,
+        mockTaxRanks,
+        yearBusinessDays
+      );
       
       expect(result.year).toBeCloseTo(1300, 0); // 10000 * 0.13
       expect(result.month).toBeCloseTo(108.33, 2);
@@ -205,7 +260,15 @@ describe("Independent Worker Calculations", () => {
     });
 
     it("should calculate IRS pay for RNH scenario", () => {
-      const result = calculateIrsPay(10000, taxRank, true, 0.2, 0, mockTaxRanks);
+      const result = calculateIrsPay(
+        10000,
+        taxRank,
+        true,
+        0.2,
+        0,
+        mockTaxRanks,
+        yearBusinessDays
+      );
       
       expect(result.year).toBeCloseTo(2000, 0); // 10000 * 0.2
       expect(result.month).toBeCloseTo(166.67, 2);
@@ -221,7 +284,15 @@ describe("Independent Worker Calculations", () => {
       // For taxableIncome of 120000:
       // Tax should be: 83696 * 0.35408 + (120000 - 83696) * 0.48
       // = 29637.47 + 17425.92 = 47063.39
-      const result = calculateIrsPay(120000, bracket9, false, 0.2, 0, taxRanks);
+      const result = calculateIrsPay(
+        120000,
+        bracket9,
+        false,
+        0.2,
+        0,
+        taxRanks,
+        yearBusinessDays
+      );
       
       // Allow small rounding differences (within 5€)
       expect(result.year).toBeCloseTo(47061, -1);
@@ -235,7 +306,12 @@ describe("Independent Worker Calculations", () => {
     const ssPay = { year: 2000, month: 166.67, day: 8.06 };
 
     it("should calculate net income correctly", () => {
-      const result = calculateNetIncome(grossIncome, irsPay, ssPay);
+      const result = calculateNetIncome(
+        grossIncome,
+        irsPay,
+        ssPay,
+        yearBusinessDays
+      );
       
       expect(result.year).toBe(25000); // 30000 - 3000 - 2000
       expect(result.month).toBeCloseTo(2083.33, 2); // 2500 - 250 - 166.67

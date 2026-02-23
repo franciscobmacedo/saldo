@@ -8,6 +8,7 @@ export * from "./independent-worker/monthly-breakdown";
 export * from "./independent-worker/schemas";
 export * from "./independent-worker/calculations";
 export * from "./independent-worker/validators";
+export * from "./independent-worker/consts";
 export * from "./data/retention-tax-tables-data";
 export {
   LocationT,

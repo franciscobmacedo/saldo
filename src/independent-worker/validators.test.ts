@@ -3,6 +3,7 @@ import {
   validateIncome,
   validateIncomeFrequency,
   validateNrDaysOff,
+  validateYearBusinessDays,
   validateSsDiscount,
   validateMaxExpensesTax,
   validateExpenses,
@@ -13,8 +14,11 @@ import {
   validateFirstAndSecondYear,
 } from "@/independent-worker/validators";
 import { FrequencyChoices } from "@/independent-worker/schemas";
+import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "@/independent-worker/consts";
 
 describe("Independent Worker Validators", () => {
+  const defaultYearBusinessDays = YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2026];
+
   describe("validateIncome", () => {
     it("should pass for valid positive income", () => {
       expect(() => validateIncome(1000)).not.toThrow();
@@ -47,22 +51,56 @@ describe("Independent Worker Validators", () => {
 
   describe("validateNrDaysOff", () => {
     it("should pass for valid non-negative integers", () => {
-      expect(() => validateNrDaysOff(0)).not.toThrow();
-      expect(() => validateNrDaysOff(5)).not.toThrow();
-      expect(() => validateNrDaysOff(20)).not.toThrow();
+      expect(() => validateNrDaysOff(0, defaultYearBusinessDays)).not.toThrow();
+      expect(() => validateNrDaysOff(5, defaultYearBusinessDays)).not.toThrow();
+      expect(() => validateNrDaysOff(20, defaultYearBusinessDays)).not.toThrow();
     });
 
     it("should throw for negative values", () => {
-      expect(() => validateNrDaysOff(-1)).toThrow("Number of days off cannot be negative");
+      expect(() => validateNrDaysOff(-1, defaultYearBusinessDays)).toThrow("Number of days off cannot be negative");
     });
 
     it("should throw for non-integers", () => {
-      expect(() => validateNrDaysOff(5.5)).toThrow("Number of days off must be an integer");
+      expect(() => validateNrDaysOff(5.5, defaultYearBusinessDays)).toThrow("Number of days off must be an integer");
     });
 
-    it("should throw for values >= YEAR_BUSINESS_DAYS", () => {
-      expect(() => validateNrDaysOff(248)).toThrow("Number of days off cannot be greater than or equal to 248");
-      expect(() => validateNrDaysOff(300)).toThrow("Number of days off cannot be greater than or equal to 248");
+    it("should throw for values >= resolved year business days", () => {
+      expect(() => validateNrDaysOff(defaultYearBusinessDays, defaultYearBusinessDays)).toThrow(
+        `Number of days off cannot be greater than or equal to ${defaultYearBusinessDays}`
+      );
+      expect(() => validateNrDaysOff(defaultYearBusinessDays + 1, defaultYearBusinessDays)).toThrow(
+        `Number of days off cannot be greater than or equal to ${defaultYearBusinessDays}`
+      );
+    });
+
+    it("should validate against custom year business days", () => {
+      expect(() => validateNrDaysOff(249, 250)).not.toThrow();
+      expect(() => validateNrDaysOff(250, 250)).toThrow(
+        "Number of days off cannot be greater than or equal to 250"
+      );
+    });
+  });
+
+  describe("validateYearBusinessDays", () => {
+    it("should pass for valid year business days", () => {
+      expect(() => validateYearBusinessDays(1)).not.toThrow();
+      expect(() => validateYearBusinessDays(248)).not.toThrow();
+      expect(() => validateYearBusinessDays(252)).not.toThrow();
+    });
+
+    it("should throw for invalid values", () => {
+      expect(() => validateYearBusinessDays(0)).toThrow(
+        "Year business days must be greater than 0"
+      );
+      expect(() => validateYearBusinessDays(-1)).toThrow(
+        "Year business days must be greater than 0"
+      );
+      expect(() => validateYearBusinessDays(12.5)).toThrow(
+        "Year business days must be an integer"
+      );
+      expect(() => validateYearBusinessDays(Number.NaN)).toThrow(
+        "Year business days must be a valid number"
+      );
     });
   });
 

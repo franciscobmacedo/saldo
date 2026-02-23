@@ -12,7 +12,7 @@ A comprehensive TypeScript library for calculating Portuguese taxes for both dep
 
 - 📊 **Dependent worker calculations**: 2025 IRS retention tables with regional coverage and twelfths/holiday handling
 - 🍽️ **Allowances**: Meal vouchers vs. cash allowances with the correct taxable/tax-free split
-- 🧮 **Independent worker simulator**: Simplified regime with expense caps, specific deductions, and 248 business-day calendar
+- 🧮 **Independent worker simulator**: Simplified regime with expense caps, specific deductions, and year-based business-day defaults
 - 🧒 **Youth IRS + RNH**: Year-capped youth IRS discounts (per IAS limits) and RNH flat-rate option
 - 🛡️ **Social security**: Rate overrides, discounts, caps (12× IAS), and first-12-month exemption for new activities
 - 🔎 **Validation**: Detailed input validation errors for misconfigured scenarios
@@ -159,8 +159,9 @@ interface DependentWorkerResult {
 
 Key parameters:
 - `income`: Gross income (year/month/day depending on `incomeFrequency`)
-- `incomeFrequency`: `"year"` (default), `"month"`, or `"day"` (248 business days)
-- `nrDaysOff`: Days off for daily calculations (cannot reach/exceed 248)
+- `incomeFrequency`: `"year"` (default), `"month"`, or `"day"` (uses year-specific business days)
+- `yearBusinessDays`: Optional override for the year business-day baseline (ideal for UI customization)
+- `nrDaysOff`: Days off for daily calculations (cannot reach/exceed resolved `yearBusinessDays`)
 - `ssTax`: Social security rate (default 21.4%), `ssDiscount`: adjustment range -25%..25%
 - `currentTaxRankYear`: 2023/2024/2025 progressive IRS tables
 - `maxExpensesTax`: Simplified regime percentage (default 15%) and `expenses`: declared expenses

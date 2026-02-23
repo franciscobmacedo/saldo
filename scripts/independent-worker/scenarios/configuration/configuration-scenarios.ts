@@ -1,6 +1,8 @@
 import { FrequencyChoices } from "../../../../src/independent-worker/schemas";
 import { IndependentWorkerTestScenario } from "../../types";
-import { YEAR_BUSINESS_DAYS } from "../../../../src/independent-worker/consts";
+import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "../../../../src/independent-worker/consts";
+
+const yearBusinessDays = YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2025];
 
 export const configurationScenarios: IndependentWorkerTestScenario[] = [
   // ============================================================
@@ -126,11 +128,11 @@ export const configurationScenarios: IndependentWorkerTestScenario[] = [
   },
   {
     name: "Daily frequency with maximum valid days off (boundary test)",
-    observations: `Testing daily frequency with maximum valid days off (${YEAR_BUSINESS_DAYS - 1})`,
+    observations: `Testing daily frequency with maximum valid days off (${yearBusinessDays - 1})`,
     params: {
       income: 100,
       incomeFrequency: FrequencyChoices.Day,
-      nrDaysOff: YEAR_BUSINESS_DAYS - 1,
+      nrDaysOff: yearBusinessDays - 1,
       ssDiscount: 0,
       maxExpensesTax: 15,
       expenses: 0,
@@ -518,4 +520,3 @@ export const configurationScenarios: IndependentWorkerTestScenario[] = [
   },
 
 ];
-

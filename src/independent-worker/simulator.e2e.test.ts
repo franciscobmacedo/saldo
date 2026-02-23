@@ -1,9 +1,12 @@
 import { describe, it, expect } from "vitest";
 import { simulateIndependentWorker } from "@/independent-worker/simulator";
 import { FrequencyChoices } from "@/independent-worker/schemas";
+import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "@/independent-worker/consts";
 
 // NO MOCKS - Testing the full integration
 describe("simulateIndependentWorker - End-to-End", () => {
+  const defaultYearBusinessDays = YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2026];
+
   describe("Real tax calculations with actual data", () => {
     it("should calculate correctly for €30,000 yearly income", () => {
       const result = simulateIndependentWorker({
@@ -65,7 +68,12 @@ describe("simulateIndependentWorker - End-to-End", () => {
       expect(result.taxTableUsed.some((rank) => rank.id === result.taxRank.id)).toBe(
         true
       );
-      expect(result.normalizedInternals.effectiveBusinessDays).toBe(248);
+      expect(result.yearBusinessDays).toBe(
+        YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2025]
+      );
+      expect(result.normalizedInternals.effectiveBusinessDays).toBe(
+        YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2025]
+      );
       expect(result.normalizedInternals.socialSecurity.baseMonthlyBeforeDiscountAndCap)
         .toBeCloseTo(result.grossIncome.month * 0.7);
       expect(result.normalizedInternals.taxableIncome.coefficientApplied).toBe(0.75);
@@ -122,7 +130,7 @@ describe("simulateIndependentWorker - End-to-End", () => {
       });
 
       expect(result.grossIncome.day).toBe(dailyIncome);
-      expect(result.grossIncome.year).toBe(dailyIncome * 248);
+      expect(result.grossIncome.year).toBe(dailyIncome * defaultYearBusinessDays);
     });
 
     it("should handle SS first year exemption", () => {
@@ -165,6 +173,23 @@ describe("simulateIndependentWorker - End-to-End", () => {
       expect(result2024.currentIas).toBe(509.26);
       expect(result2025.currentIas).toBe(522.50);
       expect(result2026.currentIas).toBe(537.13);
+      expect(result2023.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2023]);
+      expect(result2024.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2024]);
+      expect(result2025.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2025]);
+      expect(result2026.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2026]);
+    });
+
+    it("should allow overriding year business days", () => {
+      const result = simulateIndependentWorker({
+        income: 200,
+        incomeFrequency: FrequencyChoices.Day,
+        currentTaxRankYear: 2025,
+        yearBusinessDays: 240,
+      });
+
+      expect(result.yearBusinessDays).toBe(240);
+      expect(result.grossIncome.year).toBe(200 * 240);
+      expect(result.normalizedInternals.effectiveBusinessDays).toBe(240);
     });
 
     it("should handle custom expenses", () => {

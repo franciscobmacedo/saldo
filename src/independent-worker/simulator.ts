@@ -26,6 +26,7 @@ import {
   validateIncome,
   validateIncomeFrequency,
   validateNrDaysOff,
+  validateYearBusinessDays,
   validateSsDiscount,
   validateMaxExpensesTax,
   validateExpenses,
@@ -35,7 +36,7 @@ import {
   validateYearOfYouthIrs,
 } from "./validators";
 import { SUPPORTED_TAX_RANK_YEARS, TAX_RANKS } from "@/data/tax-ranks-data";
-import { YEAR_BUSINESS_DAYS } from "./consts";
+import { resolveYearBusinessDays } from "./consts";
 
 
 const isWithinFirstFinancialYear = (dateOfOpeningActivity: Date | null): boolean => {
@@ -89,6 +90,7 @@ const resolveAverageRate = (taxRank: TaxRank, taxRanks: TaxRank[]): number => {
 interface BuildNormalizedInternalsOptions {
   inputIncome: number;
   inputFrequency: FrequencyChoices;
+  yearBusinessDays: number;
   nrDaysOff: number;
   grossIncome: CurrencyByFrequency;
   ssTax: number;
@@ -110,6 +112,7 @@ interface BuildNormalizedInternalsOptions {
 const buildNormalizedInternals = ({
   inputIncome,
   inputFrequency,
+  yearBusinessDays,
   nrDaysOff,
   grossIncome,
   ssTax,
@@ -127,7 +130,7 @@ const buildNormalizedInternals = ({
   rnh,
   rnhTax,
 }: BuildNormalizedInternalsOptions): IndependentWorkerNormalizedInternals => {
-  const effectiveBusinessDays = YEAR_BUSINESS_DAYS - nrDaysOff;
+  const effectiveBusinessDays = yearBusinessDays - nrDaysOff;
 
   const ssBaseMonthlyBeforeDiscountAndCap = grossIncome.month * 0.7;
   const ssBaseMonthlyAfterDiscountBeforeCap =
@@ -206,6 +209,7 @@ const buildNormalizedInternals = ({
 export function simulateIndependentWorker({
   income,
   incomeFrequency = FrequencyChoices.Year,
+  yearBusinessDays,
   nrDaysOff = 0, // relevant for daily income frequency
   ssDiscount = 0,
   maxExpensesTax = 15,
@@ -221,12 +225,17 @@ export function simulateIndependentWorker({
   // Validate all inputs
   validateIncome(income);
   validateIncomeFrequency(incomeFrequency);
-  validateNrDaysOff(nrDaysOff);
+  validateCurrentTaxRankYear(currentTaxRankYear);
+  const resolvedYearBusinessDays = resolveYearBusinessDays(
+    currentTaxRankYear,
+    yearBusinessDays
+  );
+  validateYearBusinessDays(resolvedYearBusinessDays);
+  validateNrDaysOff(nrDaysOff, resolvedYearBusinessDays);
   validateSsDiscount(ssDiscount);
   validateMaxExpensesTax(maxExpensesTax);
   validateExpenses(expenses);
   validateSsTax(ssTax);
-  validateCurrentTaxRankYear(currentTaxRankYear);
   validateRnhTax(rnhTax);
   validateYearOfYouthIrs(yearOfYouthIrs, currentTaxRankYear);
 
@@ -234,14 +243,12 @@ export function simulateIndependentWorker({
   const workerWithinSecondFinancialYear = isWithinSecondFinancialYear(dateOfOpeningActivity);
   const workerWithinFirst12Months = isWithinFirst12Months(dateOfOpeningActivity);
 
-
-
-
   // Calculate gross income based on frequency
   const grossIncome = calculateGrossIncome(
     income,
     incomeFrequency,
-    nrDaysOff
+    nrDaysOff,
+    resolvedYearBusinessDays
   );
 
   // Get current IAS value
@@ -255,7 +262,8 @@ export function simulateIndependentWorker({
     ssDiscount,
     maxSsIncome,
     workerWithinFirst12Months,
-    nrDaysOff
+    nrDaysOff,
+    resolvedYearBusinessDays
   );
 
   // Calculate specific deductions
@@ -296,15 +304,22 @@ export function simulateIndependentWorker({
     rnh,
     rnhTax,
     nrDaysOff,
-    taxTableUsed
+    taxTableUsed,
+    resolvedYearBusinessDays
   );
 
   // Calculate net income
-  const netIncome = calculateNetIncome(grossIncome, irsPay, ssPay);
+  const netIncome = calculateNetIncome(
+    grossIncome,
+    irsPay,
+    ssPay,
+    resolvedYearBusinessDays
+  );
   const marginalRate = rnh ? rnhTax : taxRank.normalTax;
   const normalizedInternals = buildNormalizedInternals({
     inputIncome: income,
     inputFrequency: incomeFrequency,
+    yearBusinessDays: resolvedYearBusinessDays,
     nrDaysOff,
     grossIncome,
     ssTax,
@@ -333,6 +348,7 @@ export function simulateIndependentWorker({
 
   return {
     grossIncome,
+    yearBusinessDays: resolvedYearBusinessDays,
     taxableIncome,
     ssPay,
     specificDeductions,

@@ -2,7 +2,6 @@ import {
   FrequencyChoices, 
 } from "./schemas";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
-import { YEAR_BUSINESS_DAYS } from "@/independent-worker/consts";
 
 export function validateIncome(income: number): void {
   if (!Number.isFinite(income)) {
@@ -19,15 +18,32 @@ export function validateIncomeFrequency(frequency: FrequencyChoices): void {
   }
 }
 
-export function validateNrDaysOff(nrDaysOff: number): void {
+export function validateYearBusinessDays(yearBusinessDays: number): void {
+  if (!Number.isFinite(yearBusinessDays)) {
+    throw new Error("Year business days must be a valid number");
+  }
+  if (!Number.isInteger(yearBusinessDays)) {
+    throw new Error("Year business days must be an integer");
+  }
+  if (yearBusinessDays <= 0) {
+    throw new Error("Year business days must be greater than 0");
+  }
+}
+
+export function validateNrDaysOff(
+  nrDaysOff: number,
+  yearBusinessDays: number
+): void {
   if (nrDaysOff < 0) {
     throw new Error("Number of days off cannot be negative");
   }
   if (!Number.isInteger(nrDaysOff)) {
     throw new Error("Number of days off must be an integer");
   }
-  if (nrDaysOff >= YEAR_BUSINESS_DAYS) {
-    throw new Error(`Number of days off cannot be greater than or equal to ${YEAR_BUSINESS_DAYS}`);
+  if (nrDaysOff >= yearBusinessDays) {
+    throw new Error(
+      `Number of days off cannot be greater than or equal to ${yearBusinessDays}`
+    );
   }
 }
 

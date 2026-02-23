@@ -1,6 +1,8 @@
 import { FrequencyChoices } from "../../../../src/independent-worker/schemas";
 import { IndependentWorkerTestScenario } from "../../types";
-import { YEAR_BUSINESS_DAYS } from "../../../../src/independent-worker/consts";
+import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "../../../../src/independent-worker/consts";
+
+const yearBusinessDays = YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2025];
 
 export const errorScenarios: IndependentWorkerTestScenario[] = [
   // ============================================================
@@ -68,12 +70,12 @@ export const errorScenarios: IndependentWorkerTestScenario[] = [
 
   // Maximum valid days off (just below limit)
   {
-    name: "Maximum valid days off: 247 days (just below 248 limit)",
+    name: `Maximum valid days off: ${yearBusinessDays - 1} days (just below ${yearBusinessDays} limit)`,
     observations: "Testing maximum days off boundary - should handle edge case gracefully",
     params: {
       income: 100,
       incomeFrequency: FrequencyChoices.Day,
-      nrDaysOff: 247, // Just below YEAR_BUSINESS_DAYS (248)
+      nrDaysOff: yearBusinessDays - 1,
       ssDiscount: 0,
       maxExpensesTax: 15,
       expenses: 0,
@@ -456,4 +458,3 @@ export const errorScenarios: IndependentWorkerTestScenario[] = [
     },
   },
 ];
-

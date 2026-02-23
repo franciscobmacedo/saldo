@@ -6,13 +6,13 @@ import {
 } from "./schemas";
 import { TAX_RANKS } from "@/data/tax-ranks-data";
 import { YOUTH_IRS } from "@/data/youth-irs-data";
-import { YEAR_BUSINESS_DAYS } from "@/independent-worker/consts";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
 
 export function calculateGrossIncome(
   income: number,
   incomeFrequency: FrequencyChoices,
-  nrDaysOff: number
+  nrDaysOff: number,
+  yearBusinessDays: number
 ): CurrencyByFrequency {
   const result: CurrencyByFrequency = {
     year: 0,
@@ -24,15 +24,15 @@ export function calculateGrossIncome(
     case FrequencyChoices.Year:
       result.year = income;
       result.month = income / 12; // Always use 12 months for calculations
-      result.day = income / (YEAR_BUSINESS_DAYS - nrDaysOff);
+      result.day = income / (yearBusinessDays - nrDaysOff);
       break;
     case FrequencyChoices.Month:
       result.year = income * 12; // Always use 12 months for calculations
       result.month = income;
-      result.day = result.year / (YEAR_BUSINESS_DAYS - nrDaysOff);
+      result.day = result.year / (yearBusinessDays - nrDaysOff);
       break;
     case FrequencyChoices.Day:
-      result.year = income * (YEAR_BUSINESS_DAYS - nrDaysOff);
+      result.year = income * (yearBusinessDays - nrDaysOff);
       result.month = result.year / 12; // Always use 12 months for calculations
       result.day = income;
   }
@@ -45,7 +45,8 @@ export function calculateSsPay(
   ssDiscount: number,
   maxSsIncome: number,
   firstYearForSs: boolean,
-  nrDaysOff: number
+  nrDaysOff: number,
+  yearBusinessDays: number
 ): CurrencyByFrequency {
   if (firstYearForSs) {
     
@@ -68,7 +69,7 @@ export function calculateSsPay(
   return {
     year: yearSSPay,
     month: Math.max(monthSS, 20),
-    day: yearSSPay / (YEAR_BUSINESS_DAYS - nrDaysOff),
+    day: yearSSPay / (yearBusinessDays - nrDaysOff),
   };
 }
 
@@ -165,7 +166,8 @@ export function calculateIrsPay(
   rnh: boolean,
   rnhTax: number,
   nrDaysOff: number,
-  taxRanks: TaxRank[]
+  taxRanks: TaxRank[],
+  yearBusinessDays: number
 ): CurrencyByFrequency {
   let yearIRS: number;
   if (rnh) {
@@ -189,20 +191,21 @@ export function calculateIrsPay(
   return {
     year: yearIrsPay,
     month: monthIRS,
-    day: yearIrsPay / (YEAR_BUSINESS_DAYS - nrDaysOff),
+    day: yearIrsPay / (yearBusinessDays - nrDaysOff),
   };
 }
 
 export function calculateNetIncome(
   grossIncome: CurrencyByFrequency,
   irsPay: CurrencyByFrequency,
-  ssPay: CurrencyByFrequency
+  ssPay: CurrencyByFrequency,
+  yearBusinessDays: number
 ): CurrencyByFrequency {
   const monthIncome = grossIncome.month - irsPay.month - ssPay.month;
   const yearIncome = grossIncome.year - irsPay.year - ssPay.year;
   return {
     year: yearIncome,
     month: monthIncome,
-    day: yearIncome / (YEAR_BUSINESS_DAYS - 0), // Using 0 for nrDaysOff in net income calculation
+    day: yearIncome / yearBusinessDays,
   };
 }

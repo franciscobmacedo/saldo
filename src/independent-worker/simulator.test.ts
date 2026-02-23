@@ -1,21 +1,35 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { simulateIndependentWorker } from "@/independent-worker/simulator";
 import { FrequencyChoices } from "@/independent-worker/schemas";
 import { TAX_RANKS } from "@/data/tax-ranks-data";
+import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "@/independent-worker/consts";
 
 // Mock the calculation functions to control their output for tests
 vi.mock("@/independent-worker/calculations", () => ({
-  calculateGrossIncome: vi.fn((income: number, frequency: string, nrDaysOff: number) => {
+  calculateGrossIncome: vi.fn((
+    income: number,
+    frequency: string,
+    nrDaysOff: number,
+    yearBusinessDays: number = 248
+  ) => {
     const year = frequency === FrequencyChoices.Year ? income : 
                  frequency === FrequencyChoices.Month ? income * 12 :
-                 income * (248 - nrDaysOff); // YEAR_BUSINESS_DAYS - nrDaysOff
+                 income * (yearBusinessDays - nrDaysOff);
     return {
       year,
       month: year / 12,
-      day: year / (248 - nrDaysOff)
+      day: year / (yearBusinessDays - nrDaysOff)
     };
   }),
-  calculateSsPay: vi.fn((grossIncome: any, ssTax: number, ssDiscount: number, maxSsIncome: number, ssFirstYear: boolean, nrDaysOff: number) => {
+  calculateSsPay: vi.fn((
+    grossIncome: any,
+    ssTax: number,
+    ssDiscount: number,
+    maxSsIncome: number,
+    ssFirstYear: boolean,
+    nrDaysOff: number,
+    yearBusinessDays: number = 248
+  ) => {
     if (ssFirstYear) {
       return { year: 0, month: 0, day: 0 };
     }
@@ -24,7 +38,7 @@ vi.mock("@/independent-worker/calculations", () => ({
     return {
       year: yearSSPay,
       month: Math.max(monthSS, 20),
-      day: yearSSPay / (248 - nrDaysOff)
+      day: yearSSPay / (yearBusinessDays - nrDaysOff)
     };
   }),
   calculateSpecificDeductions: vi.fn((ssPay: any, grossIncome: any) => {
@@ -56,7 +70,15 @@ vi.mock("@/independent-worker/calculations", () => ({
       averageTax: 0.13
     };
   }),
-  calculateIrsPay: vi.fn((taxableIncome: number, taxRank: any, rnh: boolean, rnhTax: number, nrDaysOff: number, _taxRanks: any[]) => {
+  calculateIrsPay: vi.fn((
+    taxableIncome: number,
+    taxRank: any,
+    rnh: boolean,
+    rnhTax: number,
+    nrDaysOff: number,
+    _taxRanks: any[],
+    yearBusinessDays: number = 248
+  ) => {
     let yearIRS: number;
     if (rnh) {
       yearIRS = taxableIncome * rnhTax;
@@ -66,7 +88,7 @@ vi.mock("@/independent-worker/calculations", () => ({
     return {
       year: Math.max(yearIRS, 0),
       month: Math.max(yearIRS / 12, 0),
-      day: Math.max(yearIRS, 0) / (248 - nrDaysOff)
+      day: Math.max(yearIRS, 0) / (yearBusinessDays - nrDaysOff)
     };
   }),
   calculateTaxIncomeAvg: vi.fn((taxRank: any, taxableIncome: number) => {
@@ -81,11 +103,16 @@ vi.mock("@/independent-worker/calculations", () => ({
     }
     return taxableIncome - (taxRank.max ?? taxRank.min);
   }),
-  calculateNetIncome: vi.fn((grossIncome: any, irsPay: any, ssPay: any) => {
+  calculateNetIncome: vi.fn((
+    grossIncome: any,
+    irsPay: any,
+    ssPay: any,
+    yearBusinessDays: number = 248
+  ) => {
     return {
       year: grossIncome.year - irsPay.year - ssPay.year,
       month: grossIncome.month - irsPay.month - ssPay.month,
-      day: (grossIncome.year - irsPay.year - ssPay.year) / 248
+      day: (grossIncome.year - irsPay.year - ssPay.year) / yearBusinessDays
     };
   }),
   TAX_RANKS: {},
@@ -94,6 +121,7 @@ vi.mock("@/independent-worker/calculations", () => ({
 
 describe("simulateIndependentWorker", () => {
   const baseIncome = 30000;
+  const defaultYearBusinessDays = YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2026];
 
   it("should calculate for a basic scenario with defaults", () => {
     const result = simulateIndependentWorker({ income: baseIncome });
@@ -121,7 +149,10 @@ describe("simulateIndependentWorker", () => {
     expect(result.rnhTax).toBe(0.2);
     expect(result.benefitsOfYouthIrs).toBe(false);
     expect(result.yearOfYouthIrs).toBe(1);
-    expect(result.normalizedInternals.effectiveBusinessDays).toBe(248);
+    expect(result.yearBusinessDays).toBe(defaultYearBusinessDays);
+    expect(result.normalizedInternals.effectiveBusinessDays).toBe(
+      defaultYearBusinessDays
+    );
   });
 
   it("should expose a month-by-month breakdown consistent with monthly totals", () => {
@@ -148,7 +179,9 @@ describe("simulateIndependentWorker", () => {
       expenses: 100,
     });
 
-    expect(result.normalizedInternals.effectiveBusinessDays).toBe(240);
+    expect(result.normalizedInternals.effectiveBusinessDays).toBe(
+      defaultYearBusinessDays - 8
+    );
     expect(result.normalizedInternals.normalization.inputIncome).toBe(baseIncome);
     expect(result.normalizedInternals.normalization.inputFrequency).toBe(
       FrequencyChoices.Year
@@ -197,7 +230,7 @@ describe("simulateIndependentWorker", () => {
 
     expect(result).toBeDefined();
     expect(result.grossIncome.day).toBe(dailyIncome);
-    expect(result.grossIncome.year).toBe(dailyIncome * 248); // YEAR_BUSINESS_DAYS
+    expect(result.grossIncome.year).toBe(dailyIncome * defaultYearBusinessDays);
   });
 
   it("should handle first year scenario", () => {
@@ -294,10 +327,26 @@ describe("simulateIndependentWorker", () => {
     expect(result2024.currentIas).toBe(509.26);
     expect(result2025.currentIas).toBe(522.50);
     expect(result2026.currentIas).toBe(537.13);
+    expect(result2023.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2023]);
+    expect(result2024.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2024]);
+    expect(result2025.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2025]);
+    expect(result2026.yearBusinessDays).toBe(YEAR_BUSINESS_DAYS_BY_TAX_YEAR[2026]);
     expect(result2023.taxTableUsed).toEqual(TAX_RANKS[2023]);
     expect(result2024.taxTableUsed).toEqual(TAX_RANKS[2024]);
     expect(result2025.taxTableUsed).toEqual(TAX_RANKS[2025]);
     expect(result2026.taxTableUsed).toEqual(TAX_RANKS[2026]);
+  });
+
+  it("should allow overriding year business days", () => {
+    const result = simulateIndependentWorker({
+      income: 200,
+      incomeFrequency: FrequencyChoices.Day,
+      yearBusinessDays: 240,
+    });
+
+    expect(result.yearBusinessDays).toBe(240);
+    expect(result.grossIncome.year).toBe(200 * 240);
+    expect(result.normalizedInternals.effectiveBusinessDays).toBe(240);
   });
 
   it("should handle custom SS discount", () => {

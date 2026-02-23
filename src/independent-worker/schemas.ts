@@ -85,6 +85,7 @@ export interface IndependentWorkerNormalizedInternals {
 
 export interface IndependentWorkerResult {
   grossIncome: CurrencyByFrequency;
+  yearBusinessDays: number;
   taxableIncome: number;
   ssPay: CurrencyByFrequency;
   specificDeductions: number;
@@ -113,6 +114,7 @@ export interface IndependentWorkerResult {
 export interface SimulateIndependentWorkerOptions {
   income: number;
   incomeFrequency?: FrequencyChoices;
+  yearBusinessDays?: number;
   nrDaysOff?: number;
   ssDiscount?: number;
   maxExpensesTax?: number;
