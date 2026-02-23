@@ -9,6 +9,8 @@ export * from "./independent-worker/schemas";
 export * from "./independent-worker/calculations";
 export * from "./independent-worker/validators";
 export * from "./independent-worker/consts";
+export * from "./independent-worker/green-receipts";
+export * from "./independent-worker/green-receipts-schema";
 export * from "./data/retention-tax-tables-data";
 export {
   LocationT,

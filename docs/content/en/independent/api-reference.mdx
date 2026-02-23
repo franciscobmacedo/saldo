@@ -83,6 +83,43 @@ console.log(\`IRS: €\${result.irsPay.year.toFixed(2)}\`);
 console.log(\`Social security: €\${result.ssPay.year.toFixed(2)}\`);
 console.log(\`Net income: €\${result.netIncome.year.toFixed(2)}\`);`} />
 
+## Green Receipts
+
+A suite of utility functions designed to parse and analyze official "Recibos Verdes" (Green Receipts) CSV exports from the Portuguese *Portal das Finanças* (SIRE).
+
+### `parseGreenReceiptsCsv(content)`
+Parses the raw CSV string downloaded from SIRE into an array of weakly-typed strings (`GreenReceiptRawRow`) representing the table.
+
+### `toGreenReceipt(rawRow)`
+Transforms a raw comma-separated row into a strictly-typed `GreenReceipt`, automatically converting Portuguese-formatted numbers (e.g., `"3.945,51"`) to native JavaScript numbers and standardising dates.
+
+### `computeGreenReceiptsAnnualStats(receipts)`
+Aggregates an array of `GreenReceipt` objects into detailed annual statistics (`GreenReceiptAnnualStats`), grouped by year. This automatically calculates total VAT, IRS withheld, and provides a per-client financial breakdown.
+
+### `analyzeGreenReceiptTaxes(stats)`
+Feeds an annual statistics object into `simulateIndependentWorker` to generate a `GreenReceiptTaxAnalysis`. It estimates the total IRS and Social Security due, comparing it against the IRS already withheld by your clients to determine your final tax delta (refund or additional payment).
+
+<RunCode defaultCode={`// 1. You receive the CSV content:
+const csvContent = "...";
+
+// 2. Parse exactly as exported by Finanças:
+const rawRows = parseGreenReceiptsCsv(csvContent);
+
+// 3. Map to strongly-typed objects:
+const receipts = rawRows.map(toGreenReceipt);
+
+// 4. Aggregate by year:
+const annualStatsMap = computeGreenReceiptsAnnualStats(receipts);
+
+// 5. Get the tax breakdown for 2025:
+const stats2025 = annualStatsMap.get(2025);
+if (stats2025) {
+  const analysis = analyzeGreenReceiptTaxes(stats2025);
+  console.log(\`Estimated final IRS: €\${analysis.irsEstimatedTotal.toFixed(2)}\`);
+  console.log(\`Already Withheld: €\${analysis.irsAlreadyWithheld.toFixed(2)}\`);
+  console.log(\`IRS Delta (\${analysis.irsDeltaType}): €\${Math.abs(analysis.irsDelta).toFixed(2)}\`);
+}`} />
+
 ## Types and Enums
 
 ### `FrequencyChoices`

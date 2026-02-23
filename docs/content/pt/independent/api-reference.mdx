@@ -83,6 +83,43 @@ console.log(\`IRS: €\${result.irsPay.year.toFixed(2)}\`);
 console.log(\`Segurança social: €\${result.ssPay.year.toFixed(2)}\`);
 console.log(\`Rendimento líquido: €\${result.netIncome.year.toFixed(2)}\`);`} />
 
+## Recibos Verdes
+
+Um conjunto de funções utilitárias projetadas para analisar e processar as exportações oficiais em CSV de Recibos Verdes (SIRE) do *Portal das Finanças*.
+
+### `parseGreenReceiptsCsv(content)`
+Analisa a string CSV em bruto descarregada do SIRE para um array de strings (`GreenReceiptRawRow`) representando a tabela.
+
+### `toGreenReceipt(rawRow)`
+Transforma uma linha da tabela num `GreenReceipt` tipificado, convertendo automaticamente números em formato português (ex: `"3.945,51"`) para números nativos de JavaScript e standardizando datas.
+
+### `computeGreenReceiptsAnnualStats(receipts)`
+Agrega um array de `GreenReceipt` em estatísticas anuais detalhadas (`GreenReceiptAnnualStats`), agrupadas por ano. Calcula automaticamente o IVA total, IRS retido e fornece um detalhe financeiro por cliente.
+
+### `analyzeGreenReceiptTaxes(stats)`
+Passa um objeto de estatísticas anuais para o `simulateIndependentWorker` para gerar uma análise `GreenReceiptTaxAnalysis`. Estima o total de IRS e Segurança Social a pagar, comparando-o com o IRS já retido na fonte pelos seus clientes para determinar o diferencial final (reembolso ou pagamento adicional de IRS).
+
+<RunCode defaultCode={`// 1. Conteúdo original do CSV:
+const csvContent = "...";
+
+// 2. Analisar no formato exportado pelas Finanças:
+const rawRows = parseGreenReceiptsCsv(csvContent);
+
+// 3. Mapear para objetos tipificados:
+const receipts = rawRows.map(toGreenReceipt);
+
+// 4. Agregar por ano:
+const annualStatsMap = computeGreenReceiptsAnnualStats(receipts);
+
+// 5. Obter análise fiscal para o ano 2025:
+const stats2025 = annualStatsMap.get(2025);
+if (stats2025) {
+  const analysis = analyzeGreenReceiptTaxes(stats2025);
+  console.log(\`IRS final estimado: €\${analysis.irsEstimatedTotal.toFixed(2)}\`);
+  console.log(\`Já Retido: €\${analysis.irsAlreadyWithheld.toFixed(2)}\`);
+  console.log(\`Diferencial (\${analysis.irsDeltaType}): €\${Math.abs(analysis.irsDelta).toFixed(2)}\`);
+}`} />
+
 ## Tipos e Enums
 
 ### `FrequencyChoices`
