@@ -5,7 +5,7 @@ import { getPageMap } from 'nextra/page-map'
 import Link from 'next/link'
 import Image from 'next/image'
 
-import logo from '../../public/logo-xs.webp'
+import logo from '../../public/logo.svg'
 
 import '../globals.css'
 
@@ -72,8 +72,8 @@ export default async function RootLayout({ children, params: paramsPromise }) {
           <span style={{ opacity: '60%' }}>Portuguese Salary Calculator</span>
         </div>
       }
-      // GitHub repository for issues and discussions
-      // chatLink="https://discord.gg/hEM84NMkRv"
+    // GitHub repository for issues and discussions
+    // chatLink="https://discord.gg/hEM84NMkRv"
     />
   )
   const pageMap = await getPageMap(lang)
