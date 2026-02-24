@@ -75,8 +75,8 @@ export default async function RootLayout({ children, params: paramsPromise }) {
     // GitHub repository for issues and discussions
     // chatLink="https://discord.gg/hEM84NMkRv"
     />
-  )
-  const pageMap = await getPageMap(lang)
+  );
+  const pageMap = await getPageMap(`/${lang}`);
   return (
     <html lang={lang} dir="ltr" suppressHydrationWarning>
       <Head />
