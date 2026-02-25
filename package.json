@@ -36,6 +36,10 @@
     "tax",
     "calculator"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/franciscobmacedo/saldo.git"
+  },
   "packageManager": "pnpm@10.10.0",
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
