@@ -57,8 +57,8 @@ const HEADERS: (keyof GreenReceiptRawRow)[] = [
     "tipoDocumento",    // 1
     "atcud",            // 2
     "situacao",         // 3
-    "motivoEmissao",    // 4
-    "dataTransacao",    // 5
+    "dataTransacao",    // 4
+    "motivoEmissao",    // 5
     "dataEmissao",      // 6
     "paisAdquirente",   // 7
     "nifAdquirente",    // 8
@@ -184,6 +184,74 @@ export function computeGreenReceiptsAnnualStats(receipts: GreenReceipt[]): Map<n
     return map;
 }
 
+export interface GreenReceiptsData {
+    income: IndependentWorkerReceipt[][];
+    previousYearQ4MonthlyIncome?: number;
+}
+
+/**
+ * Prepares the data for an independent worker simulation from a green receipts CSV.
+ * It extracts the income matrix for the target year and calculates the average monthly income for the 
+ * preceding year's Q4.
+ * 
+ * @param csvContent - The raw CSV string content.
+ * @param targetYear - The year for which to prepare the data.
+ * @returns An object containing the income matrix and optionally the previous year's Q4 monthly income.
+ */
+export function prepareIndependentWorkerDataFromCsv(
+    csvContent: string,
+    targetYear: number = 2024
+): GreenReceiptsData {
+    const rawRows = parseGreenReceiptsCsv(csvContent);
+    const receipts = rawRows.map(toGreenReceipt);
+
+    const incomeMatrix: IndependentWorkerReceipt[][] = Array.from({ length: 12 }, () => []);
+
+    let q4Total = 0;
+    let q4ReceiptCount = 0;
+
+    for (const r of receipts) {
+        // Skip cancelled receipts
+        if (r.situacao === "Anulado") {
+            continue;
+        }
+
+        const year = r.dataTransacao.getFullYear();
+        // Skip invalid dates
+        if (isNaN(year)) {
+            continue;
+        }
+
+        const month = r.dataTransacao.getMonth();
+
+        // Include receipts for the target year
+        if (year === targetYear) {
+            incomeMatrix[month].push({
+                income: r.valorTributavel,
+                // Only consider retention valid if the receipt has IRS withheld.
+                // We calculate the retention percentage based on the value 
+                // and pass it directly to be simulated.
+                retention: r.valorTributavel > 0 ? r.valorIRS / r.valorTributavel : 0
+            });
+        }
+        // Accumulate data for the previous year's Q4 (Oct, Nov, Dec)
+        else if (year === targetYear - 1 && month >= 9 && month <= 11) {
+            q4Total += r.valorTributavel;
+            q4ReceiptCount++;
+        }
+    }
+
+    const hasPreviousYearQ4 = q4ReceiptCount > 0;
+    // Average over the 3 months of Q4 if any data exists. 
+    // Example: If user earned 3000 in Q4 total across 1 or 3 receipts, the average monthly income for Q4 is 1000.
+    const previousYearQ4MonthlyIncome = hasPreviousYearQ4 ? q4Total / 3 : undefined;
+
+    return {
+        income: incomeMatrix,
+        previousYearQ4MonthlyIncome
+    };
+}
+
 /**
  * Parses a green receipts CSV and runs a complete simulation for the specified target year.
  * It maps receipts directly to the simulated year's 12 months.
@@ -200,43 +268,11 @@ export function simulateFromGreenReceiptsCsv({
     currentTaxRankYear = 2024,
     ...restParams
 }: SimulateFromGreenReceiptsCsvOptions): IndependentWorkerResult {
-    const rawRows = parseGreenReceiptsCsv(csvContent);
-    const receipts = rawRows.map(toGreenReceipt);
-
-    const incomeMatrix: IndependentWorkerReceipt[][] = Array.from({ length: 12 }, () => []);
-
-    let q4Total = 0;
-    let q4ReceiptCount = 0;
-
-    for (const r of receipts) {
-        const year = r.dataTransacao.getFullYear();
-        const month = r.dataTransacao.getMonth();
-
-        // Include receipts for the target year
-        if (year === currentTaxRankYear) {
-            incomeMatrix[month].push({
-                income: r.valorTributavel,
-                // Only consider retention valid if the receipt has IRS withheld.
-                // We calculate the retention percentage based on the value 
-                // and pass it directly to be simulated.
-                retention: r.valorTributavel > 0 ? r.valorIRS / r.valorTributavel : 0
-            });
-        }
-        // Accumulate data for the previous year's Q4 (Oct, Nov, Dec)
-        else if (year === currentTaxRankYear - 1 && month >= 9 && month <= 11) {
-            q4Total += r.valorTributavel;
-            q4ReceiptCount++;
-        }
-    }
-
-    const hasPreviousYearQ4 = q4ReceiptCount > 0;
-    // Average over the 3 months of Q4 if any data exists. 
-    // Example: If user earned 3000 in Q4 total across 1 or 3 receipts, the average monthly income for Q4 is 1000.
-    const previousYearQ4MonthlyIncome = hasPreviousYearQ4 ? q4Total / 3 : undefined;
+    const { income, previousYearQ4MonthlyIncome } = prepareIndependentWorkerDataFromCsv(csvContent, currentTaxRankYear);
 
     return simulateIndependentWorker({
         ...restParams,
-        income: incomeMatrix,
+        income,
         incomeFrequency: FrequencyChoices.Year,
         currentTaxRankYear,
         previousYearQ4MonthlyIncome,
