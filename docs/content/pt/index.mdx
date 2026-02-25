@@ -1,31 +1,25 @@
 # Saldo
 
-**Biblioteca TypeScript moderna para cálculos fiscais portugueses**
+Biblioteca TypeScript para cálculos fiscais portugueses.
 
-Calcule com precisão recibos de vencimento de trabalhadores por conta de outrem e rendimentos de trabalhadores independentes (categoria B) em Portugal com suporte completo para TypeScript.
+Cobre recibos de vencimento de trabalhadores por conta de outrem e rendimentos de trabalhadores independentes (categoria B), com suporte completo para TypeScript.
 
 ## Início Rápido
 
-Escolha o caminho de que precisa:
-- **Trabalhadores por conta de outrem** — Processamento salarial com tabelas de retenção. Comece com [guia de trabalhador por conta de outrem](/dependent/get-started).
-- **Trabalhadores independentes** — Regime simplificado / RNH para trabalhadores por conta própria. Comece com [guia de trabalhador independente](/independent/get-started).
+Escolha o caminho:
+- **Trabalhadores por conta de outrem** - Processamento salarial com tabelas de retenção. [Começar](/dependent/get-started).
+- **Trabalhadores independentes** - Regime simplificado / RNH. [Começar](/independent/get-started).
 
 ## Funcionalidades
 
-✅ **Trabalhadores por conta de outrem** - Tabelas de retenção 2025 para continente, Açores e Madeira  
-✅ **Trabalhadores independentes** - Regime simplificado, limites de despesas, calendário de 248 dias úteis  
-✅ **Situações Familiares** - Solteiro, casado, dependentes, deficiências  
-✅ **Subsídios de Refeição** - Cartões de refeição e subsídios em dinheiro  
-✅ **Subsídios de Férias** - Distribuição do 13º e 14º mês  
-✅ **Informação Fiscal Detalhada** - Dados completos de escalões e tabelas  
-✅ **TypeScript Nativo** - Segurança de tipos completa e IntelliSense  
-✅ **Zero Dependências** - Leve e confiável  
-
-## Próximos Passos
-
-- [Documentação de trabalhador por conta de outrem](/dependent/get-started) - Configuração, API, cenários  
-- [Documentação de trabalhador independente](/independent/get-started) - Configuração, API, cenários  
-- [Arquitetura](/mermaid) - Diagramas de design do sistema e fluxo de dados
+- Trabalhadores por conta de outrem: tabelas de retenção 2025 para continente, Açores e Madeira
+- Trabalhadores independentes: regime simplificado, limites de despesas, calendário de 248 dias úteis
+- Situações familiares: solteiro, casado, dependentes, deficiências
+- Subsídios de refeição: cartões e dinheiro
+- Subsídios de férias: distribuição do 13.º e 14.º mês
+- Informação fiscal detalhada: escalões, tabelas e taxas
+- TypeScript nativo: segurança de tipos completa e IntelliSense
+- Zero dependências
 
 ## Instalação
 
@@ -41,37 +35,27 @@ yarn add saldo
 
 ### Situações Fiscais
 
-A biblioteca determina automaticamente a tabela fiscal apropriada com base em:
-- **Estado Civil**: Solteiro ou casado
-- **Número de Titulares de Rendimentos**: 1 ou 2 (para casais)
-- **Dependentes**: Número de filhos/dependentes
-- **Estado de Deficiência**: Benefícios de deficiência do trabalhador ou cônjuge
+A biblioteca escolhe a tabela fiscal correta com base em:
+- **Estado civil**: solteiro ou casado
+- **Número de titulares de rendimentos**: 1 ou 2 (para casais)
+- **Dependentes**: filhos ou outros qualificados
+- **Estado de deficiência**: trabalhador ou cônjuge
 
-### Localizações Suportadas
+### Localizações
 
 - **`continent`**: Portugal Continental
-- **`azores`**: Região dos Açores
-- **`madeira`**: Região da Madeira
+- **`azores`**: Açores
+- **`madeira`**: Madeira
 
-Cada localização tem taxas fiscais diferentes e pode ter regras de cálculo específicas.
+Cada região tem taxas fiscais e regras próprias.
 
 ### Períodos Temporais
 
-Os cálculos fiscais baseiam-se em intervalos de datas específicos, uma vez que as tabelas fiscais mudam ao longo do tempo. A biblioteca inclui dados históricos para cálculos precisos em diferentes períodos.
-
-## O Que Segue?
-
-- **[Trabalhador por conta de outrem](/dependent/get-started)** - Início rápido específico para processamento salarial
-- **[Trabalhador independente](/independent/get-started)** - Início rápido para trabalhadores por conta própria
-- **[Situações Fiscais](/dependent/tax-situations)** - Compreender cenários de retenção portugueses
-- **[Exemplos](/dependent/examples)** - Casos reais de trabalhadores por conta de outrem
-- **[Arquitetura](/mermaid)** - Diagramas de design do sistema e fluxo de dados
+As tabelas fiscais mudam ao longo do tempo. A biblioteca inclui dados históricos para cálculos precisos em diferentes períodos.
 
 ## Casos de Uso
 
-Perfeito para:
-- **Sistemas de Processamento Salarial**: Cálculos fiscais portugueses precisos
-- **Aplicações de RH**: Simulações de salários de funcionários
-- **Planeamento Financeiro**: Projeções de salário líquido
-- **Otimização Fiscal**: Comparar diferentes cenários
-- **Conformidade**: Garantir retenções fiscais precisas
+- Sistemas de processamento salarial
+- Simulações de salários de RH
+- Projeções de salário líquido
+- Comparação de cenários fiscais

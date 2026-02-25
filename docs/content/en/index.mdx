@@ -1,31 +1,25 @@
 # Saldo
 
-**Modern TypeScript library for Portuguese tax calculations**
+TypeScript library for Portuguese tax calculations.
 
-Accurately calculate dependent worker payslips and independent worker (category B) income in Portugal with full TypeScript support.
+Covers dependent worker payslips and independent worker (category B) income, with full TypeScript support.
 
 ## Quick Start
 
-Choose the path you need:
-- **Dependent workers** — Payroll with retention tables. Start with [dependent worker getting started](/dependent/get-started).
-- **Independent workers** — Simplified regime / RNH for self-employed. Start with [independent worker getting started](/independent/get-started).
+Pick your path:
+- **Dependent workers** - Payroll with retention tables. [Get started](/dependent/get-started).
+- **Independent workers** - Simplified regime / RNH for self-employed. [Get started](/independent/get-started).
 
 ## Features
 
-✅ **Dependent workers** - 2025 retention tables for continent, Azores, and Madeira  
-✅ **Independent workers** - Simplified regime, expense caps, 248 business-day calendar  
-✅ **Family Situations** - Single, married, dependents, disabilities  
-✅ **Lunch Allowances** - Meal vouchers and cash allowances  
-✅ **Holiday Bonuses** - 13th and 14th month distribution  
-✅ **Detailed Tax Information** - Complete bracket and table data  
-✅ **TypeScript Native** - Full type safety and IntelliSense  
-✅ **Zero Dependencies** - Lightweight and reliable  
-
-## Next Steps
-
-- [Dependent worker docs](/dependent/get-started) - Setup, API, scenarios  
-- [Independent worker docs](/independent/get-started) - Setup, API, scenarios  
-- [Architecture](/mermaid) - System design and data flow diagrams
+- Dependent workers: 2025 retention tables for continent, Azores, and Madeira
+- Independent workers: Simplified regime, expense caps, 248 business-day calendar
+- Family situations: single, married, dependents, disabilities
+- Lunch allowances: meal vouchers and cash
+- Holiday bonuses: 13th and 14th month distribution
+- Detailed tax breakdown: brackets, tables, and rates
+- TypeScript native: full type safety and IntelliSense
+- Zero dependencies
 
 ## Installation
 
@@ -41,37 +35,27 @@ yarn add saldo
 
 ### Tax Situations
 
-The library automatically determines the appropriate tax table based on:
-- **Marital Status**: Single or married
-- **Number of Income Holders**: 1 or 2 (for married couples)
-- **Dependents**: Number of dependent children/relatives
-- **Disability Status**: Worker or partner disability benefits
+The library picks the right tax table based on:
+- **Marital status**: single or married
+- **Number of income holders**: 1 or 2 (for married couples)
+- **Dependents**: children or other qualifying relatives
+- **Disability status**: worker or partner
 
-### Supported Locations
+### Locations
 
 - **`continent`**: Mainland Portugal
-- **`azores`**: Azores region
-- **`madeira`**: Madeira region
+- **`azores`**: Azores
+- **`madeira`**: Madeira
 
-Each location has different tax rates and may have specific calculation rules.
+Each region has different tax rates and rules.
 
 ### Time Periods
 
-Tax calculations are based on specific date ranges as tax tables change over time. The library includes historical data for accurate calculations across different periods.
-
-## What's Next?
-
-- **[Dependent worker](/dependent/get-started)** - Payroll-specific quick start
-- **[Independent worker](/independent/get-started)** - Self-employed quick start
-- **[Tax Situations](/dependent/tax-situations)** - Understanding Portuguese retention scenarios
-- **[Examples](/dependent/examples)** - Real-world dependent worker cases
-- **[Architecture](/mermaid)** - System design and data flow diagrams
+Tax tables change over time. The library includes historical data so calculations are accurate across different periods.
 
 ## Use Cases
 
-Perfect for:
-- **Payroll Systems**: Accurate Portuguese tax calculations
-- **HR Applications**: Employee salary simulations
-- **Financial Planning**: Net salary projections
-- **Tax Optimization**: Comparing different scenarios
-- **Compliance**: Ensuring accurate tax withholdings
+- Payroll systems
+- HR salary simulations
+- Net salary projections
+- Tax scenario comparisons

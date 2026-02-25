@@ -6,7 +6,7 @@ Dependent worker APIs for Portuguese payroll. For self-employed calculations, se
 
 ### `simulateDependentWorker(options)`
 
-Calculates Portuguese dependent worker taxes and net salary using the official retention tables. Computes a full **12-month breakdown** automatically handling the correct tax period for each month.
+Calculates Portuguese dependent worker taxes and net salary using the official retention tables. Returns a full 12-month breakdown, applying the correct tax period per month.
 
 #### Parameters
 
@@ -282,7 +282,7 @@ Retrieves a tax situation by its code.
 
 ## Validation Functions
 
-The library includes internal validation functions that are automatically called:
+The library includes internal validation functions called automatically:
 
 - `validateNumberOfHolders(numberOfHolders)`
 - `validateMarriedAndNumberOfHolders(married, numberOfHolders)`

@@ -1,6 +1,6 @@
 # Recibos Verdes
 
-A biblioteca fornece utilitários específicos para processar e analisar as exportações oficiais em CSV dos recibos verdes do **Portal das Finanças**.
+Utilitários para processar e analisar exportações CSV do **Portal das Finanças** (SIRE).
 
 Para obter o ficheiro CSV, os trabalhadores independentes devem aceder ao Portal das Finanças através [desta ligação](https://irs.portaldasfinancas.gov.pt/recibos/portal/consultar) (área de consulta de recibos verdes). No final da página (ou numa das opções), clique no botão para **exportar os dados** (CSV), de modo a extrair todas as faturas-recibo e recibos para o seu computador.
 ## Analisar o CSV (Parse)
@@ -47,7 +47,7 @@ console.log(formatedReceipts[0].valorTributavel); // 3000 (Número em formato pa
 
 ## Calcular Estatísticas Anuais
 
-Se quiser gerar um resumo anual ou estatísticas por cliente (por exemplo, qual o cliente que gerou mais receita num determinado ano), pode usar a função `computeGreenReceiptsAnnualStats`. Esta função devolve um mapa com agregações por ano e detalhes cliente a cliente.
+Use `computeGreenReceiptsAnnualStats` para agregar os recibos num resumo anual, agrupado por ano e com distribuição por cliente.
 
 ```typescript
 import { computeGreenReceiptsAnnualStats } from 'saldo';
@@ -65,9 +65,7 @@ console.log(stats2025?.byClient);
 
 ## Efetuar Análise de Impostos
 
-Através das estatísticas da faturação anual, é possível estimar o impacto do **IRS** e da **Segurança Social** num cenário real (ex.: prever se será necessário pagar imposto no ato da entrega da declaração e quanto se espera de contribuição mensal para a SS).
-
-Pode utilizar a função `analyzeGreenReceiptTaxes`. Por defeito, a simulação pressupõe os coeficientes standard de tributação sem benefícios anuais de início de atividade.
+Use `analyzeGreenReceiptTaxes` para estimar o IRS e a Segurança Social com base nas estatísticas anuais. Compara o IRS já retido na fonte com o estimado para determinar o delta (reembolso ou pagamento adicional).
 
 ```typescript
 import { analyzeGreenReceiptTaxes } from 'saldo';

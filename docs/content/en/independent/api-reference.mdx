@@ -131,19 +131,19 @@ console.log(\`Net income: €\${result.netIncome.year.toFixed(2)}\`);`} />
 
 ## Green Receipts
 
-A suite of utility functions designed to parse and analyze official "Recibos Verdes" (Green Receipts) CSV exports from the Portuguese *Portal das Finanças* (SIRE).
+A suite of utilities to parse and analyze CSV exports of green receipts ("Recibos Verdes") from the *Portal das Finanças* (SIRE).
 
 ### `parseGreenReceiptsCsv(content)`
-Parses the raw CSV string downloaded from SIRE into an array of weakly-typed strings (`GreenReceiptRawRow`) representing the table.
+Parses the raw CSV string from SIRE into an array of `GreenReceiptRawRow` objects.
 
 ### `toGreenReceipt(rawRow)`
-Transforms a raw comma-separated row into a strictly-typed `GreenReceipt`, automatically converting Portuguese-formatted numbers (e.g., `"3.945,51"`) to native JavaScript numbers and standardising dates.
+Converts a raw row into a typed `GreenReceipt`, parsing Portuguese-formatted numbers (e.g., `"3.945,51"`) and standardizing dates.
 
 ### `computeGreenReceiptsAnnualStats(receipts)`
-Aggregates an array of `GreenReceipt` objects into detailed annual statistics (`GreenReceiptAnnualStats`), grouped by year. This automatically calculates total VAT, IRS withheld, and provides a per-client financial breakdown.
+Aggregates receipts into annual stats (`GreenReceiptAnnualStats`), grouped by year, with total VAT, IRS withheld, and a per-client breakdown.
 
 ### `analyzeGreenReceiptTaxes(stats)`
-Feeds an annual statistics object into `simulateIndependentWorker` to generate a `GreenReceiptTaxAnalysis`. It estimates the total IRS and Social Security due, comparing it against the IRS already withheld by your clients to determine your final tax delta (refund or additional payment).
+Feeds annual stats into `simulateIndependentWorker` to produce a `GreenReceiptTaxAnalysis` with estimated IRS and SS, compared against IRS already withheld.
 
 <RunCode defaultCode={`// 1. You receive the CSV content:
 const csvContent = "...";

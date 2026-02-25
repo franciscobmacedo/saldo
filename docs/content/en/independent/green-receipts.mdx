@@ -1,6 +1,6 @@
 # Green Receipts
 
-The library provides dedicated utilities to process and analyze official CSV exports of green receipts ("Recibos Verdes") from the **Portal das Finanças** (Portuguese Tax Authority Portal).
+Utilities to parse and analyze CSV exports from the Portuguese **Portal das Finanças** (SIRE).
 
 To get the CSV file, independent workers must access the Portal das Finanças via [this link](https://irs.portaldasfinancas.gov.pt/recibos/portal/consultar) (green receipts consultation area). Once there, you will find an **export button** that allows you to download all the invoices and receipts as a CSV file to your computer.
 ## Parse the CSV
@@ -33,9 +33,9 @@ const rawRows = parseGreenReceiptsCsv(csvContent);
 console.log(rawRows[0].valorTributavel); // "3.000" (It is still a string here)
 ```
 
-## Formating the Data
+## Formatting the Data
 
-Numbers and dates from the Portal das Finanças have their own formatting rules (e.g., using "3.000" instead of `3000`). You map the raw rows to well-structured `GreenReceipt` objects using the `toGreenReceipt` function.
+Numbers and dates in Portal das Finanças exports use a custom format (e.g., `"3.000"` instead of `3000`). Use `toGreenReceipt` to map raw rows to typed `GreenReceipt` objects.
 
 ```typescript
 import { toGreenReceipt } from 'saldo';
@@ -47,7 +47,7 @@ console.log(formatedReceipts[0].valorTributavel); // 3000 (A standard number is 
 
 ## Calculating Annual Statistics
 
-If you want to generate a yearly summary or per-client statistics (for example, to see which client brought in the most income that year), you can use the `computeGreenReceiptsAnnualStats` function. It returns a map with grouped data for each year, alongside a client activity breakdown.
+Use `computeGreenReceiptsAnnualStats` to aggregate receipts into a yearly summary, grouped by year and with a per-client breakdown.
 
 ```typescript
 import { computeGreenReceiptsAnnualStats } from 'saldo';
@@ -65,9 +65,7 @@ console.log(stats2025?.byClient);
 
 ## Performing Tax Analysis
 
-Based on the actual income statistics, it is possible to estimate the burden of **IRS** (Income Tax) and **Social Security** (SS) within a robust scenario (e.g., to foresee if you owe tax adjustments by the end of the year, or to estimate SS monthly contributions).
-
-You can use `analyzeGreenReceiptTaxes`. By default, this evaluation uses standard taxation coefficients without initial-year reduction benefits.
+Use `analyzeGreenReceiptTaxes` to estimate IRS and Social Security based on the annual stats. It compares IRS already withheld against the estimated total to determine the delta (refund or additional payment).
 
 ```typescript
 import { analyzeGreenReceiptTaxes } from 'saldo';
