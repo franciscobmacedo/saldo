@@ -65,16 +65,23 @@ console.log(stats2025?.byClient);
 
 ## Efetuar Análise de Impostos
 
-Use `analyzeGreenReceiptTaxes` para estimar o IRS e a Segurança Social com base nas estatísticas anuais. Compara o IRS já retido na fonte com o estimado para determinar o delta (reembolso ou pagamento adicional).
+Use \`simulateFromGreenReceiptsCsv\` para analisar um ficheiro CSV e correr uma simulação completa para um ano específico diretamente. Esta função mapeia os recibos para os seus respetivos meses com precisão, tirando partido das retenções reais sempre que as mesmas estiverem disponíveis. Tem ainda a capacidade de analisar de forma automática o 4º trimestre do ano passado e tirar a média, desde que os recibos se encontrem no ficheiro CSV, por forma a garantir a avaliação precisa da Segurança Social devida no 1º trimestre corrente.
 
-```typescript
-import { analyzeGreenReceiptTaxes } from 'saldo';
+\`\`\`typescript
+import { simulateFromGreenReceiptsCsv } from 'saldo';
+import * as fs from 'fs';
 
-const taxAnalysis = analyzeGreenReceiptTaxes(stats2025);
+const csvContent = fs.readFileSync('dados-ficticios.csv', 'utf8');
 
-console.log(`IRS estimado total a pagar no ano: ${taxAnalysis.irsEstimatedTotal}€`);
-console.log(`Rendimento retido na fonte pela entidade: ${taxAnalysis.irsAlreadyWithheld}€`);
-console.log(`Ajuste de IRS (Receber/Pagar): ${taxAnalysis.irsDeltaType} -> ${taxAnalysis.irsDelta}€`);
+// A simulação inclui todas as regras aplicáveis de SS, impostos e de escalões
+const result = simulateFromGreenReceiptsCsv({
+  csvContent,
+  currentTaxRankYear: 2025,
+  expenses: 0, // Os parâmetros do simulador aplicam-se
+});
 
-console.log(`Mensalidade SS estimada: ${taxAnalysis.ssMonthlyContribution}€`);
-```
+console.log(\`IRS final estimado a pagar: \${result.irsPay.year.toFixed(2)}€\`);
+console.log(\`Segurança Social final estimada: \${result.ssPay.year.toFixed(2)}€\`);
+console.log(\`Rendimento líquido: \${result.netIncome.year.toFixed(2)}€\`);
+console.log(\`SS de Janeiro é aproximada? \${result.ssQ1Approximated}\`);
+\`\`\`

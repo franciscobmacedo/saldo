@@ -146,29 +146,22 @@ Transforma uma linha da tabela num `GreenReceipt` tipificado, convertendo automa
 ### `computeGreenReceiptsAnnualStats(receipts)`
 Agrega um array de `GreenReceipt` em estatísticas anuais detalhadas (`GreenReceiptAnnualStats`), agrupadas por ano. Calcula automaticamente o IVA total, IRS retido e fornece um detalhe financeiro por cliente.
 
-### `analyzeGreenReceiptTaxes(stats)`
-Passa um objeto de estatísticas anuais para o `simulateIndependentWorker` para gerar uma análise `GreenReceiptTaxAnalysis`. Estima o total de IRS e Segurança Social a pagar, comparando-o com o IRS já retido na fonte pelos seus clientes para determinar o diferencial final (reembolso ou pagamento adicional de IRS).
+### `simulateFromGreenReceiptsCsv(options)`
+Lê os dados CSV e executa diretamente o simulador \`simulateIndependentWorker\`, colocando as faturas nos seus respetivos meses de acordo com a predefinição para \`currentTaxRankYear\`. Se o CSV detiver documentos provenientes do 4º trimestre do ano passado (Ou, Nov e Dez), tira a devida média deles para definir automaticamente o \`previousYearQ4MonthlyIncome\`.
 
 <RunCode defaultCode={`// 1. Conteúdo original do CSV:
 const csvContent = "...";
 
-// 2. Analisar no formato exportado pelas Finanças:
-const rawRows = parseGreenReceiptsCsv(csvContent);
+// 2. Analisar do formato exportado das Finanças e correr simulador:
+const result = simulateFromGreenReceiptsCsv({
+  csvContent, 
+  currentTaxRankYear: 2025,
+  expenses: 500, // Envie qualquer atributo regular da simulação
+});
 
-// 3. Mapear para objetos tipificados:
-const receipts = rawRows.map(toGreenReceipt);
-
-// 4. Agregar por ano:
-const annualStatsMap = computeGreenReceiptsAnnualStats(receipts);
-
-// 5. Obter análise fiscal para o ano 2025:
-const stats2025 = annualStatsMap.get(2025);
-if (stats2025) {
-  const analysis = analyzeGreenReceiptTaxes(stats2025);
-  console.log(\`IRS final estimado: €\${analysis.irsEstimatedTotal.toFixed(2)}\`);
-  console.log(\`Já Retido: €\${analysis.irsAlreadyWithheld.toFixed(2)}\`);
-  console.log(\`Diferencial (\${analysis.irsDeltaType}): €\${Math.abs(analysis.irsDelta).toFixed(2)}\`);
-}`} />
+console.log(\`Rendimento líquido final: €\${result.netIncome.year.toFixed(2)}\`);
+console.log(\`SS de Janeiro estimada? \${result.ssQ1Approximated}\`);
+console.log(\`IRS a Pagar: €\${result.irsPay.year.toFixed(2)}\`);`} />
 
 ## Tipos e Enums
 

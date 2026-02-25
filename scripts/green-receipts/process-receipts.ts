@@ -17,7 +17,8 @@ import {
     parseGreenReceiptsCsv,
     toGreenReceipt,
     computeGreenReceiptsAnnualStats,
-    analyzeGreenReceiptTaxes,
+    simulateIndependentWorker,
+    FrequencyChoices,
     GreenReceipt,
     GreenReceiptAnnualStats
 } from "../../src";
@@ -217,29 +218,40 @@ function printReport(allStats: Map<number, GreenReceiptAnnualStats>, cancelled: 
 // ---------------------------------------------------------------------------
 
 /**
- * Runs analyzeGreenReceiptTaxes and prints:
+ * Runs simulateIndependentWorker and prints:
  *  - IRS total owed vs. already withheld at source → still to pay / to receive
  *  - Social Security annual contribution
  */
 function printTaxAnalysis(stats: GreenReceiptAnnualStats, separator: string, doubleSep: string) {
-    const analysis = analyzeGreenReceiptTaxes(stats);
+    const sim = simulateIndependentWorker({
+        income: stats.grossIncome,
+        incomeFrequency: FrequencyChoices.Year,
+        currentTaxRankYear: stats.year as any,
+        expenses: 0,
+        rnh: false,
+        benefitsOfYouthIrs: false,
+    });
 
-    const {
-        grossIncome,
-        taxableIncome,
-        marginalRatePercentage,
-        averageRatePercentage,
-        irsEstimatedTotal,
-        irsAlreadyWithheld,
-        irsDelta,
-        irsDeltaType,
-        ssBaseIncidenceMonthly,
-        ssMonthlyContribution,
-        ssAnnualTotal,
-        totalBurden,
-        totalBurdenPercentage,
-        netIncome
-    } = analysis;
+    const irsEstimatedTotal = sim.irsPay.year;
+    const irsAlreadyWithheld = stats.totalIRSWithheld;
+    const irsDelta = irsAlreadyWithheld - irsEstimatedTotal;
+
+    let irsDeltaType: "refund" | "pay" | "none" = "none";
+    if (irsDelta > 0) irsDeltaType = "refund";
+    if (irsDelta < 0) irsDeltaType = "pay";
+
+    const ssBaseIncidenceMonthly = (stats.grossIncome / 12) * 0.7;
+    const ssMonthlyContribution = sim.ssPay.month;
+    const ssAnnualTotal = sim.ssPay.year;
+
+    const totalBurden = irsEstimatedTotal + ssAnnualTotal;
+    const totalBurdenPercentage = stats.grossIncome > 0 ? (totalBurden / stats.grossIncome) * 100 : 0;
+    const netIncome = stats.grossIncome - totalBurden;
+
+    const grossIncome = stats.grossIncome;
+    const taxableIncome = sim.taxableIncome;
+    const marginalRatePercentage = sim.taxRank.normalTax * 100;
+    const averageRatePercentage = (sim.taxRank.averageTax ?? 0) * 100;
 
     console.log();
     console.log(doubleSep);

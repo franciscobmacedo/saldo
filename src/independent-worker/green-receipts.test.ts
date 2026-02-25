@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parsePortugueseNumber, parseDate, parseGreenReceiptsCsv, toGreenReceipt, computeGreenReceiptsAnnualStats, analyzeGreenReceiptTaxes } from "./green-receipts";
+import { parsePortugueseNumber, parseDate, parseGreenReceiptsCsv, toGreenReceipt, computeGreenReceiptsAnnualStats, simulateFromGreenReceiptsCsv } from "./green-receipts";
 import { GreenReceiptRawRow, GreenReceiptAnnualStats } from "./green-receipts-schema";
 
 describe("green-receipts module", () => {
@@ -124,36 +124,46 @@ FR ATSIRE01FR/27;Fatura-Recibo;JJMY9BJ7-27;Emitido;Pagamento dos bens ou dos ser
         });
     });
 
-    describe("analyzeGreenReceiptTaxes", () => {
-        it("calculates expected IRS and SS for a specific year's stats", () => {
-            const stats: GreenReceiptAnnualStats = {
-                year: 2024,
-                receiptCount: 5,
-                grossIncome: 45000,
-                totalIVACharged: 10350,
-                totalIRSWithheld: 7500,
-                totalReceived: 37500,
-                byClient: {}
-            };
+    describe("simulateFromGreenReceiptsCsv", () => {
+        it("calculates expected IRS and SS for a specific year from CSV content", () => {
+            const csv = `Referência;Tipo Documento;ATCUD;Situação;Data da Transação;Motivo Emissão;Data de Emissão;País do Adquirente;NIF Adquirente;Nome do Adquirente;Valor Tributável (em euros);Valor do IVA (em euros);Imposto do Selo como Retenção na Fonte;Valor do Imposto do Selo (em euros);Valor do IRS (em euros);Total de Impostos (em euros);Total com Impostos (em euros);Total de Retenções na Fonte (em euros);Contribuição Cultura (em euros);Total do Documento (em euros)
+FR 1;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-01-15;2024-01-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 2;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-02-15;2024-02-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 3;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-03-15;2024-03-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 4;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-04-15;2024-04-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 5;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-05-15;2024-05-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 6;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-06-15;2024-06-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 7;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-07-15;2024-07-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 8;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-08-15;2024-08-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 9;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-09-15;2024-09-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 10;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-10-15;2024-10-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 11;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-11-15;2024-11-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125
+FR 12;Fatura-Recibo;JJMY;Emitido;Pagamento;2024-12-15;2024-12-15;PORTUGAL;123;Client A;3.750;862,50;;0;625;;4.612,50;625;0;3.125`;
 
-            const analysis = analyzeGreenReceiptTaxes(stats);
+            const result = simulateFromGreenReceiptsCsv({ csvContent: csv, currentTaxRankYear: 2024 });
 
-            // Taxable income is calculated by the simulator based on coefficients and expenses.
-            expect(analysis.taxableIncome).toBeGreaterThan(0);
+            expect(result.taxableIncome).toBeGreaterThan(0);
+            expect(result.irsPay.year).toBeGreaterThan(0);
 
-            // Since marginal and average rate are retrieved from the simulator
-            expect(analysis.marginalRatePercentage).toBeGreaterThan(0);
-            expect(analysis.irsEstimatedTotal).toBeGreaterThan(0);
+            expect(result.grossIncome.year).toBe(45000);
 
             // SS Base is 70% of 45000 / 12 = 2625
             // 21.4% of 2625 = 561.75
-            expect(analysis.ssBaseIncidenceMonthly).toBe(2625);
-            expect(analysis.ssMonthlyContribution).toBeCloseTo(561.75, 2);
-            expect(analysis.ssAnnualTotal).toBeCloseTo(561.75 * 12, 2);
+            expect((result.normalizedInternals.socialSecurity.baseMonthlyBeforeDiscountAndCap as number[])[4]).toBe(2625);
+            expect((result.normalizedInternals.socialSecurity.contributionMonthlyBeforeMinimum as number[])[4]).toBeCloseTo(561.75, 2);
+            expect(result.ssPay.year).toBeCloseTo(561.75 * 12, 2);
 
-            // Validate totals
-            expect(analysis.totalBurden).toBe(analysis.irsEstimatedTotal + analysis.ssAnnualTotal);
-            expect(analysis.netIncome).toBe(stats.grossIncome - analysis.totalBurden);
+            expect(result.netIncome.year).toBe(result.grossIncome.year - result.irsPay.year - result.ssPay.year);
+        });
+
+        it("averages Q4 receipts from previous year properly", () => {
+            const csv = `Referência;Tipo Documento;ATCUD;Situação;Data da Transação;Motivo Emissão;Data de Emissão;País do Adquirente;NIF Adquirente;Nome do Adquirente;Valor Tributável (em euros);Valor do IVA (em euros);Imposto do Selo como Retenção na Fonte;Valor do Imposto do Selo (em euros);Valor do IRS (em euros);Total de Impostos (em euros);Total com Impostos (em euros);Total de Retenções na Fonte (em euros);Contribuição Cultura (em euros);Total do Documento (em euros)
+FR 1;Fatura;JJ;Emitido;Pagamento;2023-10-15;2023-10-15;PT;12;Client A;1.500;0;;0;0;;1.500;0;0;1.500
+FR 2;Fatura;JJ;Emitido;Pagamento;2023-11-15;2023-11-15;PT;12;Client A;1.500;0;;0;0;;1.500;0;0;1.500`;
+            const result = simulateFromGreenReceiptsCsv({ csvContent: csv, currentTaxRankYear: 2024 });
+            // Total in previous Q4 = 3000. Average = 1000
+            expect(result.ssPay.year).toBeGreaterThan(0);
+            expect(result.ssQ1Approximated).toBe(false);
         });
     });
 });

@@ -1,6 +1,15 @@
-import { GreenReceiptRawRow, GreenReceipt, GreenReceiptAnnualStats, GreenReceiptTaxAnalysis } from "./green-receipts-schema";
+import { GreenReceiptRawRow, GreenReceipt, GreenReceiptAnnualStats } from "./green-receipts-schema";
 import { simulateIndependentWorker } from "./simulator";
-import { FrequencyChoices } from "./schemas";
+import { FrequencyChoices, SimulateIndependentWorkerOptions, IndependentWorkerResult, IndependentWorkerReceipt } from "./schemas";
+
+export interface SimulateFromGreenReceiptsCsvOptions extends Omit<SimulateIndependentWorkerOptions, "income" | "incomeFrequency" | "previousYearQ4MonthlyIncome"> {
+    csvContent: string;
+    /**
+     * The year for which the simulation takes place. We will filter the CSV receipts for this year 
+     * and construct the 12-month income array.
+     */
+    currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
+}
 
 /**
  * Parses a Portuguese-locale number string into a JavaScript number.
@@ -176,58 +185,60 @@ export function computeGreenReceiptsAnnualStats(receipts: GreenReceipt[]): Map<n
 }
 
 /**
- * Computes an estimated tax analysis (IRS and Social Security) for a given year's green receipts.
- * This estimate assumes coefficient 0.75 (no 1st/2nd year reduction), no expenses declared, no RNH.
- *
- * @param stats - The annual green receipt statistics to base the estimation on.
- * @returns A comprehensive tax analysis including IRS and Social Security estimates.
+ * Parses a green receipts CSV and runs a complete simulation for the specified target year.
+ * It maps receipts directly to the simulated year's 12 months.
+ * 
+ * If receipts from the preceding year's 4th quarter (Oct, Nov, Dec) are present in the CSV,
+ * they are automatically averaged to provide the `previousYearQ4MonthlyIncome` for a more accurate 
+ * Q1 Social Security estimation.
+ * 
+ * @param options - Simulation options without `income`, `incomeFrequency`, and `previousYearQ4MonthlyIncome`. Includes `csvContent`.
+ * @returns The full `IndependentWorkerResult`.
  */
-export function analyzeGreenReceiptTaxes(stats: GreenReceiptAnnualStats): GreenReceiptTaxAnalysis {
-    const grossIncome = stats.grossIncome;
-    const year = stats.year as 2023 | 2024 | 2025 | 2026;
-    const irsAlreadyWithheld = stats.totalIRSWithheld;
+export function simulateFromGreenReceiptsCsv({
+    csvContent,
+    currentTaxRankYear = 2024,
+    ...restParams
+}: SimulateFromGreenReceiptsCsvOptions): IndependentWorkerResult {
+    const rawRows = parseGreenReceiptsCsv(csvContent);
+    const receipts = rawRows.map(toGreenReceipt);
 
-    const sim = simulateIndependentWorker({
-        income: grossIncome,
+    const incomeMatrix: IndependentWorkerReceipt[][] = Array.from({ length: 12 }, () => []);
+
+    let q4Total = 0;
+    let q4ReceiptCount = 0;
+
+    for (const r of receipts) {
+        const year = r.dataTransacao.getFullYear();
+        const month = r.dataTransacao.getMonth();
+
+        // Include receipts for the target year
+        if (year === currentTaxRankYear) {
+            incomeMatrix[month].push({
+                income: r.valorTributavel,
+                // Only consider retention valid if the receipt has IRS withheld.
+                // We calculate the retention percentage based on the value 
+                // and pass it directly to be simulated.
+                retention: r.valorTributavel > 0 ? r.valorIRS / r.valorTributavel : 0
+            });
+        }
+        // Accumulate data for the previous year's Q4 (Oct, Nov, Dec)
+        else if (year === currentTaxRankYear - 1 && month >= 9 && month <= 11) {
+            q4Total += r.valorTributavel;
+            q4ReceiptCount++;
+        }
+    }
+
+    const hasPreviousYearQ4 = q4ReceiptCount > 0;
+    // Average over the 3 months of Q4 if any data exists. 
+    // Example: If user earned 3000 in Q4 total across 1 or 3 receipts, the average monthly income for Q4 is 1000.
+    const previousYearQ4MonthlyIncome = hasPreviousYearQ4 ? q4Total / 3 : undefined;
+
+    return simulateIndependentWorker({
+        ...restParams,
+        income: incomeMatrix,
         incomeFrequency: FrequencyChoices.Year,
-        currentTaxRankYear: year,
-        // Standard coefficient (0.75)
-        expenses: 0,
-        rnh: false,
-        benefitsOfYouthIrs: false,
+        currentTaxRankYear,
+        previousYearQ4MonthlyIncome,
     });
-
-    const irsEstimatedTotal = sim.irsPay.year;
-    const irsDelta = irsAlreadyWithheld - irsEstimatedTotal;
-
-    let irsDeltaType: "refund" | "pay" | "none" = "none";
-    if (irsDelta > 0) irsDeltaType = "refund";
-    if (irsDelta < 0) irsDeltaType = "pay";
-
-    const ssAnnualTotal = sim.ssPay.year;
-    const ssMonthlyContribution = sim.ssPay.month;
-    const ssBaseIncidenceMonthly = (grossIncome / 12) * 0.7;
-
-    const totalBurden = irsEstimatedTotal + ssAnnualTotal;
-    const netIncome = grossIncome - totalBurden;
-
-    return {
-        grossIncome,
-        taxableIncome: sim.taxableIncome,
-        marginalRatePercentage: sim.taxRank.normalTax * 100,
-        averageRatePercentage: (sim.taxRank.averageTax ?? 0) * 100,
-
-        irsEstimatedTotal,
-        irsAlreadyWithheld,
-        irsDelta,
-        irsDeltaType,
-
-        ssBaseIncidenceMonthly,
-        ssMonthlyContribution,
-        ssAnnualTotal,
-
-        totalBurden,
-        totalBurdenPercentage: grossIncome > 0 ? (totalBurden / grossIncome) * 100 : 0,
-        netIncome,
-    };
 }
