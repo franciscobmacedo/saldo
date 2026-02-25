@@ -7,6 +7,9 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "bin": {
+    "saldo": "./dist/cli.js"
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -21,7 +24,7 @@
   ],
   "scripts": {
     "test": "vitest",
-    "build": "tsc && tsc-alias",
+    "build": "tsc && tsc-alias && esbuild src/cli.ts --bundle --platform=node --outfile=dist/cli.js --packages=external",
     "dev": "tsx src/index.ts",
     "saldo:docs": "pnpm build && cd docs && pnpm install && pnpm dev",
     "compare:dependent": "tsx scripts/dependent-worker/index.ts",
@@ -45,6 +48,7 @@
     "@types/cli-progress": "^3.11.6",
     "@types/node": "^22.15.17",
     "cli-progress": "^3.12.0",
+    "esbuild": "^0.27.3",
     "playwright": "^1.55.0",
     "tsc-alias": "^1.8.10",
     "tsconfig-paths": "^4.2.0",
@@ -53,5 +57,8 @@
     "vite": "^6.3.5",
     "vitest": "^3.1.3",
     "xlsx": "^0.18.5"
+  },
+  "dependencies": {
+    "commander": "^14.0.3"
   }
 }

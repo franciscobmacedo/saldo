@@ -10,7 +10,18 @@ npm install saldo
 pnpm add saldo
 ```
 
-## Início Rápido
+## Início Rápido (CLI)
+
+Pode executar cálculos de trabalhador independente diretamente do terminal se instalar o pacote globalmente:
+
+```bash
+saldo independent --income 30000 --expenses 2000 --benefits-of-youth-irs
+
+# Ou para processar os Recibos Verdes diretamente:
+saldo independent-csv --csv path/to/receipts.csv
+```
+
+## Início Rápido (Biblioteca)
 
 <RunCode defaultCode={`
 const result = simulateIndependentWorker({

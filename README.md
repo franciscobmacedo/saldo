@@ -27,7 +27,25 @@ npm install saldo
 yarn add saldo
 ```
 
-## 🚀 Quick Start
+## 🚀 Quick Start (CLI)
+
+You can use saldo directly from your terminal after installing it globally:
+
+```bash
+# Global installation for CLI usage
+pnpm install -g saldo
+
+# Dependent worker
+saldo dependent --year 2025 --income 1500 --twelfths 2
+
+# Independent worker
+saldo independent --income 30000 --expenses 2500 --benefits-of-youth-irs
+
+# Parse and simulate directly from a Green Receipts CSV
+saldo independent-csv --csv path/to/receipts.csv
+```
+
+## 🚀 Quick Start (Library)
 
 ```typescript
 import {
