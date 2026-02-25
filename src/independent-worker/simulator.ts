@@ -88,11 +88,12 @@ const resolveAverageRate = (taxRank: TaxRank, taxRanks: TaxRank[]): number => {
 };
 
 interface BuildNormalizedInternalsOptions {
-  inputIncome: number;
+  inputIncome: number | number[];
   inputFrequency: FrequencyChoices;
   yearBusinessDays: number;
   nrDaysOff: number;
   grossIncome: CurrencyByFrequency;
+  monthlyIncomes: number[];
   ssTax: number;
   ssDiscount: number;
   maxSsIncome: number;
@@ -115,6 +116,7 @@ const buildNormalizedInternals = ({
   yearBusinessDays,
   nrDaysOff,
   grossIncome,
+  monthlyIncomes,
   ssTax,
   ssDiscount,
   maxSsIncome,
@@ -132,23 +134,44 @@ const buildNormalizedInternals = ({
 }: BuildNormalizedInternalsOptions): IndependentWorkerNormalizedInternals => {
   const effectiveBusinessDays = yearBusinessDays - nrDaysOff;
 
-  const ssBaseMonthlyBeforeDiscountAndCap = grossIncome.month * 0.7;
-  const ssBaseMonthlyAfterDiscountBeforeCap =
-    ssBaseMonthlyBeforeDiscountAndCap * (1 + ssDiscount);
-  const ssBaseMonthlyAfterCap = Math.min(
-    maxSsIncome,
-    ssBaseMonthlyAfterDiscountBeforeCap
-  );
-  const ssContributionMonthlyBeforeMinimum = ssTax * ssBaseMonthlyAfterCap;
-  const ssContributionMonthlyAfterMinimum = workerWithinFirst12Months
-    ? 0
-    : Math.max(ssContributionMonthlyBeforeMinimum, 20);
-  const ssContributionAnnualAfterMinimum = workerWithinFirst12Months
-    ? 0
-    : Math.max(12 * ssContributionMonthlyBeforeMinimum, 20 * 12);
-  const minimumContributionApplied =
-    !workerWithinFirst12Months &&
-    ssContributionMonthlyAfterMinimum > ssContributionMonthlyBeforeMinimum;
+  const isVariable = Array.isArray(inputIncome);
+
+  const getSsBaseMonthlyBeforeDiscountAndCap = (): number | number[] => {
+    if (!isVariable) return grossIncome.month * 0.7;
+    return monthlyIncomes.map(m => m * 0.7);
+  };
+  const getSsBaseMonthlyAfterDiscountBeforeCap = (beforeCap: number | number[]): number | number[] => {
+    if (!isVariable) return (beforeCap as number) * (1 + ssDiscount);
+    return (beforeCap as number[]).map(m => m * (1 + ssDiscount));
+  };
+  const getSsBaseMonthlyAfterCap = (beforeCap: number | number[]): number | number[] => {
+    if (!isVariable) return Math.min(maxSsIncome, (beforeCap as number));
+    return (beforeCap as number[]).map(m => Math.min(maxSsIncome, m));
+  };
+  const getSsContributionMonthlyBeforeMinimum = (afterCap: number | number[]): number | number[] => {
+    if (!isVariable) return ssTax * (afterCap as number);
+    return (afterCap as number[]).map(m => ssTax * m);
+  };
+  const getSsContributionMonthlyAfterMinimum = (beforeMin: number | number[]): number | number[] => {
+    if (!isVariable) return workerWithinFirst12Months ? 0 : Math.max(beforeMin as number, 20);
+    return (beforeMin as number[]).map(m => workerWithinFirst12Months ? 0 : Math.max(m, 20));
+  };
+
+  const ssBaseMonthlyBeforeDiscountAndCap = getSsBaseMonthlyBeforeDiscountAndCap();
+  const ssBaseMonthlyAfterDiscountBeforeCap = getSsBaseMonthlyAfterDiscountBeforeCap(ssBaseMonthlyBeforeDiscountAndCap);
+  const ssBaseMonthlyAfterCap = getSsBaseMonthlyAfterCap(ssBaseMonthlyAfterDiscountBeforeCap);
+  const ssContributionMonthlyBeforeMinimum = getSsContributionMonthlyBeforeMinimum(ssBaseMonthlyAfterCap);
+  const ssContributionMonthlyAfterMinimum = getSsContributionMonthlyAfterMinimum(ssContributionMonthlyBeforeMinimum);
+
+  const ssContributionAnnualAfterMinimum = isVariable
+    ? (ssContributionMonthlyAfterMinimum as number[]).reduce((a, b) => a + b, 0)
+    : workerWithinFirst12Months
+      ? 0
+      : Math.max(12 * (ssContributionMonthlyBeforeMinimum as number), 20 * 12);
+
+  const minimumContributionApplied = isVariable
+    ? !workerWithinFirst12Months && (ssContributionMonthlyAfterMinimum as number[]).some((m, idx) => m > (ssContributionMonthlyBeforeMinimum as number[])[idx])
+    : !workerWithinFirst12Months && (ssContributionMonthlyAfterMinimum as number) > (ssContributionMonthlyBeforeMinimum as number);
 
   const coefficientApplied = resolveTaxableCoefficient(
     workerWithinFirstFinancialYear,
@@ -255,9 +278,12 @@ export function simulateIndependentWorker({
   const currentIas = IAS_PER_YEAR[currentTaxRankYear];
   const maxSsIncome = 12 * currentIas;
 
+  const isVariable = Array.isArray(income);
+  const monthlyIncomes = isVariable ? (income as number[]) : Array(12).fill(grossIncome.month);
+
   // Calculate social security payments
-  const ssPay = calculateSsPay(
-    grossIncome,
+  const { totals: ssPay, monthly: ssMonthlyList } = calculateSsPay(
+    monthlyIncomes,
     ssTax,
     ssDiscount,
     maxSsIncome,
@@ -322,6 +348,7 @@ export function simulateIndependentWorker({
     yearBusinessDays: resolvedYearBusinessDays,
     nrDaysOff,
     grossIncome,
+    monthlyIncomes,
     ssTax,
     ssDiscount,
     maxSsIncome,
@@ -337,12 +364,16 @@ export function simulateIndependentWorker({
     rnh,
     rnhTax,
   });
+  const netMonthly = isVariable
+    ? monthlyIncomes.map((mGross, idx) => mGross - irsPay.month - ssMonthlyList[idx])
+    : netIncome.month;
+
   const monthlyBreakdown = buildIndependentWorkerMonthlyBreakdown({
-    grossMonthly: grossIncome.month,
+    grossMonthly: isVariable ? monthlyIncomes : grossIncome.month,
     taxableIncomeAnnual: taxableIncome,
     irsMonthly: irsPay.month,
-    ssMonthly: ssPay.month,
-    netMonthly: netIncome.month,
+    ssMonthly: isVariable ? ssMonthlyList : ssPay.month,
+    netMonthly: netMonthly,
     marginalRate,
   });
 

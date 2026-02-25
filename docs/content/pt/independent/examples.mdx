@@ -54,3 +54,25 @@ const older = simulateIndependentWorker({
 console.log('=== Comparação de Isenção SS ===');
 console.log(\`Primeiros 12 meses SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
 console.log(\`Após isenção SS: €\${older.ssPay.year.toFixed(2)}\`);`} />
+
+## Rendimento mensal variável
+
+Quando o rendimento varia de mês para mês, é possível passar um array de 12 valores (um por mês). A Segurança Social é então calculada trimestralmente, com base no sistema português real de declarações trimestrais:
+- 1º Trimestre (Jan–Mar) média → SS de Mai, Jun, Jul
+- 2º Trimestre (Abr–Jun) média → SS de Ago, Set, Out
+- 3º Trimestre (Jul–Set) média → SS de Nov, Dez, Jan
+- 4º Trimestre (Out–Dez) média → SS de Fev, Mar, Abr
+
+<RunCode defaultCode={`const variable = simulateIndependentWorker({
+  income: [1200, 1800, 2400, 900, 1500, 3000, 2800, 3200, 1600, 1100, 2900, 4200],
+  expenses: 3000,
+});
+
+console.log('=== Rendimento Variável ===');
+console.log(\`Bruto Total (ano): €\${variable.grossIncome.year.toFixed(2)}\`);
+console.log(\`SS Estimada (ano): €\${variable.ssPay.year.toFixed(2)}\`);
+console.log(\`Rendimento Líquido (ano): €\${variable.netIncome.year.toFixed(2)}\`);
+console.log('Detalhe mensal de SS:');
+variable.monthlyBreakdown.forEach(m => {
+  console.log(\`  \${m.month}: SS €\${m.ssPay.toFixed(2)}, líquido €\${m.netIncome.toFixed(2)}\`);
+});`} />

@@ -19,11 +19,11 @@ export const MONTHS: IndependentMonthName[] = [
 ];
 
 interface BuildMonthlyBreakdownOptions {
-  grossMonthly: number;
+  grossMonthly: number | number[];
   taxableIncomeAnnual: number;
   irsMonthly: number;
-  ssMonthly: number;
-  netMonthly: number;
+  ssMonthly: number | number[];
+  netMonthly: number | number[];
   marginalRate: number;
 }
 
@@ -36,19 +36,28 @@ export function buildIndependentWorkerMonthlyBreakdown({
   marginalRate,
 }: BuildMonthlyBreakdownOptions): IndependentWorkerMonthlyBreakdownResult[] {
   const taxableIncomeMonthly = taxableIncomeAnnual / 12;
-  const totalTax = irsMonthly + ssMonthly;
-  const overallTaxBurden = grossMonthly === 0 ? 0 : totalTax / grossMonthly;
 
-  return MONTHS.map((month) => ({
-    month,
-    grossIncome: grossMonthly,
-    taxableIncome: taxableIncomeMonthly,
-    irsPay: irsMonthly,
-    ssPay: ssMonthly,
-    netIncome: netMonthly,
-    totalTax,
-    overallTaxBurden,
-    effectiveBracketRate: grossMonthly === 0 ? null : overallTaxBurden,
-    marginalRate,
-  }));
+  const getMonthVal = (val: number | number[], idx: number) =>
+    Array.isArray(val) ? val[idx] : val;
+
+  return MONTHS.map((month, idx) => {
+    const mGross = getMonthVal(grossMonthly, idx);
+    const mSS = getMonthVal(ssMonthly, idx);
+    const mNet = getMonthVal(netMonthly, idx);
+    const totalTax = irsMonthly + mSS;
+    const overallTaxBurden = mGross === 0 ? 0 : totalTax / mGross;
+
+    return {
+      month,
+      grossIncome: mGross,
+      taxableIncome: taxableIncomeMonthly,
+      irsPay: irsMonthly,
+      ssPay: mSS,
+      netIncome: mNet,
+      totalTax,
+      overallTaxBurden,
+      effectiveBracketRate: mGross === 0 ? null : overallTaxBurden,
+      marginalRate,
+    };
+  });
 }

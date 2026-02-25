@@ -1,7 +1,7 @@
-import { 
-  TaxRank, 
-  YouthIrs, 
-  CurrencyByFrequency, 
+import {
+  TaxRank,
+  YouthIrs,
+  CurrencyByFrequency,
   FrequencyChoices,
 } from "./schemas";
 import { TAX_RANKS } from "@/data/tax-ranks-data";
@@ -9,7 +9,7 @@ import { YOUTH_IRS } from "@/data/youth-irs-data";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
 
 export function calculateGrossIncome(
-  income: number,
+  income: number | number[],
   incomeFrequency: FrequencyChoices,
   nrDaysOff: number,
   yearBusinessDays: number
@@ -19,6 +19,13 @@ export function calculateGrossIncome(
     month: 0,
     day: 0,
   };
+
+  if (Array.isArray(income)) {
+    result.year = income.reduce((sum, val) => sum + val, 0);
+    result.month = result.year / 12; // Average monthly income
+    result.day = result.year / (yearBusinessDays - nrDaysOff);
+    return result;
+  }
 
   switch (incomeFrequency) {
     case FrequencyChoices.Year:
@@ -40,36 +47,49 @@ export function calculateGrossIncome(
 }
 
 export function calculateSsPay(
-  grossIncome: CurrencyByFrequency,
+  monthlyIncomes: number[],
   ssTax: number,
   ssDiscount: number,
   maxSsIncome: number,
   firstYearForSs: boolean,
   nrDaysOff: number,
   yearBusinessDays: number
-): CurrencyByFrequency {
+): { totals: CurrencyByFrequency; monthly: number[] } {
   if (firstYearForSs) {
-    
     return {
-      year: 0,
-      month: 0,
-      day: 0,
+      totals: { year: 0, month: 0, day: 0 },
+      monthly: Array(12).fill(0),
     };
   }
-  
-  // We first calculate 70% of the gross income, with the discount applied,
-  // then we compare it to the maximum SS income, and we take the minimum
-  const monthSS =
-    ssTax *
-    Math.min(
-      maxSsIncome,
-      grossIncome.month * 0.7 * (1 + ssDiscount),
-    );
-  const yearSSPay = Math.max(12 * monthSS, 20 * 12);
+
+  const q1Avg = (monthlyIncomes[0] + monthlyIncomes[1] + monthlyIncomes[2]) / 3;
+  const q2Avg = (monthlyIncomes[3] + monthlyIncomes[4] + monthlyIncomes[5]) / 3;
+  const q3Avg = (monthlyIncomes[6] + monthlyIncomes[7] + monthlyIncomes[8]) / 3;
+  const q4Avg = (monthlyIncomes[9] + monthlyIncomes[10] + monthlyIncomes[11]) / 3;
+
+  const calcMonthSS = (avg: number) => {
+    const base = avg * 0.7 * (1 + ssDiscount);
+    return Math.max(ssTax * Math.min(maxSsIncome, base), 20);
+  };
+
+  const q1SS = calcMonthSS(q1Avg);
+  const q2SS = calcMonthSS(q2Avg);
+  const q3SS = calcMonthSS(q3Avg);
+  const q4SS = calcMonthSS(q4Avg);
+
+  const monthly = [
+    q3SS, q4SS, q4SS, q4SS, q1SS, q1SS, q1SS, q2SS, q2SS, q2SS, q3SS, q3SS
+  ];
+
+  const yearSSPay = monthly.reduce((sum, val) => sum + val, 0);
+
   return {
-    year: yearSSPay,
-    month: Math.max(monthSS, 20),
-    day: yearSSPay / (yearBusinessDays - nrDaysOff),
+    totals: {
+      year: yearSSPay,
+      month: yearSSPay / 12,
+      day: yearSSPay / (yearBusinessDays - nrDaysOff),
+    },
+    monthly,
   };
 }
 
@@ -104,7 +124,7 @@ export function calculateTaxableIncome(
 
   return (
     (grossIncome.year - youthIrsDiscount) *
-      (firstYear ? 0.375 : secondYear ? 0.5625 : 0.75) +
+    (firstYear ? 0.375 : secondYear ? 0.5625 : 0.75) +
     expensesMissing
   );
 }
@@ -175,14 +195,14 @@ export function calculateIrsPay(
   } else {
     const taxIncomeAvg = calculateTaxIncomeAvg(taxRank, taxableIncome);
     const taxIncomeNormal = calculateTaxIncomeNormal(taxRank, taxableIncome);
-    
+
     // For the last bracket (averageTax is null), use previous bracket's averageTax
     let avgTax = taxRank.averageTax;
     if (avgTax === null) {
       const previousBracket = taxRanks.find(r => r.id === taxRank.id - 1);
       avgTax = previousBracket?.averageTax ?? 0;
     }
-    
+
     yearIRS = taxIncomeAvg * avgTax + taxIncomeNormal * taxRank.normalTax;
   }
 

@@ -1,15 +1,21 @@
-import { 
-  FrequencyChoices, 
+import {
+  FrequencyChoices,
 } from "./schemas";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
 
-export function validateIncome(income: number): void {
-  if (!Number.isFinite(income)) {
-    throw new Error("Income must be a valid number");
+export function validateIncome(income: number | number[]): void {
+  const incomes = Array.isArray(income) ? income : [income];
+  if (Array.isArray(income) && income.length !== 12) {
+    throw new Error("Income array must have exactly 12 elements");
   }
-  if (income <= 0) {
-    throw new Error("Income must be greater than 0");
-  }
+  incomes.forEach((val) => {
+    if (!Number.isFinite(val)) {
+      throw new Error("Income must be a valid number");
+    }
+    if (val < 0) {
+      throw new Error("Income must be greater than or equal to 0");
+    }
+  });
 }
 
 export function validateIncomeFrequency(frequency: FrequencyChoices): void {
@@ -101,7 +107,7 @@ export function validateRnhTax(rnhTax: number): void {
 }
 
 export function validateYearOfYouthIrs(
-  year: number, 
+  year: number,
   currentTaxRankYear: typeof SUPPORTED_TAX_RANK_YEARS[number]
 ): void {
   const validRange = currentTaxRankYear >= 2025 ? 10 : 5;

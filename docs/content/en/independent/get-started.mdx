@@ -58,7 +58,7 @@ interface IndependentWorkerResult {
 
 ## Key Parameters
 
-- **`income`** + **`incomeFrequency`**: `'year'` (default), `'month'`, or `'day'` (uses year-specific business days)
+- **`income`** + **`incomeFrequency`**: `'year'` (default), `'month'`, or `'day'` (uses year-specific business days). Alternatively, pass an **array of 12 numbers** (one per calendar month) for variable monthly income — in this case `incomeFrequency` is ignored and SS is calculated using quarterly averages.
 - **`yearBusinessDays`**: Optional override for the year business-day baseline
 - **`nrDaysOff`**: For daily frequency; must be an integer < `yearBusinessDays`
 - **`ssTax`**: Social security rate (default `0.214`) and **`ssDiscount`** range `-0.25..0.25`

@@ -1,6 +1,6 @@
 export enum FrequencyChoices {
   Year = "year",
-  Month = "month", 
+  Month = "month",
   Day = "day"
 }
 
@@ -53,17 +53,17 @@ export interface IndependentWorkerMonthlyBreakdownResult {
 export interface IndependentWorkerNormalizedInternals {
   effectiveBusinessDays: number;
   normalization: {
-    inputIncome: number;
+    inputIncome: number | number[];
     inputFrequency: FrequencyChoices;
     normalizedGrossIncome: CurrencyByFrequency;
   };
   socialSecurity: {
     firstYearExemptionApplied: boolean;
-    baseMonthlyBeforeDiscountAndCap: number;
-    baseMonthlyAfterDiscountBeforeCap: number;
-    baseMonthlyAfterCap: number;
-    contributionMonthlyBeforeMinimum: number;
-    contributionMonthlyAfterMinimum: number;
+    baseMonthlyBeforeDiscountAndCap: number | number[];
+    baseMonthlyAfterDiscountBeforeCap: number | number[];
+    baseMonthlyAfterCap: number | number[];
+    contributionMonthlyBeforeMinimum: number | number[];
+    contributionMonthlyAfterMinimum: number | number[];
     contributionAnnualAfterMinimum: number;
     minimumContributionApplied: boolean;
   };
@@ -112,7 +112,7 @@ export interface IndependentWorkerResult {
 }
 
 export interface SimulateIndependentWorkerOptions {
-  income: number;
+  income: number | number[];
   incomeFrequency?: FrequencyChoices;
   yearBusinessDays?: number;
   nrDaysOff?: number;

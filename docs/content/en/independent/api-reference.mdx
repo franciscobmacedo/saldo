@@ -12,7 +12,7 @@ Calculates Portuguese category B (independent worker) income with simplified reg
 
 ```typescript
 interface SimulateIndependentWorkerOptions {
-  income: number;
+  income: number | number[];
   incomeFrequency?: FrequencyChoices;
   nrDaysOff?: number;
   ssDiscount?: number;
@@ -30,7 +30,7 @@ interface SimulateIndependentWorkerOptions {
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `income` | `number` | **Required** | Gross income based on `incomeFrequency` |
+| `income` | `number \| number[]` | **Required** | Gross income based on `incomeFrequency`. Can be provided as an array of exactly 12 numbers for variable monthly income. |
 | `incomeFrequency` | `FrequencyChoices` | `"year"` | Frequency of the `income` (`"year"`, `"month"`, `"day"`) |
 | `yearBusinessDays` | `number` | year-specific | Optional override for the year business-day baseline |
 | `nrDaysOff` | `number` | `0` | Days off for daily frequency (integer, must be < `yearBusinessDays`) |
@@ -73,6 +73,7 @@ interface IndependentWorkerResult {
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
   monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
+  normalizedInternals: IndependentWorkerNormalizedInternals;
 }
 
 interface IndependentWorkerMonthlyBreakdownResult {
@@ -109,6 +110,7 @@ interface IndependentWorkerMonthlyBreakdownResult {
 | `rnh` / `rnhTax` | `boolean` / `number` | Indicates RNH flat rate usage |
 | `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Youth IRS inputs echoed back |
 | `monthlyBreakdown` | `IndependentWorkerMonthlyBreakdownResult[]` | Monthly breakdown with taxes and net income |
+| `normalizedInternals` | `IndependentWorkerNormalizedInternals` | Raw and intermediary calculation metrics (e.g. detailed SS outputs) |
 
 #### Example
 
@@ -266,3 +268,23 @@ console.log(\`First year taxable: €\${firstYear.taxableIncome.toFixed(2)}\`);
 console.log(\`Second year taxable: €\${secondYear.taxableIncome.toFixed(2)}\`);
 console.log(\`First year SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
 console.log(\`Second year SS: €\${secondYear.ssPay.year.toFixed(2)}\`);`} />
+
+### Variable Income and Social Security
+
+When supplying an array of exactly 12 numbers for `income`, the simulator processes income as variable across the year. The frequency field (`incomeFrequency`) is ignored, and Social Security is calculated on a quarterly basis, mirroring the real-world quarterly declarations:
+
+- **Q1 Income** (Jan, Feb, Mar) influences SS payments for May, June, July.
+- **Q2 Income** (Apr, May, Jun) influences SS payments for Aug, Sept, Oct.
+- **Q3 Income** (Jul, Aug, Sep) influences SS payments for Nov, Dec, Jan.
+- **Q4 Income** (Oct, Nov, Dec) influences SS payments for Feb, Mar, Apr.
+
+<RunCode defaultCode={`// Simulate fluctuating income over the year
+const variableEmployed = simulateIndependentWorker({
+  income: [1500, 1800, 2000, 1200, 1000, 2500, 3000, 3200, 1500, 1000, 2800, 4000],
+  expenses: 3000,
+});
+
+console.log('=== Variable Income SS Output ===');
+console.log(\`Estimated Annual IRS: €\${variableEmployed.irsPay.year.toFixed(2)}\`);
+console.log(\`Estimated Annual SS: €\${variableEmployed.ssPay.year.toFixed(2)}\`);
+console.log(\`Base Monthly Calculation (After Cap): [\${(variableEmployed.normalizedInternals.socialSecurity.baseMonthlyAfterCap as number[]).join(', ')}]\`);`} />

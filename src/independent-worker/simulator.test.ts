@@ -12,9 +12,9 @@ vi.mock("@/independent-worker/calculations", () => ({
     nrDaysOff: number,
     yearBusinessDays: number = 248
   ) => {
-    const year = frequency === FrequencyChoices.Year ? income : 
-                 frequency === FrequencyChoices.Month ? income * 12 :
-                 income * (yearBusinessDays - nrDaysOff);
+    const year = frequency === FrequencyChoices.Year ? income :
+      frequency === FrequencyChoices.Month ? income * 12 :
+        income * (yearBusinessDays - nrDaysOff);
     return {
       year,
       month: year / 12,
@@ -22,7 +22,7 @@ vi.mock("@/independent-worker/calculations", () => ({
     };
   }),
   calculateSsPay: vi.fn((
-    grossIncome: any,
+    monthlyIncomes: number[],
     ssTax: number,
     ssDiscount: number,
     maxSsIncome: number,
@@ -31,14 +31,19 @@ vi.mock("@/independent-worker/calculations", () => ({
     yearBusinessDays: number = 248
   ) => {
     if (ssFirstYear) {
-      return { year: 0, month: 0, day: 0 };
+      return { totals: { year: 0, month: 0, day: 0 }, monthly: Array(12).fill(0) };
     }
-    const monthSS = ssTax * Math.min(maxSsIncome, grossIncome.month * 0.7 * (1 + ssDiscount));
-    const yearSSPay = Math.max(12 * monthSS, 20 * 12);
+    const qAvg = monthlyIncomes[0]; // simplistic mock for tests
+    const monthSS = ssTax * Math.min(maxSsIncome, qAvg * 0.7 * (1 + ssDiscount));
+    const finalSS = Math.max(monthSS, 20);
+    const yearSSPay = 12 * finalSS;
     return {
-      year: yearSSPay,
-      month: Math.max(monthSS, 20),
-      day: yearSSPay / (yearBusinessDays - nrDaysOff)
+      totals: {
+        year: yearSSPay,
+        month: finalSS,
+        day: yearSSPay / (yearBusinessDays - nrDaysOff)
+      },
+      monthly: Array(12).fill(finalSS)
     };
   }),
   calculateSpecificDeductions: vi.fn((ssPay: any, grossIncome: any) => {
@@ -125,7 +130,7 @@ describe("simulateIndependentWorker", () => {
 
   it("should calculate for a basic scenario with defaults", () => {
     const result = simulateIndependentWorker({ income: baseIncome });
-    
+
     expect(result).toBeDefined();
     expect(result.grossIncome).toBeDefined();
     expect(result.grossIncome.year).toBe(baseIncome);
@@ -188,15 +193,15 @@ describe("simulateIndependentWorker", () => {
     );
 
     expect(
-      result.normalizedInternals.socialSecurity.baseMonthlyBeforeDiscountAndCap
+      result.normalizedInternals.socialSecurity.baseMonthlyBeforeDiscountAndCap as number
     ).toBeCloseTo(result.grossIncome.month * 0.7);
     expect(
-      result.normalizedInternals.socialSecurity.baseMonthlyAfterDiscountBeforeCap
+      result.normalizedInternals.socialSecurity.baseMonthlyAfterDiscountBeforeCap as number
     ).toBeCloseTo(result.grossIncome.month * 0.7 * 1.1);
     expect(
-      result.normalizedInternals.socialSecurity.contributionMonthlyBeforeMinimum
+      result.normalizedInternals.socialSecurity.contributionMonthlyBeforeMinimum as number
     ).toBeCloseTo(
-      result.normalizedInternals.socialSecurity.baseMonthlyAfterCap * result.ssTax
+      (result.normalizedInternals.socialSecurity.baseMonthlyAfterCap as number) * result.ssTax
     );
 
     expect(result.normalizedInternals.taxableIncome.coefficientApplied).toBe(0.75);
@@ -205,7 +210,7 @@ describe("simulateIndependentWorker", () => {
     ).toBeCloseTo(result.grossIncome.year - result.youthIrsDiscount);
     expect(
       result.normalizedInternals.taxableIncome.valueFromCoefficient +
-        result.normalizedInternals.taxableIncome.valueFromExpensesMissing
+      result.normalizedInternals.taxableIncome.valueFromExpensesMissing
     ).toBeCloseTo(result.taxableIncome);
   });
 
@@ -293,15 +298,15 @@ describe("simulateIndependentWorker", () => {
     expect(result.ssPay.day).toBe(0);
   });
 
-    it("should handle custom expenses", () => {
-      const customExpenses = 5000;
-      const result = simulateIndependentWorker({
-        income: baseIncome,
-        expenses: customExpenses,
-      });
-
-      expect(result.expenses).toBe(customExpenses);
+  it("should handle custom expenses", () => {
+    const customExpenses = 5000;
+    const result = simulateIndependentWorker({
+      income: baseIncome,
+      expenses: customExpenses,
     });
+
+    expect(result.expenses).toBe(customExpenses);
+  });
 
   it("should handle different tax years", () => {
     const result2023 = simulateIndependentWorker({
@@ -376,12 +381,12 @@ describe("simulateIndependentWorker", () => {
     expect(result.ssTax).toBe(0.25);
   });
 
-    it("should handle custom number of days off", () => {
-      const result = simulateIndependentWorker({
-        income: baseIncome,
-        nrDaysOff: 5,
-      });
-
-      expect(result).toBeDefined();
+  it("should handle custom number of days off", () => {
+    const result = simulateIndependentWorker({
+      income: baseIncome,
+      nrDaysOff: 5,
     });
+
+    expect(result).toBeDefined();
+  });
 });

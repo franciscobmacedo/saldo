@@ -12,7 +12,7 @@ Calcula o rendimento de categoria B (trabalhador independente) português com re
 
 ```typescript
 interface SimulateIndependentWorkerOptions {
-  income: number;
+  income: number | number[];
   incomeFrequency?: FrequencyChoices;
   nrDaysOff?: number;
   ssDiscount?: number;
@@ -30,7 +30,7 @@ interface SimulateIndependentWorkerOptions {
 
 | Parâmetro | Tipo | Predefinição | Descrição |
 |-----------|------|---------|-------------|
-| `income` | `number` | **Obrigatório** | Rendimento bruto baseado em `incomeFrequency` |
+| `income` | `number \| number[]` | **Obrigatório** | Rendimento bruto baseado em `incomeFrequency`. Pode ser um array com exatamente 12 números para rendimentos mensais variáveis. |
 | `incomeFrequency` | `FrequencyChoices` | `"year"` | Frequência do `income` (`"year"`, `"month"`, `"day"`) |
 | `yearBusinessDays` | `number` | específico do ano | Substituição opcional da base de dias úteis do ano |
 | `nrDaysOff` | `number` | `0` | Dias de folga para frequência diária (inteiro, deve ser < `yearBusinessDays`) |
@@ -73,6 +73,7 @@ interface IndependentWorkerResult {
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
   monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
+  normalizedInternals: IndependentWorkerNormalizedInternals;
 }
 
 interface IndependentWorkerMonthlyBreakdownResult {
@@ -109,6 +110,7 @@ interface IndependentWorkerMonthlyBreakdownResult {
 | `rnh` / `rnhTax` | `boolean` / `number` | Indica uso de taxa fixa RNH |
 | `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Entradas IRS de juventude ecoadas de volta |
 | `monthlyBreakdown` | `IndependentWorkerMonthlyBreakdownResult[]` | Detalhe mensal com impostos e rendimento líquido |
+| `normalizedInternals` | `IndependentWorkerNormalizedInternals` | Métricas brutas e de cálculo intermediárias (ex: detalhe de saídas da SS) |
 
 #### Exemplo
 
@@ -266,3 +268,22 @@ console.log(\`Primeiro ano tributável: €\${firstYear.taxableIncome.toFixed(2)
 console.log(\`Segundo ano tributável: €\${secondYear.taxableIncome.toFixed(2)}\`);
 console.log(\`Primeiro ano SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
 console.log(\`Segundo ano SS: €\${secondYear.ssPay.year.toFixed(2)}\`);`} />
+
+### Rendimento Variável e Segurança Social
+
+Ao fornecer um array de exatamente 12 números para `income`, o simulador processa o rendimento como variável ao longo do ano. O campo frequência (`incomeFrequency`) é ignorado, e a Segurança Social é unicamente calculada com base trimestral, espelhando as declarações trimestrais do mundo real:
+
+- **Rendimento do 1º Trimestre** (Jan, Fev, Mar) influencia os pagamentos à SS para Mai, Jun, Jul.
+- **Rendimento do 2º Trimestre** (Abr, Mai, Jun) influencia os pagamentos à SS para Ago, Set, Out.
+- **Rendimento do 3º Trimestre** (Jul, Ago, Set) influencia os pagamentos à SS para Nov, Dez, Jan.
+- **Rendimento do 4º Trimestre** (Out, Nov, Dez) influencia os pagamentos à SS para Fev, Mar, Abr.
+
+<RunCode defaultCode={`// Simular rendimento flutuante ao longo do ano
+const variableEmployed = simulateIndependentWorker({
+  income: [1500, 1800, 2000, 1200, 1000, 2500, 3000, 3200, 1500, 1000, 2800, 4000],
+  expenses: 3000,
+});
+
+console.log('=== Detalhe de SS com Rendimento Variável ===');
+console.log(\`SS Anual Estimada: €\${variableEmployed.ssPay.year.toFixed(2)}\`);
+console.log(\`Cálculo da Base Mensal (Após Limite Central): [\${(variableEmployed.normalizedInternals.socialSecurity.baseMonthlyAfterCap as number[]).join(', ')}]\`);`} />

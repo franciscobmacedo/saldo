@@ -25,9 +25,9 @@ describe("Independent Worker Validators", () => {
       expect(() => validateIncome(0.01)).not.toThrow();
     });
 
-    it("should throw for zero or negative income", () => {
-      expect(() => validateIncome(0)).toThrow("Income must be greater than 0");
-      expect(() => validateIncome(-100)).toThrow("Income must be greater than 0");
+    it("should allow zero but throw for negative income", () => {
+      expect(() => validateIncome(0)).not.toThrow();
+      expect(() => validateIncome(-100)).toThrow("Income must be greater than or equal to 0");
     });
 
     it("should throw for invalid numbers", () => {
@@ -124,7 +124,7 @@ describe("Independent Worker Validators", () => {
     });
   });
 
-  
+
 
   describe("validateMaxExpensesTax", () => {
     it("should pass for valid non-negative values", () => {

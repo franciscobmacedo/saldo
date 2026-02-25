@@ -54,3 +54,25 @@ const older = simulateIndependentWorker({
 console.log('=== SS Exemption Comparison ===');
 console.log(\`First 12 months SS: €\${firstYear.ssPay.year.toFixed(2)}\`);
 console.log(\`After exemption SS: €\${older.ssPay.year.toFixed(2)}\`);`} />
+
+## Variable monthly income
+
+When income varies month to month, pass an array of 12 values (one per month). Social Security is then calculated quarterly, based on the real-world Portuguese declaration system:
+- Q1 (Jan–Mar) avg → SS for May, Jun, Jul
+- Q2 (Apr–Jun) avg → SS for Aug, Sep, Oct
+- Q3 (Jul–Sep) avg → SS for Nov, Dec, Jan
+- Q4 (Oct–Dec) avg → SS for Feb, Mar, Apr
+
+<RunCode defaultCode={`const variable = simulateIndependentWorker({
+  income: [1200, 1800, 2400, 900, 1500, 3000, 2800, 3200, 1600, 1100, 2900, 4200],
+  expenses: 3000,
+});
+
+console.log('=== Variable Income ===');
+console.log(\`Total Gross (year): €\${variable.grossIncome.year.toFixed(2)}\`);
+console.log(\`Estimated SS (year): €\${variable.ssPay.year.toFixed(2)}\`);
+console.log(\`Net Income (year): €\${variable.netIncome.year.toFixed(2)}\`);
+console.log('Monthly SS breakdown:');
+variable.monthlyBreakdown.forEach(m => {
+  console.log(\`  \${m.month}: SS €\${m.ssPay.toFixed(2)}, net €\${m.netIncome.toFixed(2)}\`);
+});`} />

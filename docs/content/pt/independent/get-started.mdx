@@ -58,7 +58,7 @@ interface IndependentWorkerResult {
 
 ## Parâmetros Principais
 
-- **`income`** + **`incomeFrequency`**: `'year'` (predefinição), `'month'`, ou `'day'` (dias úteis do ano)
+- **`income`** + **`incomeFrequency`**: `'year'` (predefinição), `'month'`, ou `'day'` (dias úteis do ano). Em alternativa, pode passar um **array de 12 números** (um por mês do calendário) para rendimentos mensais variáveis — neste caso, `incomeFrequency` é ignorado e a SS é calculada com base em médias trimestrais.
 - **`yearBusinessDays`**: Substituição opcional da base dias úteis do ano
 - **`nrDaysOff`**: Para frequência diária; deve ser um inteiro < `yearBusinessDays`
 - **`ssTax`**: Taxa de segurança social (predefinição `0.214`) e **`ssDiscount`** intervalo `-0.25..0.25`
