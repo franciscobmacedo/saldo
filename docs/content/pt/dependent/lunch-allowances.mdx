@@ -1,15 +1,15 @@
 # Subsídios de Refeição
 
-Os subsídios de refeição são um benefício comum no emprego português. Compreender como são tributados é crucial para cálculos de salário precisos.
+Os subsídios de refeição (subsídio de alimentação) são um benefício comum no emprego português. Compreender como são tributados é crucial para cálculos precisos do salário.
 
 ## Visão Geral
 
 Os subsídios de refeição em Portugal têm tratamento fiscal específico:
-- **Porção isenta**: Até certos limites diários
-- **Porção tributável**: Valor que excede os limites
-- **Segurança Social**: Pode estar isenta dependendo do tipo
+- **Porção isenta**: Até determinados limites diários
+- **Porção tributável**: Montante que excede os limites
+- **Segurança social**: Pode ser isenta dependendo do tipo
 
-> O tratamento de subsídio de refeição faz parte do simulador de **trabalhador por conta de outrem**. Os cálculos de trabalhador independente seguem regras de regime simplificado sem entradas de subsídio de refeição.
+> O tratamento de subsídios de refeição faz parte do simulador de **trabalhador por conta de outrem**. Os cálculos de trabalhador independente seguem as regras do regime simplificado sem entradas de subsídio de refeição.
 
 ## Tipos de Subsídios de Refeição
 
@@ -18,30 +18,34 @@ Os subsídios de refeição em Portugal têm tratamento fiscal específico:
 Limite diário isento: **€10,20**
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.50,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22
 });
 
-console.log(\`Subsídio de refeição mensal: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Porção isenta: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Porção tributável: €\${result.lunchAllowance.taxable.toFixed(2)}\`);`} />
+const jan = result.monthlyBreakdown[0];
+console.log(\`Subsídio de refeição mensal: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Porção isenta: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Porção tributável: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);`} />
 
 ### Subsídio em Dinheiro (Em Dinheiro)
 
 Limite diário isento: **€6,00**
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 7.50,
   lunchAllowanceMode: "salary",
   lunchAllowanceDaysCount: 21
 });
 
-console.log(\`Subsídio de refeição mensal: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Porção isenta: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Porção tributável: €\${result.lunchAllowance.taxable.toFixed(2)}\`);`} />
+const jan = result.monthlyBreakdown[0];
+console.log(\`Subsídio de refeição mensal: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Porção isenta: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Porção tributável: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);`} />
 
 ## Parâmetros
 
@@ -50,6 +54,7 @@ Ao usar subsídios de refeição, pode especificar estes parâmetros:
 - **`lunchAllowanceDailyValue`**: Valor diário do subsídio em euros
 - **`lunchAllowanceMode`**: Tipo de subsídio (`"cupon"` ou `"salary"`)
 - **`lunchAllowanceDaysCount`**: Número de dias úteis por mês
+- **`includeLunchAllowanceInJune`**: Se junho recebe subsídio de refeição (predefinição `false`)
 
 ## Cenários Comuns
 
@@ -58,6 +63,7 @@ Ao usar subsídios de refeição, pode especificar estes parâmetros:
 Cenário mais comum com cartões de refeição abaixo do limite isento:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   lunchAllowanceDailyValue: 7.50,
   lunchAllowanceMode: "cupon",
@@ -65,17 +71,19 @@ Cenário mais comum com cartões de refeição abaixo do limite isento:
 });
 
 // Subsídio mensal: €165 (7.50 * 22)
-// Isento: €165 (totalmente isento pois está abaixo de €10,20/dia)
+// Isento: €165 (totalmente isento pois é inferior a €10,20/dia)
 // Tributável: €0
+const jan = result.monthlyBreakdown[0];
 console.log('=== Cartões de Refeição Padrão ===');
-console.log(\`Benefício líquido: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Total do subsídio: €\${result.lunchAllowance.gross.toFixed(2)}\`);`} />
+console.log(\`Benefício líquido: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Total do subsídio: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);`} />
 
 ### Cartões de Refeição de Alto Valor
 
 Cartões de refeição que excedem o limite isento:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   lunchAllowanceDailyValue: 12.00,
   lunchAllowanceMode: "cupon",
@@ -85,16 +93,18 @@ Cartões de refeição que excedem o limite isento:
 // Subsídio mensal: €264 (12.00 * 22)
 // Isento: €224,40 (10.20 * 22)
 // Tributável: €39,60 ((12.00 - 10.20) * 22)
+const jan = result.monthlyBreakdown[0];
 console.log('=== Cartões de Refeição de Alto Valor ===');
-console.log(\`Total do subsídio: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Porção tributável: €\${result.lunchAllowance.taxable.toFixed(2)}\`);
-console.log(\`Porção isenta: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);`} />
+console.log(\`Total do subsídio: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Porção tributável: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);
+console.log(\`Porção isenta: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);`} />
 
 ### Subsídio de Refeição em Dinheiro
 
 Subsídio em dinheiro com limite isento mais baixo:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.00,
   lunchAllowanceMode: "salary",
@@ -104,39 +114,42 @@ Subsídio em dinheiro com limite isento mais baixo:
 // Subsídio mensal: €168 (8.00 * 21)
 // Isento: €126 (6.00 * 21)
 // Tributável: €42 ((8.00 - 6.00) * 21)
+const jan = result.monthlyBreakdown[0];
 console.log('=== Subsídio de Refeição em Dinheiro ===');
-console.log(\`Porção isenta: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Porção tributável: €\${result.lunchAllowance.taxable.toFixed(2)}\`);`} />
+console.log(\`Porção isenta: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Porção tributável: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);`} />
 
 ### Sem Subsídio de Refeição
 
 Usando a predefinição (sem subsídio):
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500
-  // Nenhum parâmetro de subsídio de refeição especificado
+  // Sem parâmetros de subsídio de refeição especificados
 });
 
+const jan = result.monthlyBreakdown[0];
 console.log('=== Sem Subsídio de Refeição ===');
-console.log(\`Subsídio de refeição: €\${result.lunchAllowance.gross.toFixed(2)}\`); // €0`} />
+console.log(\`Subsídio de refeição: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`); // €0`} />
 
 ## Implicações Fiscais
 
-### Imposto sobre Rendimentos
+### Imposto sobre o Rendimento
 
 - **Porção isenta**: Não incluída no rendimento tributável
 - **Porção tributável**: Adicionada ao rendimento tributável mensal
-- **Impacto**: Subsídios totais mais altos podem empurrá-lo para escalões fiscais mais altos
+- **Impacto**: Subsídios totais mais elevados podem colocá-lo num escalão fiscal superior
 
 ### Segurança Social
 
-- **Cartões de refeição**: Geralmente isentos de contribuições de segurança social
-- **Subsídios em dinheiro**: Podem estar sujeitos a segurança social (depende da implementação)
+- **Cartões de refeição**: Geralmente isentos de contribuições para a segurança social
+- **Subsídios em dinheiro**: Podem estar sujeitos à segurança social (dependente da implementação)
 
 ## Considerações Regionais
 
-O tratamento fiscal do subsídio de refeição é geralmente consistente em:
-- Portugal Continental (continente)
+O tratamento fiscal dos subsídios de refeição é geralmente consistente em:
+- Portugal Continental (continent)
 - Açores (azores)  
 - Madeira (madeira)
 
@@ -144,48 +157,52 @@ No entanto, verifique sempre os regulamentos atuais, pois podem mudar.
 
 ## Boas Práticas
 
-### Para Funcionários
+### Para Trabalhadores
 
-1. **Compreenda o tipo de subsídio**: Cartões vs. dinheiro têm limites diferentes
-2. **Acompanhe valores diários**: Garanta que está dentro dos limites isentos
-3. **Considere a compensação total**: Equilibre salário base vs. subsídios
+1. **Compreenda o seu tipo de subsídio**: Os cartões vs. dinheiro têm limites diferentes
+2. **Acompanhe os valores diários**: Certifique-se de que está dentro dos limites isentos
+3. **Considere a remuneração total**: Equilibre o salário base vs. os subsídios
 
 ### Para Sistemas de Folha de Pagamento
 
-1. **Valide limites diários**: Garanta que os cálculos usam valores isentos corretos
-2. **Lide com meses parciais**: Ajuste a contagem de dias para feriados/ausências
+1. **Valide os limites diários**: Certifique-se de que os cálculos usam os valores corretos isentos
+2. **Gira meses parciais**: Ajuste a contagem de dias para férias/ausências
 3. **Mantenha-se atualizado**: Os limites isentos podem mudar anualmente
 
-## Cálculos de Exemplo
+## Exemplos de Cálculo
 
-### Cenário 1: Funcionário Padrão
+### Cenário 1: Trabalhador Padrão
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1400,
   lunchAllowanceDailyValue: 7.50,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22
 });
 
-console.log('=== Funcionário Padrão (formato Doutor Finanças) ===');
-console.log(\`Rendimento líquido: €\${result.net.base.toFixed(2)}\`);
-console.log(\`Subsídio de alimentação: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Salário líquido: €\${result.net.salary.toFixed(2)}\`);`} />
+const jan = result.monthlyBreakdown[0];
+console.log('=== Trabalhador Padrão ===');
+console.log(\`Rendimento Líquido Base: €\${jan.netIncome.fromBaseSalaryAmount.toFixed(2)}\`);
+console.log(\`Subsídio de Alimentação: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Salário Líquido Total: €\${jan.netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### Cenário 2: Alto Rendimento com Cartões Premium
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 3000,
   lunchAllowanceDailyValue: 15.00,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22
 });
 
+const jan = result.monthlyBreakdown[0];
 console.log('=== Alto Rendimento com Cartões Premium ===');
-console.log(\`Rendimento Tributável: €\${result.taxableIncome.toFixed(2)}\`); // €3.000 + porção tributável
-console.log(\`Subsídio de refeição - Total: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Subsídio de refeição - Tributável: €\${result.lunchAllowance.taxable.toFixed(2)}\`);
-console.log(\`Subsídio de refeição - Isento: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);`} />
+console.log(\`Rendimento Tributável: €\${jan.taxableIncomeForIrsCalculation.toFixed(2)}\`);
+console.log(\`Subsídio de refeição - Total: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Subsídio de refeição - Tributável: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);
+console.log(\`Subsídio de refeição - Isento: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);`} />
 
 ## Ferramenta de Comparação
 
@@ -193,11 +210,13 @@ Compare o impacto de diferentes configurações de subsídio de refeição:
 
 <RunCode defaultCode={`// Sem subsídio
 const noAllowance = simulateDependentWorker({
+  year: 2025,
   income: 1500
 });
 
 // Cartões padrão
 const withVouchers = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.0,
   lunchAllowanceMode: "cupon",
@@ -206,15 +225,16 @@ const withVouchers = simulateDependentWorker({
 
 // Subsídio em dinheiro
 const withCash = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.0,
   lunchAllowanceMode: "salary",
   lunchAllowanceDaysCount: 22
 });
 
-console.log('=== Comparação de Subsídios de Refeição ===');
-console.log(\`Sem subsídio - Líquido: €\${noAllowance.net.salary.toFixed(2)}\`);
-console.log(\`Com cartões - Líquido: €\${withVouchers.net.salary.toFixed(2)}\`);
-console.log(\`Com dinheiro - Líquido: €\${withCash.net.salary.toFixed(2)}\`);`} />
+console.log('=== Comparação de Subsídios de Refeição (Janeiro) ===');
+console.log(\`Sem subsídio - Líquido: €\${noAllowance.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Com cartões - Líquido: €\${withVouchers.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Com dinheiro - Líquido: €\${withCash.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
-Compreender os subsídios de refeição ajuda a otimizar a compensação total enquanto garante conformidade com os regulamentos fiscais portugueses.
+Compreender os subsídios de refeição ajuda a otimizar a remuneração total garantindo conformidade com os regulamentos fiscais portugueses.

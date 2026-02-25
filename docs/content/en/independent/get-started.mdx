@@ -58,10 +58,11 @@ interface IndependentWorkerResult {
 
 ## Key Parameters
 
-- **`income`** + **`incomeFrequency`**: `'year'` (default), `'month'`, or `'day'` (248 business days)
-- **`nrDaysOff`**: For daily frequency; must be an integer < 248
+- **`income`** + **`incomeFrequency`**: `'year'` (default), `'month'`, or `'day'` (uses year-specific business days)
+- **`yearBusinessDays`**: Optional override for the year business-day baseline
+- **`nrDaysOff`**: For daily frequency; must be an integer < `yearBusinessDays`
 - **`ssTax`**: Social security rate (default `0.214`) and **`ssDiscount`** range `-0.25..0.25`
-- **`currentTaxRankYear`**: `2023 | 2024 | 2025` IRS tables
+- **`currentTaxRankYear`**: `2023 | 2024 | 2025 | 2026` IRS tables
 - **`maxExpensesTax`**: Simplified regime percentage (default `15`)
 - **`expenses`**: Declared expenses (0 by default)
 - **`dateOfOpeningActivity`**: Determines first/second financial year factors and SS exemption in first 12 months

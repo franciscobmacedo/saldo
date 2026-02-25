@@ -54,8 +54,8 @@ importers:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
       saldo:
-        specifier: ^0.0.5
-        version: 0.0.5
+        specifier: ^1.0.0
+        version: 1.0.0
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -3291,8 +3291,8 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  saldo@0.0.5:
-    resolution: {integrity: sha512-9Vnc8TDKHFPufol9dD6Bo9YV6NUB/BgSqNfVTiNTifZ/D9+Efx6iSHG4nJgKVsN9oNdRJ1QB5Oa8elBavIdsVg==}
+  saldo@1.0.0:
+    resolution: {integrity: sha512-l8zLQcTiaTnxuDI/0DGdeAh2cExESI3uBY1MBT6GlOiGSLFue/HZ183XRuE/VIRpAsXM+N5oZzcz5OTiDbrTzA==}
 
   scheduler@0.26.0:
     resolution: {integrity: sha512-NlHwttCI/l5gCPR3D1nNXtWABUmBwvZpEQiD4IXSbIDq8BzLIK/7Ir5gTFSGZDUu37K5cMNp0hFtzO38sC7gWA==}
@@ -7705,7 +7705,7 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  saldo@0.0.5: {}
+  saldo@1.0.0: {}
 
   scheduler@0.26.0: {}
 

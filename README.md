@@ -37,14 +37,18 @@ import {
   FrequencyChoices,
 } from 'saldo';
 
-// Dependent worker (monthly income)
+// Dependent worker (monthly income, calculates full year breakdown)
 const dependent = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   twelfths: Twelfths.TWO_MONTHS,
   location: 'continent',
 });
 
-console.log(`Dependent Net Salary: €${dependent.netSalary.toFixed(2)}`);
+// Access per-month breakdown
+const january = dependent.monthlyBreakdown[0];
+console.log(`January Net: €${january.netIncome.totalAmount.toFixed(2)}`);
+console.log(`Annual Total Net: €${dependent.yearly.totalNetIncomeAmount.toFixed(2)}`);
 
 // Independent worker (annual income, simplified regime)
 const independent = simulateIndependentWorker({
@@ -65,6 +69,7 @@ console.log(`Independent Net Income (year): €${independent.netIncome.year.toFi
 ```typescript
 // Married household with dependents
 const married = simulateDependentWorker({
+  year: 2025,
   income: 2500,
   married: true,
   numberOfHolders: 2,
@@ -72,8 +77,11 @@ const married = simulateDependentWorker({
   location: "continent",
 });
 
+console.log(`Annual Net: €${married.yearly.totalNetIncomeAmount.toFixed(2)}`);
+
 // Worker with disability and meal vouchers
 const disabled = simulateDependentWorker({
+  year: 2025,
   income: 1800,
   disabled: true,
   partnerDisabled: true,
@@ -85,10 +93,10 @@ const disabled = simulateDependentWorker({
 
 // Azores with twelfths distributed
 const azores = simulateDependentWorker({
+  year: 2025,
   income: 1600,
   location: "azores",
   twelfths: Twelfths.TWO_MONTHS,
-  period: "2025-01-01_2025-07-31",
 });
 ```
 
@@ -124,6 +132,7 @@ const rnh = simulateIndependentWorker({
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `year` | `number` | **required** | Tax year (e.g. `2025`) |
 | `income` | `number` | **required** | Monthly gross income in EUR |
 | `married` | `boolean` | `false` | Marital status |
 | `disabled` | `boolean` | `false` | Worker disability status |
@@ -132,26 +141,39 @@ const rnh = simulateIndependentWorker({
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of disabled dependents |
-| `period` | `PeriodT` | `"2025-01-01_2025-07-31"` | Tax period |
-| `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
+| `socialSecurityContributionRate` | `number` | `0.11` | Social security contribution rate (11%) |
 | `twelfths` | `Twelfths` | `TWO_MONTHS` | Holiday bonus distribution |
 | `lunchAllowanceDailyValue` | `number` | `10.2` | Daily lunch allowance value |
 | `lunchAllowanceMode` | `"cupon" \| "salary"` | `"cupon"` | Lunch allowance type |
 | `lunchAllowanceDaysCount` | `number` | `22` | Monthly lunch allowance days |
+| `includeLunchAllowanceInJune` | `boolean` | `false` | Whether June includes lunch allowance |
+| `oneHalfMonthTwelfthsLumpSumMonth` | `"june" \| "december"` | `"december"` | Which month receives the ONE_HALF_MONTH lump sum |
 
 #### Returns: `DependentWorkerResult`
 
 ```typescript
 interface DependentWorkerResult {
-  taxableIncome: number;
-  tax: number;
-  socialSecurity: number;
-  socialSecurityTax: number;
-  gross: { monthly: number; yearly: number };
-  net: { base: number; salary: number; yearly: number };
-  lunchAllowance: LunchAllowanceResult;  // gross, net, taxable, taxFree
-  bracket: Bracket;
-  taxRetentionTable: TaxRetentionTable;
+  yearly: {
+    totalGrossIncomeAmount: number;      // Annual gross income
+    totalNetIncomeAmount: number;        // Annual net income
+    totalLunchAllowanceGrossAmount: number; // Annual lunch allowance
+  };
+  socialSecurityContributionRate: number; // SS rate applied
+  monthlyBreakdown: MonthlyBreakdownResult[]; // 12-entry array, one per month
+}
+
+// Each MonthlyBreakdownResult includes:
+interface MonthlyBreakdownResult {
+  month: MonthName;
+  period: PeriodT;
+  grossIncome: GrossIncomeAmountBreakdown;
+  irsWithholdingTax: IncomeComponentAmountBreakdown; // .totalAmount, .fromBaseSalaryAmount, ...
+  socialSecurityContribution: IncomeComponentAmountBreakdown;
+  netIncome: IncomeComponentAmountBreakdown; // .totalAmount is the monthly net
+  lunchAllowance: LunchAllowanceAmountBreakdown;
+  subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
+  bracket: BracketResult;
+  taxRetentionTable: TaxRetentionTableResult;
 }
 ```
 
@@ -163,7 +185,7 @@ Key parameters:
 - `yearBusinessDays`: Optional override for the year business-day baseline (ideal for UI customization)
 - `nrDaysOff`: Days off for daily calculations (cannot reach/exceed resolved `yearBusinessDays`)
 - `ssTax`: Social security rate (default 21.4%), `ssDiscount`: adjustment range -25%..25%
-- `currentTaxRankYear`: 2023/2024/2025 progressive IRS tables
+- `currentTaxRankYear`: 2023/2024/2025/2026 progressive IRS tables
 - `maxExpensesTax`: Simplified regime percentage (default 15%) and `expenses`: declared expenses
 - `dateOfOpeningActivity`: Determines first/second year factors and first-12-month SS exemption
 - `rnh` / `rnhTax`: Apply RNH flat rate instead of progressive brackets

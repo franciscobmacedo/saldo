@@ -14,61 +14,100 @@ pnpm add saldo
 
 <RunCode defaultCode={`
 const result = simulateDependentWorker({
+  year: 2025,
   income: 1500, // Rendimento bruto mensal em euros
   location: 'continent',
   married: false
 });
 
-console.log(\`Rendimento Bruto: €\${result.gross.monthly.toFixed(2)}\`);
-console.log(\`Rendimento Tributável: €\${result.taxableIncome.toFixed(2)}\`);
-console.log(\`IRS: €\${result.IrsTax.toFixed(2)}\`);
-console.log(\`Segurança Social: €\${result.socialSecurityTax.toFixed(2)}\`);
-console.log(\`Salário Líquido: €\${result.net.salary.toFixed(2)}\`);
-console.log(\`Líquido Anual: €\${result.net.yearly.toFixed(2)}\`);`} />
+// Aceder ao breakdown de janeiro
+const jan = result.monthlyBreakdown[0];
+console.log(\`Rendimento Bruto (Jan): €\${jan.grossIncome.baseSalaryAmount.toFixed(2)}\`);
+console.log(\`IRS Retido (Jan): €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Segurança Social (Jan): €\${jan.socialSecurityContribution.totalAmount.toFixed(2)}\`);
+console.log(\`Rendimento Líquido (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+
+// Totais anuais
+console.log(\`Líquido Anual: €\${result.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
 ## Compreender o Resultado
 
 ```typescript
 interface DependentWorkerResult {
-  taxableIncome: number;
-  IrsTax: number;
-  socialSecurityTax: number;
-  socialSecurityTaxRate: number;
-  gross: { monthly: number; yearly: number };
-  net: { base: number; salary: number; yearly: number };
-  lunchAllowance: LunchAllowanceResult;  // gross, net, taxable, taxFree
-  bracket: Bracket;
-  taxRetentionTable: TaxRetentionTable;
+  yearly: {
+    totalGrossIncomeAmount: number;         // Rendimento bruto anual
+    totalNetIncomeAmount: number;           // Rendimento líquido anual
+    totalLunchAllowanceGrossAmount: number; // Subsídio de refeição anual bruto
+  };
+  socialSecurityContributionRate: number;   // Taxa de SS aplicada
+  monthlyBreakdown: MonthlyBreakdownResult[]; // 12 entradas, uma por mês
+}
+
+interface MonthlyBreakdownResult {
+  month: MonthName;   // ex. "january"
+  period: PeriodT;    // ex. "2025-01-01_2025-07-31"
+  grossIncome: {
+    baseSalaryAmount: number;
+    baseSalaryAndLunchAllowanceAmount: number;
+    totalWithLunchAllowanceAndSubsidyTwelfthsAmount: number;
+  };
+  irsWithholdingTax: {
+    totalAmount: number;
+    fromBaseSalaryAmount: number;
+    fromLunchAllowanceAmount: number;
+    fromSubsidyTwelfthsAmount: number;
+  };
+  socialSecurityContribution: {
+    totalAmount: number;
+    fromBaseSalaryAmount: number;
+    fromLunchAllowanceAmount: number;
+    fromSubsidyTwelfthsAmount: number;
+  };
+  netIncome: {
+    totalAmount: number;        // Salário líquido mensal total
+    fromBaseSalaryAmount: number;
+    fromLunchAllowanceAmount: number;
+    fromSubsidyTwelfthsAmount: number;
+  };
+  lunchAllowance: LunchAllowanceAmountBreakdown;
+  subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
+  bracket: BracketResult;
+  taxRetentionTable: TaxRetentionTableResult;
 }
 ```
 
 ## Parâmetros Principais
 
+- **`year`**: Ano fiscal — **obrigatório** (ex: `2025`)
 - **`income`**: Rendimento bruto mensal em euros
 - **`married`** / **`numberOfHolders`**: Obrigatórios em conjunto para trabalhadores casados (1 ou 2)
 - **`disabled`**, **`partnerDisabled`**, **`numberOfDependents`**, **`numberOfDependentsDisabled`**
 - **`location`**: `'continent' | 'azores' | 'madeira'` (predefinição `'continent'`)
-- **`period`**: `"2025-01-01_2025-07-31"`, `"2025-08-01_2025-09-30"`, `"2025-10-01_2025-12-31"`
-- **`socialSecurityTaxRate`**: Predefinição `0.11`
+- **`socialSecurityContributionRate`**: Predefinição `0.11`
 - **`twelfths`**: `Twelfths.NONE | ONE_HALF_MONTH | ONE_MONTH | TWO_MONTHS` (predefinição `TWO_MONTHS`)
 - **`lunchAllowanceDailyValue`**, **`lunchAllowanceMode`** (`"cupon"` ou `"salary"`), **`lunchAllowanceDaysCount`**
+- **`includeLunchAllowanceInJune`**: Se junho inclui subsídio de refeição (predefinição `false`)
+- **`oneHalfMonthTwelfthsLumpSumMonth`**: `"june"` ou `"december"` (predefinição `"december"`)
 
 ## Cenários Comuns
 
 ### Pessoa Solteira
 
 <RunCode defaultCode={`const single = simulateDependentWorker({
+  year: 2025,
   income: 1000,
   location: 'continent'
 });
 
 console.log('=== Pessoa Solteira ===');
-console.log(\`Salário Líquido: €\${single.net.salary.toFixed(2)}\`);
-console.log(\`Líquido Anual: €\${single.net.yearly.toFixed(2)}\`);`} />
+const jan = single.monthlyBreakdown[0];
+console.log(\`Líquido Mensal (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Líquido Anual: €\${single.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
 ### Casado com Filhos
 
 <RunCode defaultCode={`const marriedWithKids = simulateDependentWorker({
+  year: 2025,
   income: 1800,
   married: true,
   numberOfHolders: 1,
@@ -77,24 +116,28 @@ console.log(\`Líquido Anual: €\${single.net.yearly.toFixed(2)}\`);`} />
 });
 
 console.log('=== Casado com Filhos ===');
-console.log(\`Salário Líquido: €\${marriedWithKids.net.salary.toFixed(2)}\`);
-console.log(\`Benefícios Fiscais: €\${marriedWithKids.bracket.deduction.toFixed(2)}\`);`} />
+const jan = marriedWithKids.monthlyBreakdown[0];
+console.log(\`Líquido Mensal (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Dedução do Escalão: €\${jan.bracket.deduction.toFixed(2)}\`);`} />
 
 ### Trabalhador com Deficiência
 
 <RunCode defaultCode={`const disabledWorker = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   disabled: true,
   location: 'continent'
 });
 
 console.log('=== Trabalhador com Deficiência ===');
-console.log(\`Salário Líquido: €\${disabledWorker.net.salary.toFixed(2)}\`);
-console.log(\`Deduções Adicionais: €\${disabledWorker.bracket.var1_deduction.toFixed(2)}\`);`} />
+const jan = disabledWorker.monthlyBreakdown[0];
+console.log(\`Líquido Mensal (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Dedução Adicional: €\${jan.bracket.var1_deduction.toFixed(2)}\`);`} />
 
 ### Com Subsídio de Refeição
 
 <RunCode defaultCode={`const withLunch = simulateDependentWorker({
+  year: 2025,
   income: 1400,
   lunchAllowanceDailyValue: 7.5,
   lunchAllowanceMode: "cupon",
@@ -102,37 +145,35 @@ console.log(\`Deduções Adicionais: €\${disabledWorker.bracket.var1_deduction
   location: 'continent'
 });
 
-console.log('=== Com Subsídio de Refeição (formato Doutor Finanças) ===');
-console.log(\`Rendimento líquido: €\${withLunch.net.base.toFixed(2)}\`);
-console.log(\`Subsídio de alimentação: €\${withLunch.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Salário líquido: €\${withLunch.net.salary.toFixed(2)}\`);`} />
+console.log('=== Com Subsídio de Refeição ===');
+const jan = withLunch.monthlyBreakdown[0];
+console.log(\`Líquido base: €\${jan.netIncome.fromBaseSalaryAmount.toFixed(2)}\`);
+console.log(\`Subsídio de refeição bruto: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Total Líquido (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### Usando Enum Twelfths
 
 <RunCode defaultCode={`
 const withoutHolidayAllowance = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   twelfths: Twelfths.NONE, // Sem distribuição de subsídios de férias
   location: 'continent'
 });
 
-const withOneHolidayAllowance = simulateDependentWorker({
-  income: 1500,
-  twelfths: Twelfths.ONE_MONTH, // Dois subsídios a 50% (um mês total)
-  location: 'continent'
-});
-
 const withBothHolidayAllowances = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   twelfths: Twelfths.TWO_MONTHS, // Tanto o subsídio de Natal como o de férias
   location: 'continent'
 });
 
 console.log('=== Comparação de Twelfths ===');
-console.log(\`Sem Distribuição - Líquido Mensal: €\${withoutHolidayAllowance.net.salary.toFixed(2)}\`);
-console.log(\`Um Mês - Líquido Mensal: €\${withOneHolidayAllowance.net.salary.toFixed(2)}\`);
-console.log(\`Dois Meses - Líquido Mensal: €\${withBothHolidayAllowances.net.salary.toFixed(2)}\`);
-console.log(\`Dois Meses - Líquido Anual: €\${withBothHolidayAllowances.yearlyNetSalary.toFixed(2)}\`);`} />
+const janSem = withoutHolidayAllowance.monthlyBreakdown[0];
+const janDois = withBothHolidayAllowances.monthlyBreakdown[0];
+console.log(\`Sem Distribuição - Líquido Mensal (Jan): €\${janSem.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Dois Meses - Líquido Mensal (Jan): €\${janDois.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Dois Meses - Líquido Anual: €\${withBothHolidayAllowances.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
 ## Trabalhar com Tipos
 
@@ -142,12 +183,12 @@ import {
   LocationT, 
   Twelfths, 
   DependentWorkerResult,
-  SimulateDependentWorkerOptions,
-  LunchAllowanceResult
+  SimulateDependentWorkerOptions
 } from 'saldo';
 
 // Cálculo de trabalhador por conta de outrem com segurança de tipos
 const dependentOpts: SimulateDependentWorkerOptions = {
+  year: 2025,
   income: 1500,
   location: 'continent',
 };
@@ -160,26 +201,29 @@ Cada região portuguesa tem taxas fiscais diferentes:
 
 <RunCode defaultCode={`// Portugal Continental
 const continent = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   location: 'continent'
 });
 
 // Açores
 const azores = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   location: 'azores'
 });
 
 // Madeira
 const madeira = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   location: 'madeira'
 });
 
-console.log('=== Comparação Regional (€1500 de rendimento) ===');
-console.log(\`Continente - Líquido: €\${continent.net.salary.toFixed(2)}\`);
-console.log(\`Açores - Líquido: €\${azores.net.salary.toFixed(2)}\`);
-console.log(\`Madeira - Líquido: €\${madeira.net.salary.toFixed(2)}\`);`} />
+console.log('=== Comparação Regional (€1500, Janeiro) ===');
+console.log(\`Continente - Líquido: €\${continent.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Açores - Líquido: €\${azores.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Madeira - Líquido: €\${madeira.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ## Tratamento de Erros
 
@@ -187,6 +231,7 @@ A biblioteca fornece mensagens de erro claras para configurações inválidas:
 
 <RunCode defaultCode={`try {
   const result = simulateDependentWorker({
+    year: 2025,
     income: 1500,
     married: true,
     // Falta numberOfHolders - obrigatório para casados

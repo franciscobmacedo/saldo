@@ -18,30 +18,34 @@ Lunch allowances in Portugal have specific tax treatment:
 Daily tax-free limit: **€10.20**
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.50,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22
 });
 
-console.log(\`Monthly lunch allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Tax-free portion: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Taxable portion: €\${result.lunchAllowance.taxable.toFixed(2)}\`);`} />
+const jan = result.monthlyBreakdown[0];
+console.log(\`Monthly lunch allowance: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Tax-free portion: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Taxable portion: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);`} />
 
 ### Cash Allowance (Em Dinheiro)
 
 Daily tax-free limit: **€6.00**
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 7.50,
   lunchAllowanceMode: "salary",
   lunchAllowanceDaysCount: 21
 });
 
-console.log(\`Monthly lunch allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Tax-free portion: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Taxable portion: €\${result.lunchAllowance.taxable.toFixed(2)}\`);`} />
+const jan = result.monthlyBreakdown[0];
+console.log(\`Monthly lunch allowance: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Tax-free portion: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Taxable portion: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);`} />
 
 ## Parameters
 
@@ -50,6 +54,7 @@ When using lunch allowances, you can specify these parameters:
 - **`lunchAllowanceDailyValue`**: Daily allowance amount in euros
 - **`lunchAllowanceMode`**: Type of allowance (`"cupon"` or `"salary"`)
 - **`lunchAllowanceDaysCount`**: Number of working days per month
+- **`includeLunchAllowanceInJune`**: Whether June receives a lunch allowance (default `false`)
 
 ## Common Scenarios
 
@@ -58,6 +63,7 @@ When using lunch allowances, you can specify these parameters:
 Most common scenario with meal vouchers below the tax-free limit:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   lunchAllowanceDailyValue: 7.50,
   lunchAllowanceMode: "cupon",
@@ -67,15 +73,17 @@ Most common scenario with meal vouchers below the tax-free limit:
 // Monthly allowance: €165 (7.50 * 22)
 // Tax-free: €165 (fully tax-free as it's below €10.20/day)
 // Taxable: €0
+const jan = result.monthlyBreakdown[0];
 console.log('=== Standard Meal Vouchers ===');
-console.log(\`Net benefit: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Total allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);`} />
+console.log(\`Net benefit: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Total allowance: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);`} />
 
 ### High-Value Meal Vouchers
 
 Meal vouchers exceeding the tax-free limit:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   lunchAllowanceDailyValue: 12.00,
   lunchAllowanceMode: "cupon",
@@ -85,16 +93,18 @@ Meal vouchers exceeding the tax-free limit:
 // Monthly allowance: €264 (12.00 * 22)
 // Tax-free: €224.40 (10.20 * 22)
 // Taxable: €39.60 ((12.00 - 10.20) * 22)
+const jan = result.monthlyBreakdown[0];
 console.log('=== High-Value Meal Vouchers ===');
-console.log(\`Total allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Taxable portion: €\${result.lunchAllowance.taxable.toFixed(2)}\`);
-console.log(\`Tax-free portion: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);`} />
+console.log(\`Total allowance: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Taxable portion: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);
+console.log(\`Tax-free portion: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);`} />
 
 ### Cash Lunch Allowance
 
 Cash allowance with lower tax-free limit:
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.00,
   lunchAllowanceMode: "salary",
@@ -104,21 +114,24 @@ Cash allowance with lower tax-free limit:
 // Monthly allowance: €168 (8.00 * 21)
 // Tax-free: €126 (6.00 * 21)
 // Taxable: €42 ((8.00 - 6.00) * 21)
+const jan = result.monthlyBreakdown[0];
 console.log('=== Cash Lunch Allowance ===');
-console.log(\`Tax-free portion: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);
-console.log(\`Taxable portion: €\${result.lunchAllowance.taxable.toFixed(2)}\`);`} />
+console.log(\`Tax-free portion: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);
+console.log(\`Taxable portion: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);`} />
 
 ### No Lunch Allowance
 
 Using the default (no allowance):
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1500
   // No lunch allowance parameters specified
 });
 
+const jan = result.monthlyBreakdown[0];
 console.log('=== No Lunch Allowance ===');
-console.log(\`Lunch allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`); // €0`} />
+console.log(\`Lunch allowance: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`); // €0`} />
 
 ## Tax Implications
 
@@ -161,31 +174,35 @@ However, always verify current regulations as they may change.
 ### Scenario 1: Standard Employee
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 1400,
   lunchAllowanceDailyValue: 7.50,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22
 });
 
-console.log('=== Standard Employee (Doutor Finanças style) ===');
-console.log(\`Net Income: €\${result.net.base.toFixed(2)}\`);
-console.log(\`Lunch Allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);`} />
+const jan = result.monthlyBreakdown[0];
+console.log('=== Standard Employee ===');
+console.log(\`Net Base Income: €\${jan.netIncome.fromBaseSalaryAmount.toFixed(2)}\`);
+console.log(\`Lunch Allowance: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Total Net Salary: €\${jan.netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### Scenario 2: High Earner with Premium Vouchers
 
 <RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
   income: 3000,
   lunchAllowanceDailyValue: 15.00,
   lunchAllowanceMode: "cupon",
   lunchAllowanceDaysCount: 22
 });
 
+const jan = result.monthlyBreakdown[0];
 console.log('=== High Earner with Premium Vouchers ===');
-console.log(\`Taxable Income: €\${result.taxableIncome.toFixed(2)}\`); // €3,000 + taxable portion
-console.log(\`Lunch allowance - Total: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Lunch allowance - Taxable: €\${result.lunchAllowance.taxable.toFixed(2)}\`);
-console.log(\`Lunch allowance - Tax-free: €\${result.lunchAllowance.taxFree.toFixed(2)}\`);`} />
+console.log(\`Taxable Income: €\${jan.taxableIncomeForIrsCalculation.toFixed(2)}\`);
+console.log(\`Lunch allowance - Total: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Lunch allowance - Taxable: €\${jan.lunchAllowance.taxableAmount.toFixed(2)}\`);
+console.log(\`Lunch allowance - Tax-free: €\${jan.lunchAllowance.taxExemptAmount.toFixed(2)}\`);`} />
 
 ## Comparison Tool
 
@@ -193,11 +210,13 @@ Compare the impact of different lunch allowance configurations:
 
 <RunCode defaultCode={`// No allowance
 const noAllowance = simulateDependentWorker({
+  year: 2025,
   income: 1500
 });
 
 // Standard vouchers
 const withVouchers = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.0,
   lunchAllowanceMode: "cupon",
@@ -206,15 +225,16 @@ const withVouchers = simulateDependentWorker({
 
 // Cash allowance
 const withCash = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   lunchAllowanceDailyValue: 8.0,
   lunchAllowanceMode: "salary",
   lunchAllowanceDaysCount: 22
 });
 
-console.log('=== Lunch Allowance Comparison ===');
-console.log(\`No allowance - Net: €\${noAllowance.net.salary.toFixed(2)}\`);
-console.log(\`With vouchers - Net: €\${withVouchers.net.salary.toFixed(2)}\`);
-console.log(\`With cash - Net: €\${withCash.net.salary.toFixed(2)}\`);`} />
+console.log('=== Lunch Allowance Comparison (January) ===');
+console.log(\`No allowance - Net: €\${noAllowance.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`With vouchers - Net: €\${withVouchers.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`With cash - Net: €\${withCash.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 Understanding lunch allowances helps optimize total compensation while ensuring compliance with Portuguese tax regulations. 

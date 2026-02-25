@@ -19,7 +19,7 @@ interface SimulateIndependentWorkerOptions {
   maxExpensesTax?: number;
   expenses?: number;
   ssTax?: number;
-  currentTaxRankYear?: 2023 | 2024 | 2025;
+  currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
   rnh?: boolean;
   rnhTax?: number;
   dateOfOpeningActivity?: Date | null;
@@ -32,12 +32,13 @@ interface SimulateIndependentWorkerOptions {
 |-----------|------|---------|-------------|
 | `income` | `number` | **Required** | Gross income based on `incomeFrequency` |
 | `incomeFrequency` | `FrequencyChoices` | `"year"` | Frequency of the `income` (`"year"`, `"month"`, `"day"`) |
-| `nrDaysOff` | `number` | `0` | Days off for daily frequency (integer, must be < 248) |
+| `yearBusinessDays` | `number` | year-specific | Optional override for the year business-day baseline |
+| `nrDaysOff` | `number` | `0` | Days off for daily frequency (integer, must be < `yearBusinessDays`) |
 | `ssDiscount` | `number` | `0` | Social security adjustment (-0.25 to 0.25) applied to the 70% SS base |
 | `maxExpensesTax` | `number` | `15` | Simplified regime percentage for deductible expenses |
 | `expenses` | `number` | `0` | Declared expenses (used before adding missing expenses) |
 | `ssTax` | `number` | `0.214` | Social security rate |
-| `currentTaxRankYear` | `2023 \| 2024 \| 2025` | `2025` | IRS progressive table year |
+| `currentTaxRankYear` | `2023 \| 2024 \| 2025 \| 2026` | `2025` | IRS progressive table year |
 | `rnh` | `boolean` | `false` | Apply RNH flat tax instead of progressive brackets |
 | `rnhTax` | `number` | `0.2` | RNH flat tax rate |
 | `dateOfOpeningActivity` | `Date \| null` | `null` | Sets first/second financial year multipliers and first-12-month SS exemption |
@@ -165,7 +166,7 @@ Represents a progressive IRS bracket for independent workers (tables for 2023, 2
 - `validateIncome`, `validateIncomeFrequency`, `validateNrDaysOff`
 - `validateSsDiscount`, `validateMaxExpensesTax`, `validateExpenses`, `validateSsTax`
 - `validateCurrentTaxRankYear`, `validateRnhTax`
-- `validateYearOfYouthIrs` (caps years to 1-5 for 2023/2024 and 1-10 for 2025)
+- `validateYearOfYouthIrs` (caps years to 1-5 for 2023/2024 and 1-10 for 2025/2026)
 
 ## Error Handling
 

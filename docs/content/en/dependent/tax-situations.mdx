@@ -25,6 +25,7 @@ The library automatically determines the appropriate tax situation based on:
 
 <RunCode defaultCode={`// Single person, no dependents
 const single = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   married: false,
   numberOfDependents: 0
@@ -32,6 +33,7 @@ const single = simulateDependentWorker({
 
 // Married, both working, no dependents
 const marriedTwoHolders = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   married: true,
   numberOfHolders: 2,
@@ -40,16 +42,17 @@ const marriedTwoHolders = simulateDependentWorker({
 
 // Married, both working, with children
 const marriedWithKids = simulateDependentWorker({
+  year: 2025,
   income: 1800,
   married: true,
   numberOfHolders: 2,
   numberOfDependents: 2
 });
 
-console.log('=== TABLE1 Examples ===');
-console.log(\`Single - Net: €\${single.net.salary.toFixed(2)}\`);
-console.log(\`Married 2 holders - Net: €\${marriedTwoHolders.net.salary.toFixed(2)}\`);
-console.log(\`Married with kids - Net: €\${marriedWithKids.net.salary.toFixed(2)}\`);`} />
+console.log('=== TABLE1 Examples (January) ===');
+console.log(\`Single - Net: €\${single.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Married 2 holders - Net: €\${marriedTwoHolders.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Married with kids - Net: €\${marriedWithKids.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### TABLE2_SINGLE_ONE_OR_MORE_DEPENDENTS - Single with Dependents
 
@@ -62,14 +65,16 @@ console.log(\`Married with kids - Net: €\${marriedWithKids.net.salary.toFixed(
 
 <RunCode defaultCode={`// Single parent with 2 children
 const singleParent = simulateDependentWorker({
+  year: 2025,
   income: 1400,
   married: false,
   numberOfDependents: 2
 });
 
+const jan = singleParent.monthlyBreakdown[0];
 console.log('=== TABLE2 Example ===');
-console.log(\`Single Parent - Net: €\${singleParent.net.salary.toFixed(2)}\`);
-console.log(\`Tax Benefits: €\${singleParent.bracket.deduction.toFixed(2)}\`);`} />
+console.log(\`Single Parent - Net: €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Tax Benefits: €\${jan.bracket.deduction.toFixed(2)}\`);`} />
 
 ### TABLE3_MARRIED_1_HOLDER - Married, Single Holder
 
@@ -82,6 +87,7 @@ console.log(\`Tax Benefits: €\${singleParent.bracket.deduction.toFixed(2)}\`);
 
 <RunCode defaultCode={`// Married, single income, no children
 const marriedSingleIncome = simulateDependentWorker({
+  year: 2025,
   income: 2000,
   married: true,
   numberOfHolders: 1,
@@ -90,15 +96,16 @@ const marriedSingleIncome = simulateDependentWorker({
 
 // Married, single income, with children
 const marriedWithKids = simulateDependentWorker({
+  year: 2025,
   income: 2200,
   married: true,
   numberOfHolders: 1,
   numberOfDependents: 3
 });
 
-console.log('=== TABLE3 Examples ===');
-console.log(\`Married Single Income - Net: €\${marriedSingleIncome.net.salary.toFixed(2)}\`);
-console.log(\`Married with Kids - Net: €\${marriedWithKids.net.salary.toFixed(2)}\`);`} />
+console.log('=== TABLE3 Examples (January) ===');
+console.log(\`Married Single Income - Net: €\${marriedSingleIncome.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Married with Kids - Net: €\${marriedWithKids.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ## Disability Situations
 
@@ -111,6 +118,7 @@ All base situations have corresponding disability variants with lower tax rates:
 
 <RunCode defaultCode={`// Single person with disability
 const singleDisabled = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   married: false,
   disabled: true
@@ -118,15 +126,16 @@ const singleDisabled = simulateDependentWorker({
 
 // Married, both working, one with disability
 const marriedDisabled = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   married: true,
   numberOfHolders: 2,
   disabled: true
 });
 
-console.log('=== TABLE4 Examples ===');
-console.log(\`Single Disabled - Net: €\${singleDisabled.net.salary.toFixed(2)}\`);
-console.log(\`Married Disabled - Net: €\${marriedDisabled.net.salary.toFixed(2)}\`);`} />
+console.log('=== TABLE4 Examples (January) ===');
+console.log(\`Single Disabled - Net: €\${singleDisabled.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Married Disabled - Net: €\${marriedDisabled.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### TABLE5_SINGLE_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Single with Dependents and Disability
 
@@ -135,6 +144,7 @@ console.log(\`Married Disabled - Net: €\${marriedDisabled.net.salary.toFixed(2
 
 <RunCode defaultCode={`// Single parent with disability and children
 const singleParentDisabled = simulateDependentWorker({
+  year: 2025,
   income: 1400,
   married: false,
   disabled: true,
@@ -142,7 +152,7 @@ const singleParentDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE5 Example ===');
-console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.net.salary.toFixed(2)}\`);`} />
+console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### TABLE6_MARRIED_2_HOLDERS_ONE_OR_MORE_DEPENDENTS_PERSON_WITH_DISABILITY - Married Two Holders with Dependents and Disability
 
@@ -151,6 +161,7 @@ console.log(\`Single Parent Disabled - Net: €\${singleParentDisabled.net.salar
 
 <RunCode defaultCode={`// Married, both working, children, one with disability
 const marriedTwoHoldersDisabled = simulateDependentWorker({
+  year: 2025,
   income: 1800,
   married: true,
   numberOfHolders: 2,
@@ -159,7 +170,7 @@ const marriedTwoHoldersDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE6 Example ===');
-console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisabled.net.salary.toFixed(2)}\`);`} />
+console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisabled.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY - Married Single Holder with Disability
 
@@ -168,6 +179,7 @@ console.log(\`Married Two Holders Disabled - Net: €\${marriedTwoHoldersDisable
 
 <RunCode defaultCode={`// Married, single income, with disability
 const marriedSingleIncomeDisabled = simulateDependentWorker({
+  year: 2025,
   income: 2000,
   married: true,
   numberOfHolders: 1,
@@ -175,7 +187,7 @@ const marriedSingleIncomeDisabled = simulateDependentWorker({
 });
 
 console.log('=== TABLE7 Example ===');
-console.log(\`Married Single Income Disabled - Net: €\${marriedSingleIncomeDisabled.net.salary.toFixed(2)}\`);`} />
+console.log(\`Married Single Income Disabled - Net: €\${marriedSingleIncomeDisabled.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ## Situation Determination Logic
 
@@ -220,15 +232,17 @@ If your spouse has a disability (but you don't), you may qualify for additional 
 
 <RunCode defaultCode={`// Partner has disability
 const partnerDisabled = simulateDependentWorker({
+  year: 2025,
   income: 1600,
   married: true,
   numberOfHolders: 1,
   partnerDisabled: true // Additional deductions apply
 });
 
+const jan = partnerDisabled.monthlyBreakdown[0];
 console.log('=== Partner Disability Benefits ===');
-console.log(\`Net Salary: €\${partnerDisabled.net.salary.toFixed(2)}\`);
-console.log(\`Additional Deduction: €\${partnerDisabled.bracket.var2_deduction.toFixed(2)}\`);`} />
+console.log(\`Net Salary: €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Additional Deduction: €\${jan.bracket.var2_deduction.toFixed(2)}\`);`} />
 
 ## Dependent Disability Benefits
 
@@ -236,6 +250,7 @@ Dependents with disabilities provide additional tax deductions:
 
 <RunCode defaultCode={`// Family with disabled dependents
 const familyWithDisabledDependent = simulateDependentWorker({
+  year: 2025,
   income: 2000,
   married: true,
   numberOfHolders: 1,
@@ -243,9 +258,10 @@ const familyWithDisabledDependent = simulateDependentWorker({
   numberOfDependentsDisabled: 1 // Extra deduction for disabled dependent
 });
 
+const jan = familyWithDisabledDependent.monthlyBreakdown[0];
 console.log('=== Dependent Disability Benefits ===');
-console.log(\`Net Salary: €\${familyWithDisabledDependent.net.salary.toFixed(2)}\`);
-console.log(\`Dependent Deduction: €\${familyWithDisabledDependent.bracket.dependent_aditional_deduction.toFixed(2)}\`);`} />
+console.log(\`Net Salary: €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Dependent Deduction: €\${jan.bracket.dependent_aditional_deduction.toFixed(2)}\`);`} />
 
 ## Important Notes
 
@@ -268,6 +284,7 @@ The library automatically validates your input and will throw descriptive errors
 <RunCode defaultCode={`// This will throw an error
 try {
   simulateDependentWorker({
+    year: 2025,
     income: 1500,
     married: false,
     numberOfHolders: 2 // Invalid: single person cannot have 2 holders
@@ -279,6 +296,7 @@ try {
 // This will also throw an error
 try {
   simulateDependentWorker({
+    year: 2025,
     income: 1500,
     numberOfDependents: 2,
     numberOfDependentsDisabled: 3 // Invalid: more disabled than total dependents

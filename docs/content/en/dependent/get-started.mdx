@@ -14,61 +14,101 @@ pnpm add saldo
 
 <RunCode defaultCode={`
 const result = simulateDependentWorker({
+  year: 2025,
   income: 1500, // Monthly gross income in euros
   location: 'continent',
   married: false
 });
 
-console.log(\`Gross Income: €\${result.gross.monthly.toFixed(2)}\`);
-console.log(\`Taxable Income: €\${result.taxableIncome.toFixed(2)}\`);
-console.log(\`Tax: €\${result.IrsTax.toFixed(2)}\`);
-console.log(\`Social Security: €\${result.socialSecurityTax.toFixed(2)}\`);
-console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);
-console.log(\`Yearly Net: €\${result.net.yearly.toFixed(2)}\`);`} />
+// Access the January breakdown
+const jan = result.monthlyBreakdown[0];
+console.log(\`Gross Income (Jan): €\${jan.grossIncome.baseSalaryAmount.toFixed(2)}\`);
+console.log(\`IRS Withheld (Jan): €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Social Security (Jan): €\${jan.socialSecurityContribution.totalAmount.toFixed(2)}\`);
+console.log(\`Net Income (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+
+// Yearly totals
+console.log(\`Annual Net: €\${result.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
 ## Understanding the Result
 
 ```typescript
 interface DependentWorkerResult {
-  taxableIncome: number;
-  IrsTax: number;
-  socialSecurityTax: number;
-  socialSecurityTaxRate: number;
-  gross: { monthly: number; yearly: number };
-  net: { base: number; salary: number; yearly: number };
-  lunchAllowance: LunchAllowanceResult;  // gross, net, taxable, taxFree
-  bracket: Bracket;
-  taxRetentionTable: TaxRetentionTable;
+  yearly: {
+    totalGrossIncomeAmount: number;         // Annual gross income
+    totalNetIncomeAmount: number;           // Annual net income
+    totalLunchAllowanceGrossAmount: number; // Annual lunch allowance
+  };
+  socialSecurityContributionRate: number;   // SS rate applied
+  monthlyBreakdown: MonthlyBreakdownResult[]; // 12 entries, one per month
+}
+
+interface MonthlyBreakdownResult {
+  month: MonthName;   // e.g. "january"
+  period: PeriodT;    // e.g. "2025-01-01_2025-07-31"
+  grossIncome: {
+    baseSalaryAmount: number;
+    baseSalaryAndLunchAllowanceAmount: number;
+    totalWithLunchAllowanceAndSubsidyTwelfthsAmount: number;
+  };
+  irsWithholdingTax: {
+    totalAmount: number;
+    fromBaseSalaryAmount: number;
+    fromLunchAllowanceAmount: number;
+    fromSubsidyTwelfthsAmount: number;
+  };
+  socialSecurityContribution: {
+    totalAmount: number;
+    fromBaseSalaryAmount: number;
+    fromLunchAllowanceAmount: number;
+    fromSubsidyTwelfthsAmount: number;
+  };
+  netIncome: {
+    totalAmount: number;       // Monthly net salary (the main figure)
+    fromBaseSalaryAmount: number;
+    fromLunchAllowanceAmount: number;
+    fromSubsidyTwelfthsAmount: number;
+  };
+  lunchAllowance: LunchAllowanceAmountBreakdown;
+  subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
+  bracket: BracketResult;
+  taxRetentionTable: TaxRetentionTableResult;
 }
 ```
 
 ## Key Parameters
 
+- **`year`**: Tax year — **required** (e.g. `2025`)
 - **`income`**: Monthly gross income in euros
 - **`married`** / **`numberOfHolders`**: Required together for married workers (1 or 2)
 - **`disabled`**, **`partnerDisabled`**, **`numberOfDependents`**, **`numberOfDependentsDisabled`**
 - **`location`**: `'continent' | 'azores' | 'madeira'` (default `'continent'`)
-- **`period`**: `"2025-01-01_2025-07-31"`, `"2025-08-01_2025-09-30"`, `"2025-10-01_2025-12-31"`
-- **`socialSecurityTaxRate`**: Default `0.11`
+- **`socialSecurityContributionRate`**: Default `0.11`
 - **`twelfths`**: `Twelfths.NONE | ONE_HALF_MONTH | ONE_MONTH | TWO_MONTHS` (default `TWO_MONTHS`)
 - **`lunchAllowanceDailyValue`**, **`lunchAllowanceMode`** (`"cupon"` or `"salary"`), **`lunchAllowanceDaysCount`**
+- **`includeLunchAllowanceInJune`**: Whether June gets lunch allowance (default `false`)
+- **`oneHalfMonthTwelfthsLumpSumMonth`**: `"june"` or `"december"` (default `"december"`)
 
 ## Common Scenarios
 
 ### Single Person
 
 <RunCode defaultCode={`const single = simulateDependentWorker({
+  year: 2025,
   income: 1000,
   location: 'continent'
 });
 
 console.log('=== Single Person ===');
-console.log(\`Net Salary: €\${single.net.salary.toFixed(2)}\`);
-console.log(\`Yearly Net: €\${single.net.yearly.toFixed(2)}\`);`} />
+// Monthly net in january
+const jan = single.monthlyBreakdown[0];
+console.log(\`Monthly Net (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Annual Net: €\${single.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
 ### Married with Children
 
 <RunCode defaultCode={`const marriedWithKids = simulateDependentWorker({
+  year: 2025,
   income: 1800,
   married: true,
   numberOfHolders: 1,
@@ -77,24 +117,28 @@ console.log(\`Yearly Net: €\${single.net.yearly.toFixed(2)}\`);`} />
 });
 
 console.log('=== Married with Children ===');
-console.log(\`Net Salary: €\${marriedWithKids.net.salary.toFixed(2)}\`);
-console.log(\`Tax Benefits: €\${marriedWithKids.bracket.deduction.toFixed(2)}\`);`} />
+const jan = marriedWithKids.monthlyBreakdown[0];
+console.log(\`Monthly Net (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Tax Bracket Deduction: €\${jan.bracket.deduction.toFixed(2)}\`);`} />
 
 ### Disabled Worker
 
 <RunCode defaultCode={`const disabledWorker = simulateDependentWorker({
+  year: 2025,
   income: 1200,
   disabled: true,
   location: 'continent'
 });
 
 console.log('=== Disabled Worker ===');
-console.log(\`Net Salary: €\${disabledWorker.net.salary.toFixed(2)}\`);
-console.log(\`Additional Deduction: €\${disabledWorker.bracket.var1_deduction.toFixed(2)}\`);`} />
+const jan = disabledWorker.monthlyBreakdown[0];
+console.log(\`Monthly Net (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Additional Deduction: €\${jan.bracket.var1_deduction.toFixed(2)}\`);`} />
 
 ### With Lunch Allowance
 
 <RunCode defaultCode={`const withLunch = simulateDependentWorker({
+  year: 2025,
   income: 1400,
   lunchAllowanceDailyValue: 7.5,
   lunchAllowanceMode: "cupon",
@@ -102,37 +146,35 @@ console.log(\`Additional Deduction: €\${disabledWorker.bracket.var1_deduction.
   location: 'continent'
 });
 
-console.log('=== With Lunch Allowance (Doutor Finanças style) ===');
-console.log(\`Net Income: €\${withLunch.net.base.toFixed(2)}\`);
-console.log(\`Lunch Allowance: €\${withLunch.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Net Salary: €\${withLunch.net.salary.toFixed(2)}\`);`} />
+console.log('=== With Lunch Allowance ===');
+const jan = withLunch.monthlyBreakdown[0];
+console.log(\`Base Net Income: €\${jan.netIncome.fromBaseSalaryAmount.toFixed(2)}\`);
+console.log(\`Lunch Allowance Gross: €\${jan.lunchAllowance.grossAmount.toFixed(2)}\`);
+console.log(\`Total Net (Jan): €\${jan.netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ### Using Twelfths Enum
 
 <RunCode defaultCode={`
 const withoutHolidayAllowance = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   twelfths: Twelfths.NONE, // No holiday allowance distribution
   location: 'continent'
 });
 
-const withOneHolidayAllowance = simulateDependentWorker({
-  income: 1500,
-  twelfths: Twelfths.ONE_MONTH, // Two 50% allowances (one month total)
-  location: 'continent'
-});
-
 const withBothHolidayAllowances = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   twelfths: Twelfths.TWO_MONTHS, // Both Christmas AND holiday allowance
   location: 'continent'
 });
 
 console.log('=== Twelfths Comparison ===');
-console.log(\`No Distribution - Monthly Net: €\${withoutHolidayAllowance.net.salary.toFixed(2)}\`);
-console.log(\`One Month - Monthly Net: €\${withOneHolidayAllowance.net.salary.toFixed(2)}\`);
-console.log(\`Two Months - Monthly Net: €\${withBothHolidayAllowances.net.salary.toFixed(2)}\`);
-console.log(\`Two Months - Yearly Net: €\${withBothHolidayAllowances.net.yearly.toFixed(2)}\`);`} />
+const janNoTwelfths = withoutHolidayAllowance.monthlyBreakdown[0];
+const janBothTwelfths = withBothHolidayAllowances.monthlyBreakdown[0];
+console.log(\`No Distribution - Monthly Net (Jan): €\${janNoTwelfths.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Two Months - Monthly Net (Jan): €\${janBothTwelfths.netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Two Months - Annual Net: €\${withBothHolidayAllowances.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
 ## Working with Types
 
@@ -142,12 +184,12 @@ import {
   LocationT, 
   Twelfths, 
   DependentWorkerResult,
-  SimulateDependentWorkerOptions,
-  LunchAllowanceResult
+  SimulateDependentWorkerOptions
 } from 'saldo';
 
 // Type-safe dependent worker calculation
 const dependentOpts: SimulateDependentWorkerOptions = {
+  year: 2025,
   income: 1500,
   location: 'continent',
 };
@@ -160,26 +202,29 @@ Each Portuguese region has different tax rates:
 
 <RunCode defaultCode={`// Mainland Portugal
 const continent = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   location: 'continent'
 });
 
 // Azores
 const azores = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   location: 'azores'
 });
 
 // Madeira
 const madeira = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   location: 'madeira'
 });
 
-console.log('=== Regional Comparison (€1500 income) ===');
-console.log(\`Continent - Net: €\${continent.net.salary.toFixed(2)}\`);
-console.log(\`Azores - Net: €\${azores.net.salary.toFixed(2)}\`);
-console.log(\`Madeira - Net: €\${madeira.net.salary.toFixed(2)}\`);`} />
+console.log('=== Regional Comparison (€1500 income, January) ===');
+console.log(\`Continent - Net: €\${continent.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Azores - Net: €\${azores.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Madeira - Net: €\${madeira.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ## Error Handling
 
@@ -187,6 +232,7 @@ The library provides clear error messages for invalid configurations:
 
 <RunCode defaultCode={`try {
   const result = simulateDependentWorker({
+    year: 2025,
     income: 1500,
     married: true,
     // Missing numberOfHolders - required for married

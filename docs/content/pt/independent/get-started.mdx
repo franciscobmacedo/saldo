@@ -58,10 +58,11 @@ interface IndependentWorkerResult {
 
 ## Parâmetros Principais
 
-- **`income`** + **`incomeFrequency`**: `'year'` (predefinição), `'month'`, ou `'day'` (248 dias úteis)
-- **`nrDaysOff`**: Para frequência diária; deve ser um inteiro < 248
+- **`income`** + **`incomeFrequency`**: `'year'` (predefinição), `'month'`, ou `'day'` (dias úteis do ano)
+- **`yearBusinessDays`**: Substituição opcional da base dias úteis do ano
+- **`nrDaysOff`**: Para frequência diária; deve ser um inteiro < `yearBusinessDays`
 - **`ssTax`**: Taxa de segurança social (predefinição `0.214`) e **`ssDiscount`** intervalo `-0.25..0.25`
-- **`currentTaxRankYear`**: Tabelas IRS `2023 | 2024 | 2025`
+- **`currentTaxRankYear`**: Tabelas IRS `2023 | 2024 | 2025 | 2026`
 - **`maxExpensesTax`**: Percentagem do regime simplificado (predefinição `15`)
 - **`expenses`**: Despesas declaradas (0 por predefinição)
 - **`dateOfOpeningActivity`**: Determina fatores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses

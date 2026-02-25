@@ -19,7 +19,7 @@ interface SimulateIndependentWorkerOptions {
   maxExpensesTax?: number;
   expenses?: number;
   ssTax?: number;
-  currentTaxRankYear?: 2023 | 2024 | 2025;
+  currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
   rnh?: boolean;
   rnhTax?: number;
   dateOfOpeningActivity?: Date | null;
@@ -32,12 +32,13 @@ interface SimulateIndependentWorkerOptions {
 |-----------|------|---------|-------------|
 | `income` | `number` | **Obrigatório** | Rendimento bruto baseado em `incomeFrequency` |
 | `incomeFrequency` | `FrequencyChoices` | `"year"` | Frequência do `income` (`"year"`, `"month"`, `"day"`) |
-| `nrDaysOff` | `number` | `0` | Dias de folga para frequência diária (inteiro, deve ser < 248) |
+| `yearBusinessDays` | `number` | específico do ano | Substituição opcional da base de dias úteis do ano |
+| `nrDaysOff` | `number` | `0` | Dias de folga para frequência diária (inteiro, deve ser < `yearBusinessDays`) |
 | `ssDiscount` | `number` | `0` | Ajuste de segurança social (-0.25 a 0.25) aplicado à base SS de 70% |
 | `maxExpensesTax` | `number` | `15` | Percentagem do regime simplificado para despesas dedutíveis |
 | `expenses` | `number` | `0` | Despesas declaradas (usadas antes de adicionar despesas em falta) |
 | `ssTax` | `number` | `0.214` | Taxa de segurança social |
-| `currentTaxRankYear` | `2023 \| 2024 \| 2025` | `2025` | Ano da tabela IRS progressiva |
+| `currentTaxRankYear` | `2023 \| 2024 \| 2025 \| 2026` | `2025` | Ano da tabela IRS progressiva |
 | `rnh` | `boolean` | `false` | Aplicar imposto fixo RNH em vez de escalões progressivos |
 | `rnhTax` | `number` | `0.2` | Taxa de imposto fixo RNH |
 | `dateOfOpeningActivity` | `Date \| null` | `null` | Define multiplicadores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses |
@@ -158,14 +159,14 @@ interface TaxRank {
 }
 ```
 
-Representa um escalão IRS progressivo para trabalhadores independentes (tabelas para 2023, 2024 e 2025).
+Representa um escalão IRS progressivo para trabalhadores independentes (tabelas para 2023, 2024, 2025 e 2026).
 
 ## Funções de Validação
 
 - `validateIncome`, `validateIncomeFrequency`, `validateNrDaysOff`
 - `validateSsDiscount`, `validateMaxExpensesTax`, `validateExpenses`, `validateSsTax`
 - `validateCurrentTaxRankYear`, `validateRnhTax`
-- `validateYearOfYouthIrs` (limita anos a 1-5 para 2023/2024 e 1-10 para 2025)
+- `validateYearOfYouthIrs` (limita anos a 1-5 para 2023/2024 e 1-10 para 2025/2026)
 
 ## Tratamento de Erros
 

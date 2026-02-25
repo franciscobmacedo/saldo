@@ -6,12 +6,13 @@ Dependent worker APIs for Portuguese payroll. For self-employed calculations, se
 
 ### `simulateDependentWorker(options)`
 
-Calculates Portuguese dependent worker taxes and net salary using the official retention tables.
+Calculates Portuguese dependent worker taxes and net salary using the official retention tables. Computes a full **12-month breakdown** automatically handling the correct tax period for each month.
 
 #### Parameters
 
 ```typescript
 interface SimulateDependentWorkerOptions {
+  year: number;
   income: number;
   married?: boolean;
   disabled?: boolean;
@@ -20,17 +21,19 @@ interface SimulateDependentWorkerOptions {
   numberOfHolders?: number | null;
   numberOfDependents?: number | null;
   numberOfDependentsDisabled?: number | null;
-  period?: PeriodT;
-  socialSecurityTaxRate?: number;
+  socialSecurityContributionRate?: number;
   twelfths?: Twelfths;
   lunchAllowanceDailyValue?: number;
   lunchAllowanceMode?: "cupon" | "salary";
   lunchAllowanceDaysCount?: number;
+  includeLunchAllowanceInJune?: boolean;
+  oneHalfMonthTwelfthsLumpSumMonth?: "june" | "december";
 }
 ```
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
+| `year` | `number` | **Required** | Tax year (e.g. `2025`) |
 | `income` | `number` | **Required** | Monthly gross income in euros |
 | `married` | `boolean` | `false` | Whether the person is married |
 | `disabled` | `boolean` | `false` | Whether the person has a disability |
@@ -39,55 +42,70 @@ interface SimulateDependentWorkerOptions {
 | `numberOfHolders` | `number \| null` | `null` | Number of income holders in marriage (1 or 2) |
 | `numberOfDependents` | `number \| null` | `null` | Number of dependents |
 | `numberOfDependentsDisabled` | `number \| null` | `null` | Number of dependents with disabilities |
-| `period` | `PeriodT` | `"2025-01-01_2025-07-31"` | Tax calculation period in format "YYYY-MM-DD_YYYY-MM-DD" |
-| `socialSecurityTaxRate` | `number` | `0.11` | Social security tax rate (11%) |
+| `socialSecurityContributionRate` | `number` | `0.11` | Social security contribution rate (11%) |
 | `twelfths` | `Twelfths` | `Twelfths.TWO_MONTHS` | Holiday allowance distribution |
 | `lunchAllowanceDailyValue` | `number` | `10.2` | Daily lunch allowance amount in euros |
 | `lunchAllowanceMode` | `"cupon" \| "salary"` | `"cupon"` | Type of lunch allowance |
 | `lunchAllowanceDaysCount` | `number` | `22` | Working days per month for lunch allowance |
+| `includeLunchAllowanceInJune` | `boolean` | `false` | Whether June includes lunch allowance |
+| `oneHalfMonthTwelfthsLumpSumMonth` | `"june" \| "december"` | `"december"` | Month for the ONE_HALF_MONTH lump sum payment |
 
 #### Return Value
 
 ```typescript
 interface DependentWorkerResult {
-  taxableIncome: number;
-  IrsTax: number;
-  socialSecurityTax: number;
-  socialSecurityTaxRate: number;
-  gross: {
-    monthly: number;  // Total gross salary per month
-    yearly: number;   // Gross salary for the year (14 months)
-  };
-  net: {
-    base: number;    // Net income from base + twelfths (excludes lunch allowance)
-    salary: number;  // Total net salary: base + lunch allowance
-    yearly: number;  // Net salary for the year
-  };
-  lunchAllowance: LunchAllowanceResult;  // Calculated values only
-  bracket: { ... };
-  taxRetentionTable: { ... };
+  yearly: YearlyDependentWorkerSummary;
+  socialSecurityContributionRate: number;
+  monthlyBreakdown: MonthlyBreakdownResult[];
+}
+
+interface YearlyDependentWorkerSummary {
+  totalGrossIncomeAmount: number;         // Total gross income for the year
+  totalNetIncomeAmount: number;           // Total net income for the year
+  totalLunchAllowanceGrossAmount: number; // Total gross lunch allowance for the year
+}
+
+interface MonthlyBreakdownResult {
+  month: MonthName;
+  period: PeriodT;
+  taxableIncomeForIrsCalculation: number;
+  incomeSubjectToIrsAndSocialSecurity: number;
+  grossIncome: GrossIncomeAmountBreakdown;
+  irsWithholdingTax: IncomeComponentAmountBreakdown;
+  socialSecurityContribution: IncomeComponentAmountBreakdown;
+  netIncome: IncomeComponentAmountBreakdown;
+  lunchAllowance: LunchAllowanceAmountBreakdown;
+  subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
+  bracket: BracketResult;
+  taxRetentionTable: TaxRetentionTableResult;
 }
 ```
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `taxableIncome` | `number` | Monthly income subject to tax |
-| `IrsTax` | `number` | Monthly tax amount |
-| `socialSecurityTax` | `number` | Monthly social security contribution |
-| `socialSecurityTaxRate` | `number` | Social security tax rate applied |
-| `gross.monthly` | `number` | Total monthly gross income including allowances |
-| `gross.yearly` | `number` | Annual gross salary (14 months) |
-| `net.base` | `number` | Net income from base salary + twelfths (Rendimento líquido). Excludes lunch allowance |
-| `net.salary` | `number` | Total monthly net salary after deductions (Salário líquido = net.base + lunch allowance) |
-| `net.yearly` | `number` | Annual net salary (14 months) |
-| `lunchAllowance` | `LunchAllowanceResult` | Calculated lunch allowance: gross, net, taxable, taxFree |
-| `bracket` | `object` | Tax bracket information with rates and deductions |
-| `taxRetentionTable` | `object` | Complete tax retention table data |
+| `yearly.totalGrossIncomeAmount` | `number` | Annual gross income (14 months + lunch allowance) |
+| `yearly.totalNetIncomeAmount` | `number` | Annual net income |
+| `yearly.totalLunchAllowanceGrossAmount` | `number` | Annual gross lunch allowance |
+| `socialSecurityContributionRate` | `number` | Social security contribution rate applied |
+| `monthlyBreakdown` | `MonthlyBreakdownResult[]` | Array of 12 monthly breakdowns |
+| `monthlyBreakdown[n].grossIncome.baseSalaryAmount` | `number` | Monthly base salary |
+| `monthlyBreakdown[n].grossIncome.totalWithLunchAllowanceAndSubsidyTwelfthsAmount` | `number` | Total monthly gross including allowances |
+| `monthlyBreakdown[n].irsWithholdingTax.totalAmount` | `number` | Total IRS withheld that month |
+| `monthlyBreakdown[n].socialSecurityContribution.totalAmount` | `number` | Total SS contribution that month |
+| `monthlyBreakdown[n].netIncome.totalAmount` | `number` | Total monthly net income |
+| `monthlyBreakdown[n].lunchAllowance.grossAmount` | `number` | Gross lunch allowance for the month |
+| `monthlyBreakdown[n].lunchAllowance.taxableAmount` | `number` | Taxable portion of lunch allowance |
+| `monthlyBreakdown[n].lunchAllowance.taxExemptAmount` | `number` | Tax-exempt portion of lunch allowance |
+| `monthlyBreakdown[n].subsidyTwelfths.distributedMonthlyAmount` | `number` | Monthly distributed twelfths |
+| `monthlyBreakdown[n].subsidyTwelfths.lumpSumAmount` | `number` | Lump-sum twelfths for this month |
+| `monthlyBreakdown[n].bracket` | `BracketResult` | Tax bracket information |
+| `monthlyBreakdown[n].taxRetentionTable` | `TaxRetentionTableResult` | Complete tax retention table data |
 
 #### Example
 
 <RunCode defaultCode={`
 const result = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   married: true,
   numberOfHolders: 1,
@@ -99,10 +117,15 @@ const result = simulateDependentWorker({
   twelfths: Twelfths.TWO_MONTHS
 });
 
-// Doutor Finanças-style breakdown:
-console.log(\`Net Income: €\${result.net.base.toFixed(2)}\`);
-console.log(\`Lunch Allowance: €\${result.lunchAllowance.gross.toFixed(2)}\`);
-console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);`} />
+// Yearly summary:
+console.log(\`Annual Gross: €\${result.yearly.totalGrossIncomeAmount.toFixed(2)}\`);
+console.log(\`Annual Net: €\${result.yearly.totalNetIncomeAmount.toFixed(2)}\`);
+
+// January breakdown:
+const jan = result.monthlyBreakdown[0];
+console.log(\`Jan IRS: €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Jan SS: €\${jan.socialSecurityContribution.totalAmount.toFixed(2)}\`);
+console.log(\`Jan Net: €\${jan.netIncome.totalAmount.toFixed(2)}\`);`} />
 
 ## Types and Enums
 
@@ -123,29 +146,53 @@ enum Twelfths {
 }
 ```
 
-### `LunchAllowanceResult`
-
-The result contains calculated lunch allowance values only (no input data):
+### `GrossIncomeAmountBreakdown`
 
 ```typescript
-interface LunchAllowanceResult {
-  gross: number;    // Gross monthly amount
-  net: number;     // Net amount after tax/SS on taxable portion
-  taxable: number; // Portion subject to tax and social security
-  taxFree: number; // Portion exempt from tax and social security
+interface GrossIncomeAmountBreakdown {
+  baseSalaryAmount: number;
+  baseSalaryAndLunchAllowanceAmount: number;
+  totalWithLunchAllowanceAndSubsidyTwelfthsAmount: number;
 }
 ```
 
-| Property | Type | Description |
-|----------|------|-------------|
-| `gross` | `number` | Total monthly lunch allowance |
-| `net` | `number` | Net amount after tax and social security on taxable portion |
-| `taxable` | `number` | Portion subject to tax |
-| `taxFree` | `number` | Tax-free portion |
+### `IncomeComponentAmountBreakdown`
+
+Used for `irsWithholdingTax`, `socialSecurityContribution`, and `netIncome`:
+
+```typescript
+interface IncomeComponentAmountBreakdown {
+  totalAmount: number;
+  fromBaseSalaryAmount: number;
+  fromLunchAllowanceAmount: number;
+  fromSubsidyTwelfthsAmount: number;
+}
+```
+
+### `LunchAllowanceAmountBreakdown`
+
+```typescript
+interface LunchAllowanceAmountBreakdown {
+  grossAmount: number;
+  taxableAmount: number;
+  taxExemptAmount: number;
+  isPaidInThisMonth: boolean;
+}
+```
 
 **Tax Rules**:
 - **Meal vouchers** (`"cupon"`): Tax-free up to €10.20/day
 - **Cash allowance** (`"salary"`): Tax-free up to €6.00/day
+
+### `SubsidyTwelfthsAmountBreakdown`
+
+```typescript
+interface SubsidyTwelfthsAmountBreakdown {
+  distributedMonthlyAmount: number; // Monthly distributed portion
+  lumpSumAmount: number;            // Lump-sum payment in June/December
+  totalAmount: number;              // distributedMonthlyAmount + lumpSumAmount
+}
+```
 
 ### `SituationCodesT`
 
@@ -183,50 +230,31 @@ interface Condition {
 }
 ```
 
-### `Bracket`
+### `BracketResult`
 
 ```typescript
-interface Bracket {
-  signal: "max" | "min";                    // Whether this is a maximum or minimum bracket
-  limit: number;                            // Income limit for this bracket
-  max_marginal_rate: number;                // Maximum marginal tax rate
-  deduction: number;                        // Standard deduction amount
-  var1_deduction: number;                   // Variable deduction 1
-  var2_deduction: number;                   // Variable deduction 2
-  dependent_aditional_deduction: number;   // Additional deduction per dependent
-  effective_mensal_rate: number;            // Effective monthly tax rate
+interface BracketResult {
+  signal: "max" | "min";
+  limit: number;
+  max_marginal_rate: number;
+  deduction: number;
+  var1_deduction: number;
+  var2_deduction: number;
+  dependent_aditional_deduction: number;
+  effective_mensal_rate: number;
 }
 ```
 
-### `TaxRetentionTable`
+### `TaxRetentionTableResult`
 
 ```typescript
-interface TaxRetentionTable {
-  situation: string;                       // Situation code
-  description: string;                     // Human-readable description
-  brackets: Bracket[];                      // Array of all tax brackets
-  dependent_disabled_addition_deduction?: number; // Additional deduction for disabled dependents
+interface TaxRetentionTableResult {
+  situation: string;
+  description: string;
+  brackets: BracketResult[];
+  dependent_disabled_addition_deduction?: number;
 }
 ```
-
-### `RetentionPathsSchema`
-
-```typescript
-class RetentionPathsSchema {
-  public identifier: string;
-
-  constructor(
-    period: PeriodT,
-    location: LocationT,
-    situationCode: SituationCodesT,
-    year: number | string
-  );
-
-  get path(): string; // Returns the identifier
-}
-```
-
-Constructs identifiers in the format `"2025/continent/2025-01-01_2025-07-31/TABLE1_SINGLE_OR_MARRIED_2_HOLDERS"`.
 
 ## Utility Functions
 
@@ -258,61 +286,32 @@ The library includes internal validation functions that are automatically called
 
 - `validateNumberOfHolders(numberOfHolders)`
 - `validateMarriedAndNumberOfHolders(married, numberOfHolders)`
+- `validatePartnerDisabled(married, partnerDisabled)`
 - `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
+- `validateLunchAllowanceMode(lunchAllowanceMode)`
+- `validateYear(year)`
 
 ## Error Handling
 
 <RunCode defaultCode={`// Invalid situation
 try {
   simulateDependentWorker({
+    year: 2025,
     income: 1500,
     married: true,
     // Missing numberOfHolders - required for married
   });
 } catch (error) {
   console.error('Error:', error.message); // "'numberOfHolders' is required for married workers"
-}
-
-// Invalid bracket
-try {
-  simulateDependentWorker({
-    income: 999999, // Extremely high income
-    location: 'continent'
-  });
-} catch (error) {
-  console.error('Error:', error.message); // "No bracket found for salary..."
 }`} />
 
 ## Advanced Usage
-
-### Period-based Calculations
-
-<RunCode defaultCode={`const result = simulateDependentWorker({
-  income: 1500,
-  period: "2025-01-01_2025-07-31",  // First period of 2025
-  location: 'continent'
-});
-
-console.log('=== Period-based Calculation ===');
-console.log(\`Net Salary: €\${result.net.salary.toFixed(2)}\`);
-console.log(\`Yearly Net: €\${result.net.yearly.toFixed(2)}\`);`} />
-
-### Custom Social Security Rates
-
-<RunCode defaultCode={`const result = simulateDependentWorker({
-  income: 1500,
-        socialSecurityTaxRate: 0.11, // 11% (default)
-  location: 'continent'
-});
-
-console.log('=== Custom Social Security Rate ===');
-console.log(\`Social Security: €\${result.socialSecurityTax.toFixed(2)}\`);
-console.log(\`Rate Applied: \${(result.socialSecurityTaxRate * 100).toFixed(1)}%\`);`} />
 
 ### Disability Benefits
 
 <RunCode defaultCode={`// Worker with disability
 const workerDisability = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   disabled: true,
   location: 'continent'
@@ -320,22 +319,38 @@ const workerDisability = simulateDependentWorker({
 
 // Partner with disability (extra deduction)
 const partnerDisability = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   married: true,
   numberOfHolders: 1,
-  partnerDisabled: true, // €135.71 extra deduction
+  partnerDisabled: true,
   location: 'continent'
 });
 
 // Dependent with disability (extra deduction per dependent)
 const dependentDisability = simulateDependentWorker({
+  year: 2025,
   income: 1500,
   numberOfDependents: 2,
   numberOfDependentsDisabled: 1,
   location: 'continent'
 });
 
-console.log('=== Disability Benefits Comparison ===');
-console.log(\`Worker Disability - Net: €\${workerDisability.net.salary.toFixed(2)}\`);
-console.log(\`Partner Disability - Net: €\${partnerDisability.net.salary.toFixed(2)}\`);
-console.log(\`Dependent Disability - Net: €\${dependentDisability.net.salary.toFixed(2)}\`);`} />
+console.log('=== Disability Benefits Comparison (January) ===');
+console.log(\`Worker Disability - Net: €\${workerDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Partner Disability - Net: €\${partnerDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
+console.log(\`Dependent Disability - Net: €\${dependentDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
+
+### Custom Social Security Rate
+
+<RunCode defaultCode={`const result = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  socialSecurityContributionRate: 0.11, // 11% (default)
+  location: 'continent'
+});
+
+const jan = result.monthlyBreakdown[0];
+console.log('=== Custom Social Security Rate ===');
+console.log(\`Social Security (Jan): €\${jan.socialSecurityContribution.totalAmount.toFixed(2)}\`);
+console.log(\`Rate Applied: \${(result.socialSecurityContributionRate * 100).toFixed(1)}%\`);`} />
