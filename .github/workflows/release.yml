@@ -88,4 +88,11 @@ jobs:
           prerelease: ${{ steps.version.outputs.is_prerelease == 'true' }}
 
       - name: Publish to NPM
-        run: npm publish
+        run: |
+          if [ "${{ steps.version.outputs.is_prerelease }}" = "true" ]; then
+            npm publish --tag beta
+          else
+            npm publish
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
