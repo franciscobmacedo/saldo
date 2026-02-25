@@ -1,6 +1,6 @@
 # Referência da API
 
-APIs de trabalhador independente (regime simplificado/RNH). Para cálculos de folha de pagamento, consulte a [API de trabalhador por conta de outrem](/dependent/api-reference).
+APIs de trabalhador independente (regime simplificado/RNH). Para cálculos de processamento salarial, consulte a [API de trabalhador por conta de outrem](/dependent/api-reference).
 
 ## Função Principal
 
@@ -135,7 +135,7 @@ Um conjunto de funções utilitárias projetadas para analisar e processar as ex
 Analisa a string CSV em bruto descarregada do SIRE para um array de strings (`GreenReceiptRawRow`) representando a tabela.
 
 ### `toGreenReceipt(rawRow)`
-Transforma uma linha da tabela num `GreenReceipt` tipificado, convertendo automaticamente números em formato português (ex: `"3.945,51"`) para números nativos de JavaScript e standardizando datas.
+Transforma uma linha da tabela num `GreenReceipt` tipificado, convertendo automaticamente números em formato português (ex: `"3.945,51"`) para números nativos de JavaScript e normalizando datas.
 
 ### `computeGreenReceiptsAnnualStats(receipts)`
 Agrega um array de `GreenReceipt` em estatísticas anuais detalhadas (`GreenReceiptAnnualStats`), agrupadas por ano. Calcula automaticamente o IVA total, IRS retido e fornece um detalhe financeiro por cliente.
@@ -188,7 +188,7 @@ interface CurrencyByFrequency {
 }
 ```
 
-A maioria dos resultados de trabalhador independente são retornados nesta forma (sempre usando 12 meses e 248 dias úteis).
+A maioria dos resultados de trabalhador independente são devolvidos nesta forma (sempre usando 12 meses e 248 dias úteis).
 
 ### `IndependentMonthName`
 

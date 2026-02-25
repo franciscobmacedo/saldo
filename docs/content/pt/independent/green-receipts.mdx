@@ -35,7 +35,7 @@ console.log(rawRows[0].valorTributavel); // "3.000" (Ainda é string)
 
 ## Formatar os Dados
 
-Os números e datas do Portal das Finanças têm os seus próprios formatos (por exemplo, "3.000" em vez de `3000`). Pode mapear os dados brutos para o objeto bem estruturado `GreenReceipt` através da função `toGreenReceipt`.
+Os números e datas do Portal das Finanças têm os seus próprios formatos (por exemplo, "3.000" em vez de `3000`). Pode mapear os dados em bruto para um objeto bem estruturado `GreenReceipt` através da função `toGreenReceipt`.
 
 ```typescript
 import { toGreenReceipt } from 'saldo';
@@ -47,12 +47,12 @@ console.log(formatedReceipts[0].valorTributavel); // 3000 (Número em formato pa
 
 ## Calcular Estatísticas Anuais
 
-Se quiser gerar um sumário anual ou estatísticas por cliente (por exemplo, qual o cliente que rendeu mais num determinado ano), pode usar a função `computeGreenReceiptsAnnualStats`. Esta função retorna um mapa com agregadores por ano e detalhes cliente-a-cliente.
+Se quiser gerar um resumo anual ou estatísticas por cliente (por exemplo, qual o cliente que gerou mais receita num determinado ano), pode usar a função `computeGreenReceiptsAnnualStats`. Esta função devolve um mapa com agregações por ano e detalhes cliente a cliente.
 
 ```typescript
 import { computeGreenReceiptsAnnualStats } from 'saldo';
 
-// As chaves são os anos presentes nos faturamentos, p. ex.: 2024, 2025
+// As chaves são os anos presentes na faturação, p. ex.: 2024, 2025
 const annualStats = computeGreenReceiptsAnnualStats(formatedReceipts);
 
 const stats2025 = annualStats.get(2025);
@@ -65,7 +65,7 @@ console.log(stats2025?.byClient);
 
 ## Efetuar Análise de Impostos
 
-Através das estatísticas do faturamento anual, é possível estimar o impacto do **IRS** e da **Segurança Social** num cenário real (ex.: prever se será necessário pagar imposto no ato da entrega da declaração e quanto se espera de contribuição mensal para a SS).
+Através das estatísticas da faturação anual, é possível estimar o impacto do **IRS** e da **Segurança Social** num cenário real (ex.: prever se será necessário pagar imposto no ato da entrega da declaração e quanto se espera de contribuição mensal para a SS).
 
 Pode utilizar a função `analyzeGreenReceiptTaxes`. Por defeito, a simulação pressupõe os coeficientes standard de tributação sem benefícios anuais de início de atividade.
 
