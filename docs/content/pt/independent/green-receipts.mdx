@@ -1,0 +1,82 @@
+# Recibos Verdes
+
+A biblioteca fornece utilitários específicos para processar e analisar as exportações oficiais em CSV dos recibos verdes do **Portal das Finanças**.
+
+Para obter o ficheiro CSV, os trabalhadores independentes devem aceder ao Portal das Finanças através [desta ligação](https://irs.portaldasfinancas.gov.pt/recibos/portal/consultar) (área de consulta de recibos verdes). No final da página (ou numa das opções), clique no botão para **exportar os dados** (CSV), de modo a extrair todas as faturas-recibo e recibos para o seu computador.
+## Analisar o CSV (Parse)
+
+A função `parseGreenReceiptsCsv` aceita o conteúdo em texto do ficheiro CSV exportado pelo Portal das Finanças e devolve uma lista de objetos do tipo `GreenReceiptRawRow`.
+
+### Exemplo de Ficheiro CSV
+
+Os ficheiros CSV oficiais utilizam `;` como separador e têm um cabeçalho fixo. Segue um pequeno exemplo com dados fictícios:
+
+```csv filename="dados-ficticios.csv"
+Referência;Tipo Documento;ATCUD;Situação;Data da Transação;Motivo Emissão;Data de Emissão;País do Adquirente;NIF Adquirente;Nome do Adquirente;Valor Tributável (em euros);Valor do IVA (em euros);Imposto do Selo como Retenção na Fonte;Valor do Imposto do Selo (em euros);Valor do IRS (em euros);Total de Impostos (em euros);Total com Impostos (em euros);Total de Retenções na Fonte (em euros);Contribuição Cultura (em euros);Total do Documento (em euros)
+FR ATSIRE01FR/27;Fatura-Recibo;ABC12345-27;Emitido;Pagamento dos bens ou dos serviços;2025-12-30;2025-12-30;PORTUGAL;123456789;EMPRESA DE EXEMPLO LDA;3.000;690;;0;750;;3.690;750;0;2.940
+FR ATSIRE01FR/26;Fatura-Recibo;ABC12345-26;Emitido;Pagamento dos bens ou dos serviços;2025-12-16;2025-12-16;PORTUGAL;987654321;OUTRA EMPRESA SA;500;115;;0;125;;615;125;0;490
+FR ATSIRE01FR/20;Fatura-Recibo;ABC12345-20;Anulado;Pagamento dos bens ou dos serviços;2025-10-23;2025-10-23;PORTUGAL;123456789;EMPRESA DE EXEMPLO LDA;300;0;;0;25;;300;25;0;275
+FR ATSIRE01FR/11;Fatura-Recibo;ABC12345-11;Emitido;Pagamento dos bens ou dos serviços;2025-03-31;2025-04-07;REINO UNIDO;000111222;INTERNATIONAL LTD;4.000;0;Não;0;0;;4.000;0;0;4.000
+```
+
+### Ler o CSV
+
+```typescript
+import { parseGreenReceiptsCsv } from 'saldo';
+import * as fs from 'fs';
+
+const csvContent = fs.readFileSync('dados-ficticios.csv', 'utf8');
+
+// Analisa o CSV bruto
+const rawRows = parseGreenReceiptsCsv(csvContent);
+
+console.log(rawRows[0].valorTributavel); // "3.000" (Ainda é string)
+```
+
+## Formatar os Dados
+
+Os números e datas do Portal das Finanças têm os seus próprios formatos (por exemplo, "3.000" em vez de `3000`). Pode mapear os dados brutos para o objeto bem estruturado `GreenReceipt` através da função `toGreenReceipt`.
+
+```typescript
+import { toGreenReceipt } from 'saldo';
+
+const formatedReceipts = rawRows.map(toGreenReceipt);
+
+console.log(formatedReceipts[0].valorTributavel); // 3000 (Número em formato padrão)
+```
+
+## Calcular Estatísticas Anuais
+
+Se quiser gerar um sumário anual ou estatísticas por cliente (por exemplo, qual o cliente que rendeu mais num determinado ano), pode usar a função `computeGreenReceiptsAnnualStats`. Esta função retorna um mapa com agregadores por ano e detalhes cliente-a-cliente.
+
+```typescript
+import { computeGreenReceiptsAnnualStats } from 'saldo';
+
+// As chaves são os anos presentes nos faturamentos, p. ex.: 2024, 2025
+const annualStats = computeGreenReceiptsAnnualStats(formatedReceipts);
+
+const stats2025 = annualStats.get(2025);
+console.log(`Recebimentos totais em 2025: ${stats2025?.grossIncome}€`);
+console.log(`IVA total cobrado: ${stats2025?.totalIVACharged}€`);
+
+// Pode consultar, também, as distribuições por cliente
+console.log(stats2025?.byClient); 
+```
+
+## Efetuar Análise de Impostos
+
+Através das estatísticas do faturamento anual, é possível estimar o impacto do **IRS** e da **Segurança Social** num cenário real (ex.: prever se será necessário pagar imposto no ato da entrega da declaração e quanto se espera de contribuição mensal para a SS).
+
+Pode utilizar a função `analyzeGreenReceiptTaxes`. Por defeito, a simulação pressupõe os coeficientes standard de tributação sem benefícios anuais de início de atividade.
+
+```typescript
+import { analyzeGreenReceiptTaxes } from 'saldo';
+
+const taxAnalysis = analyzeGreenReceiptTaxes(stats2025);
+
+console.log(`IRS estimado total a pagar no ano: ${taxAnalysis.irsEstimatedTotal}€`);
+console.log(`Rendimento retido na fonte pela entidade: ${taxAnalysis.irsAlreadyWithheld}€`);
+console.log(`Ajuste de IRS (Receber/Pagar): ${taxAnalysis.irsDeltaType} -> ${taxAnalysis.irsDelta}€`);
+
+console.log(`Mensalidade SS estimada: ${taxAnalysis.ssMonthlyContribution}€`);
+```
