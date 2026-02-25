@@ -60,6 +60,8 @@ export interface IndependentWorkerNormalizedInternals {
   };
   socialSecurity: {
     firstYearExemptionApplied: boolean;
+    /** True when previousYearQ4MonthlyIncome was NOT provided and Jan/Feb/Mar SS is estimated from current-year data */
+    ssQ1Approximated: boolean;
     baseMonthlyBeforeDiscountAndCap: number | number[];
     baseMonthlyAfterDiscountBeforeCap: number | number[];
     baseMonthlyAfterCap: number | number[];
@@ -110,6 +112,8 @@ export interface IndependentWorkerResult {
   rnhTax: number;
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
+  /** True when previousYearQ4MonthlyIncome was NOT provided and Jan/Feb/Mar SS is estimated from current-year data */
+  ssQ1Approximated: boolean;
   monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
   normalizedInternals: IndependentWorkerNormalizedInternals;
 }
@@ -130,6 +134,16 @@ export interface SimulateIndependentWorkerOptions {
   dateOfOpeningActivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
+  /**
+   * Average monthly gross income earned in October, November, and December of the
+   * **previous** year.  When provided, this is used to compute the exact SS
+   * contribution due in January, February, and March (which is always based on
+   * the previous quarter's income under Portuguese SS rules).
+   *
+   * When omitted the simulator falls back to using the current-year Q3 average
+   * as a proxy and sets `ssQ1Approximated = true` on the result.
+   */
+  previousYearQ4MonthlyIncome?: number;
 }
 
 export type SimulateIndependentWorkerMonthlyIncomeSweepOptions =

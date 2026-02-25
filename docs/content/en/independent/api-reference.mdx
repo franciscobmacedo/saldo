@@ -25,6 +25,7 @@ interface SimulateIndependentWorkerOptions {
   dateOfOpeningActivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
+  previousYearQ4MonthlyIncome?: number;
 }
 ```
 
@@ -44,6 +45,7 @@ interface SimulateIndependentWorkerOptions {
 | `dateOfOpeningActivity` | `Date \| null` | `null` | Sets first/second financial year multipliers and first-12-month SS exemption |
 | `benefitsOfYouthIrs` | `boolean` | `false` | Apply youth IRS discount |
 | `yearOfYouthIrs` | `number` | `1` | Youth IRS benefit year (1-10 for 2025 tables) |
+| `previousYearQ4MonthlyIncome` | `number` | `undefined` | Average monthly **gross** income for Oct/Nov/Dec of the **previous** year. When supplied, Jan/Feb/Mar SS is computed exactly from this value. When omitted, those months are estimated and `ssQ1Approximated` is `true` on the result. |
 
 #### Return Value
 
@@ -72,6 +74,7 @@ interface IndependentWorkerResult {
   rnhTax: number;
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
+  ssQ1Approximated: boolean;
   monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
   normalizedInternals: IndependentWorkerNormalizedInternals;
 }
@@ -107,6 +110,7 @@ interface IndependentWorkerMonthlyBreakdownResult {
 | `workerWithinFirstFinancialYear` | `boolean` | Uses 37.5% simplified factor |
 | `workerWithinSecondFinancialYear` | `boolean` | Uses 56.25% simplified factor |
 | `workerWithinFirst12Months` | `boolean` | SS waived for first 12 months after opening activity |
+| `ssQ1Approximated` | `boolean` | `true` when Jan/Feb/Mar SS is estimated (i.e. `previousYearQ4MonthlyIncome` was not provided). Show a note to the user in this case. |
 | `rnh` / `rnhTax` | `boolean` / `number` | Indicates RNH flat rate usage |
 | `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Youth IRS inputs echoed back |
 | `monthlyBreakdown` | `IndependentWorkerMonthlyBreakdownResult[]` | Monthly breakdown with taxes and net income |
@@ -273,18 +277,33 @@ console.log(\`Second year SS: €\${secondYear.ssPay.year.toFixed(2)}\`);`} />
 
 When supplying an array of exactly 12 numbers for `income`, the simulator processes income as variable across the year. The frequency field (`incomeFrequency`) is ignored, and Social Security is calculated on a quarterly basis, mirroring the real-world quarterly declarations:
 
-- **Q1 Income** (Jan, Feb, Mar) influences SS payments for May, June, July.
-- **Q2 Income** (Apr, May, Jun) influences SS payments for Aug, Sept, Oct.
-- **Q3 Income** (Jul, Aug, Sep) influences SS payments for Nov, Dec, Jan.
-- **Q4 Income** (Oct, Nov, Dec) influences SS payments for Feb, Mar, Apr.
+| Income earned | SS payment months |
+|---|---|
+| **Prev-year Q4** (Oct, Nov, Dec) | Jan, Feb, Mar |
+| **Q1** (Jan, Feb, Mar) | Apr, May, Jun |
+| **Q2** (Apr, May, Jun) | Jul, Aug, Sep |
+| **Q3** (Jul, Aug, Sep) | Oct, Nov, Dec |
 
-<RunCode defaultCode={`// Simulate fluctuating income over the year
-const variableEmployed = simulateIndependentWorker({
+Because Jan/Feb/Mar SS depends on the **previous year's** Oct–Dec income, the simulator accepts an optional `previousYearQ4MonthlyIncome` parameter. When not provided, those three months fall back to the current-year Q3 average and `ssQ1Approximated` is `true` on the result — useful for showing a UI notice.
+
+<RunCode defaultCode={`// Without previous year data — Jan/Feb/Mar SS will be estimated
+const estimated = simulateIndependentWorker({
   income: [1500, 1800, 2000, 1200, 1000, 2500, 3000, 3200, 1500, 1000, 2800, 4000],
   expenses: 3000,
 });
 
-console.log('=== Variable Income SS Output ===');
-console.log(\`Estimated Annual IRS: €\${variableEmployed.irsPay.year.toFixed(2)}\`);
-console.log(\`Estimated Annual SS: €\${variableEmployed.ssPay.year.toFixed(2)}\`);
-console.log(\`Base Monthly Calculation (After Cap): [\${(variableEmployed.normalizedInternals.socialSecurity.baseMonthlyAfterCap as number[]).join(', ')}]\`);`} />
+if (estimated.ssQ1Approximated) {
+  console.log('⚠️  Jan/Feb/Mar SS is an estimate — provide previousYearQ4MonthlyIncome for exact values');
+}
+
+// With previous year data — fully accurate
+const accurate = simulateIndependentWorker({
+  income: [1500, 1800, 2000, 1200, 1000, 2500, 3000, 3200, 1500, 1000, 2800, 4000],
+  expenses: 3000,
+  previousYearQ4MonthlyIncome: 2200, // average gross income of Oct/Nov/Dec of last year
+});
+
+console.log('Jan SS (estimated):', estimated.monthlyBreakdown[0].ssPay.toFixed(2));
+console.log('Jan SS (accurate):', accurate.monthlyBreakdown[0].ssPay.toFixed(2));
+console.log('Annual SS (estimated):', estimated.ssPay.year.toFixed(2));
+console.log('Annual SS (accurate):', accurate.ssPay.year.toFixed(2));`} />

@@ -53,12 +53,14 @@ export function calculateSsPay(
   maxSsIncome: number,
   firstYearForSs: boolean,
   nrDaysOff: number,
-  yearBusinessDays: number
-): { totals: CurrencyByFrequency; monthly: number[] } {
+  yearBusinessDays: number,
+  previousYearQ4MonthlyIncome?: number
+): { totals: CurrencyByFrequency; monthly: number[]; ssQ1Approximated: boolean } {
   if (firstYearForSs) {
     return {
       totals: { year: 0, month: 0, day: 0 },
       monthly: Array(12).fill(0),
+      ssQ1Approximated: false,
     };
   }
 
@@ -72,13 +74,28 @@ export function calculateSsPay(
     return Math.max(ssTax * Math.min(maxSsIncome, base), 20);
   };
 
+  // Jan/Feb/Mar SS is determined by prior-year Q4 (Oct/Nov/Dec) income.
+  // Use the supplied previousYearQ4MonthlyIncome when available; otherwise fall
+  // back to the current-year Q3 average and flag the result as approximated.
+  const ssQ1Approximated = previousYearQ4MonthlyIncome === undefined;
+  const prevQ4Avg = previousYearQ4MonthlyIncome ?? q3Avg;
+
+  const prevQ4SS = calcMonthSS(prevQ4Avg);
   const q1SS = calcMonthSS(q1Avg);
   const q2SS = calcMonthSS(q2Avg);
   const q3SS = calcMonthSS(q3Avg);
   const q4SS = calcMonthSS(q4Avg);
 
+  // Payment mapping (income quarter → months when SS is paid):
+  //   prev-year Q4  → Jan, Feb, Mar  (prevQ4SS)
+  //   Q1 (Jan–Mar)  → Apr, May, Jun  (q1SS)
+  //   Q2 (Apr–Jun)  → Jul, Aug, Sep  (q2SS)
+  //   Q3 (Jul–Sep)  → Oct, Nov, Dec  (q3SS)
   const monthly = [
-    q3SS, q4SS, q4SS, q4SS, q1SS, q1SS, q1SS, q2SS, q2SS, q2SS, q3SS, q3SS
+    prevQ4SS, prevQ4SS, prevQ4SS,   // Jan, Feb, Mar
+    q1SS, q1SS, q1SS,               // Apr, May, Jun
+    q2SS, q2SS, q2SS,               // Jul, Aug, Sep
+    q3SS, q3SS, q3SS,               // Oct, Nov, Dec
   ];
 
   const yearSSPay = monthly.reduce((sum, val) => sum + val, 0);
@@ -90,6 +107,7 @@ export function calculateSsPay(
       day: yearSSPay / (yearBusinessDays - nrDaysOff),
     },
     monthly,
+    ssQ1Approximated,
   };
 }
 

@@ -108,6 +108,7 @@ interface BuildNormalizedInternalsOptions {
   taxRanks: TaxRank[];
   rnh: boolean;
   rnhTax: number;
+  ssQ1Approximated: boolean;
 }
 
 const buildNormalizedInternals = ({
@@ -131,6 +132,7 @@ const buildNormalizedInternals = ({
   taxRanks,
   rnh,
   rnhTax,
+  ssQ1Approximated,
 }: BuildNormalizedInternalsOptions): IndependentWorkerNormalizedInternals => {
   const effectiveBusinessDays = yearBusinessDays - nrDaysOff;
 
@@ -204,6 +206,7 @@ const buildNormalizedInternals = ({
     },
     socialSecurity: {
       firstYearExemptionApplied: workerWithinFirst12Months,
+      ssQ1Approximated,
       baseMonthlyBeforeDiscountAndCap: ssBaseMonthlyBeforeDiscountAndCap,
       baseMonthlyAfterDiscountBeforeCap: ssBaseMonthlyAfterDiscountBeforeCap,
       baseMonthlyAfterCap: ssBaseMonthlyAfterCap,
@@ -245,6 +248,7 @@ export function simulateIndependentWorker({
   dateOfOpeningActivity = null,
   benefitsOfYouthIrs = false,
   yearOfYouthIrs = 1,
+  previousYearQ4MonthlyIncome,
 }: SimulateIndependentWorkerOptions): IndependentWorkerResult {
   // Validate all inputs
   validateIncome(income);
@@ -286,14 +290,15 @@ export function simulateIndependentWorker({
   const monthlyIncomes = isVariable ? (income as number[]) : Array(12).fill(grossIncome.month);
 
   // Calculate social security payments
-  const { totals: ssPay, monthly: ssMonthlyList } = calculateSsPay(
+  const { totals: ssPay, monthly: ssMonthlyList, ssQ1Approximated } = calculateSsPay(
     monthlyIncomes,
     ssTax,
     ssDiscount,
     maxSsIncome,
     workerWithinFirst12Months,
     nrDaysOff,
-    resolvedYearBusinessDays
+    resolvedYearBusinessDays,
+    previousYearQ4MonthlyIncome
   );
 
   // Calculate specific deductions
@@ -365,6 +370,7 @@ export function simulateIndependentWorker({
     taxableIncome,
     taxRank,
     taxRanks: taxTableUsed,
+    ssQ1Approximated,
     rnh,
     rnhTax,
   });
@@ -413,6 +419,7 @@ export function simulateIndependentWorker({
     rnhTax,
     benefitsOfYouthIrs,
     yearOfYouthIrs,
+    ssQ1Approximated,
     monthlyBreakdown,
     normalizedInternals,
   };

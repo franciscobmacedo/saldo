@@ -25,6 +25,7 @@ interface SimulateIndependentWorkerOptions {
   dateOfOpeningActivity?: Date | null;
   benefitsOfYouthIrs?: boolean;
   yearOfYouthIrs?: number;
+  previousYearQ4MonthlyIncome?: number;
 }
 ```
 
@@ -44,6 +45,7 @@ interface SimulateIndependentWorkerOptions {
 | `dateOfOpeningActivity` | `Date \| null` | `null` | Define multiplicadores de primeiro/segundo ano fiscal e isenção SS nos primeiros 12 meses |
 | `benefitsOfYouthIrs` | `boolean` | `false` | Aplicar desconto IRS de juventude |
 | `yearOfYouthIrs` | `number` | `1` | Ano de benefício IRS de juventude (1-10 para tabelas 2025) |
+| `previousYearQ4MonthlyIncome` | `number` | `undefined` | Rendimento **bruto** mensal médio para Out/Nov/Dez do ano **anterior**. Quando partilhado, a SS para Jan/Fev/Mar é calculada exatamente a partir deste valor. Quando omitido, estes três meses são estimados e `ssQ1Approximated` retorna como `true` no resultado. |
 
 #### Valor de Retorno
 
@@ -72,6 +74,7 @@ interface IndependentWorkerResult {
   rnhTax: number;
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
+  ssQ1Approximated: boolean;
   monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
   normalizedInternals: IndependentWorkerNormalizedInternals;
 }
@@ -107,6 +110,7 @@ interface IndependentWorkerMonthlyBreakdownResult {
 | `workerWithinFirstFinancialYear` | `boolean` | Usa fator simplificado de 37.5% |
 | `workerWithinSecondFinancialYear` | `boolean` | Usa fator simplificado de 56.25% |
 | `workerWithinFirst12Months` | `boolean` | SS isenta nos primeiros 12 meses após abertura de atividade |
+| `ssQ1Approximated` | `boolean` | Retorna `true` quando a SS para Jan/Fev/Mar é estimada (i.e. `previousYearQ4MonthlyIncome` não foi incluído). Apresente uma nota na interface nesse sentido. |
 | `rnh` / `rnhTax` | `boolean` / `number` | Indica uso de taxa fixa RNH |
 | `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Entradas IRS de juventude ecoadas de volta |
 | `monthlyBreakdown` | `IndependentWorkerMonthlyBreakdownResult[]` | Detalhe mensal com impostos e rendimento líquido |
@@ -273,17 +277,33 @@ console.log(\`Segundo ano SS: €\${secondYear.ssPay.year.toFixed(2)}\`);`} />
 
 Ao fornecer um array de exatamente 12 números para `income`, o simulador processa o rendimento como variável ao longo do ano. O campo frequência (`incomeFrequency`) é ignorado, e a Segurança Social é unicamente calculada com base trimestral, espelhando as declarações trimestrais do mundo real:
 
-- **Rendimento do 1º Trimestre** (Jan, Fev, Mar) influencia os pagamentos à SS para Mai, Jun, Jul.
-- **Rendimento do 2º Trimestre** (Abr, Mai, Jun) influencia os pagamentos à SS para Ago, Set, Out.
-- **Rendimento do 3º Trimestre** (Jul, Ago, Set) influencia os pagamentos à SS para Nov, Dez, Jan.
-- **Rendimento do 4º Trimestre** (Out, Nov, Dez) influencia os pagamentos à SS para Fev, Mar, Abr.
+| Rendimento obtido | Meses a pagar à SS |
+|---|---|
+| **4º Trimestre do ano anterior** (Out, Nov, Dez) | Jan, Fev, Mar |
+| **1º Trimestre** (Jan, Fev, Mar) | Abr, Mai, Jun |
+| **2º Trimestre** (Abr, Mai, Jun) | Jul, Ago, Set |
+| **3º Trimestre** (Jul, Ago, Set) | Out, Nov, Dez |
 
-<RunCode defaultCode={`// Simular rendimento flutuante ao longo do ano
-const variableEmployed = simulateIndependentWorker({
+Por a contribuição de Jan/Fev/Mar depender do rendimento de Out–Dez do **ano anterior**, o simulador aceita um parâmetro adicional opcional `previousYearQ4MonthlyIncome`. Quando este é omitido, os três meses baseiam-se numa estimativa para a média do 3º trimestre do ano correspondente e o parâmetro `ssQ1Approximated` retorna `true` no resultado — o que é útil para expor um aviso ao utilizador na interface.
+
+<RunCode defaultCode={`// Sem dados do ano anterior — a contribuição para Jan/Fev/Mar da SS será uma estimativa
+const estimated = simulateIndependentWorker({
   income: [1500, 1800, 2000, 1200, 1000, 2500, 3000, 3200, 1500, 1000, 2800, 4000],
   expenses: 3000,
 });
 
-console.log('=== Detalhe de SS com Rendimento Variável ===');
-console.log(\`SS Anual Estimada: €\${variableEmployed.ssPay.year.toFixed(2)}\`);
-console.log(\`Cálculo da Base Mensal (Após Limite Central): [\${(variableEmployed.normalizedInternals.socialSecurity.baseMonthlyAfterCap as number[]).join(', ')}]\`);`} />
+if (estimated.ssQ1Approximated) {
+  console.log('⚠️  A contribuição SS para Jan/Fev/Mar é uma estimativa — preencha previousYearQ4MonthlyIncome para valor exato');
+}
+
+// Com dados do ano anterior — cálculo exato
+const accurate = simulateIndependentWorker({
+  income: [1500, 1800, 2000, 1200, 1000, 2500, 3000, 3200, 1500, 1000, 2800, 4000],
+  expenses: 3000,
+  previousYearQ4MonthlyIncome: 2200, // rendimento bruto médio para Out/Nov/Dez do ano anterior
+});
+
+console.log('SS em Janeiro (estimativa):', estimated.monthlyBreakdown[0].ssPay.toFixed(2));
+console.log('SS em Janeiro (exato):', accurate.monthlyBreakdown[0].ssPay.toFixed(2));
+console.log('SS Anual (estimativa):', estimated.ssPay.year.toFixed(2));
+console.log('SS Anual (exato):', accurate.ssPay.year.toFixed(2));`} />
