@@ -65,9 +65,9 @@ console.log(stats2025?.byClient);
 
 ## Performing Tax Analysis
 
-Use \`simulateFromGreenReceiptsCsv\` to directly parse a CSV file and run a complete simulation for a specific year. It automatically maps the receipts precisely to their respective months, using actual retentions when available. It will even calculate the previous year's Q4 automatically if those receipts are present in the CSV file, to ensure accurate Q1 Social Security estimates.
+Use `simulateFromGreenReceiptsCsv` to directly parse a CSV file and run a complete simulation for a specific year. It automatically maps the receipts precisely to their respective months, using actual retentions when available. It will even calculate the previous year's Q4 automatically if those receipts are present in the CSV file, to ensure accurate Q1 Social Security estimates.
 
-\`\`\`typescript
+```typescript
 import { simulateFromGreenReceiptsCsv } from 'saldo';
 import * as fs from 'fs';
 
@@ -80,8 +80,8 @@ const result = simulateFromGreenReceiptsCsv({
   expenses: 0, // Optionals from simulateIndependentWorker can be added
 });
 
-console.log(\`Estimated final IRS to pay: €\${result.irsPay.year.toFixed(2)}\`);
-console.log(\`Estimated final SS contribution: €\${result.ssPay.year.toFixed(2)}\`);
-console.log(\`Net income: €\${result.netIncome.year.toFixed(2)}\`);
-console.log(\`Is Q1 SS Approximated? \${result.ssQ1Approximated}\`);
-\`\`\`
+console.log(`Estimated final IRS to pay: €${result.irsPay.year.toFixed(2)}`);
+console.log(`Estimated final SS contribution: €${result.ssPay.year.toFixed(2)}`);
+console.log(`Net income: €${result.netIncome.year.toFixed(2)}`);
+console.log(`Is Q1 SS Approximated? ${result.ssQ1Approximated}`);
+```

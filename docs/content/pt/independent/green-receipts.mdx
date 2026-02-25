@@ -65,9 +65,9 @@ console.log(stats2025?.byClient);
 
 ## Efetuar Análise de Impostos
 
-Use \`simulateFromGreenReceiptsCsv\` para analisar um ficheiro CSV e correr uma simulação completa para um ano específico diretamente. Esta função mapeia os recibos para os seus respetivos meses com precisão, tirando partido das retenções reais sempre que as mesmas estiverem disponíveis. Tem ainda a capacidade de analisar de forma automática o 4º trimestre do ano passado e tirar a média, desde que os recibos se encontrem no ficheiro CSV, por forma a garantir a avaliação precisa da Segurança Social devida no 1º trimestre corrente.
+Use `simulateFromGreenReceiptsCsv` para analisar um ficheiro CSV e correr uma simulação completa para um ano específico diretamente. Esta função mapeia os recibos para os seus respetivos meses com precisão, tirando partido das retenções reais sempre que as mesmas estiverem disponíveis. Tem ainda a capacidade de analisar de forma automática o 4º trimestre do ano passado e tirar a média, desde que os recibos se encontrem no ficheiro CSV, por forma a garantir a avaliação precisa da Segurança Social devida no 1º trimestre corrente.
 
-\`\`\`typescript
+```typescript
 import { simulateFromGreenReceiptsCsv } from 'saldo';
 import * as fs from 'fs';
 
@@ -80,8 +80,8 @@ const result = simulateFromGreenReceiptsCsv({
   expenses: 0, // Os parâmetros do simulador aplicam-se
 });
 
-console.log(\`IRS final estimado a pagar: \${result.irsPay.year.toFixed(2)}€\`);
-console.log(\`Segurança Social final estimada: \${result.ssPay.year.toFixed(2)}€\`);
-console.log(\`Rendimento líquido: \${result.netIncome.year.toFixed(2)}€\`);
-console.log(\`SS de Janeiro é aproximada? \${result.ssQ1Approximated}\`);
-\`\`\`
+console.log(`IRS final estimado a pagar: ${result.irsPay.year.toFixed(2)}€`);
+console.log(`Segurança Social final estimada: ${result.ssPay.year.toFixed(2)}€`);
+console.log(`Rendimento líquido: ${result.netIncome.year.toFixed(2)}€`);
+console.log(`SS de Janeiro é aproximada? ${result.ssQ1Approximated}`);
+```
