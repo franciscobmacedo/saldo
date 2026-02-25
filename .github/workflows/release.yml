@@ -50,42 +50,7 @@ jobs:
 
       - name: Bump version
         id: version
-        run: |
-          # Get date in YYYY.M.D format (no leading zeros)
-          DATE_VERSION=$(date +'%Y.%-m.%-d')
-          echo "Base date version: $DATE_VERSION"
-          
-          # Fetch all tags
-          git fetch --tags --force
-          
-          if [ "${{ github.event.inputs.prerelease }}" = "true" ]; then
-            # Handle Prerelease: find latest beta index for today
-            LATEST_BETA=$(git tag -l "$DATE_VERSION-beta.*" | grep -oE '[0-9]+$' | sort -n | tail -1 || echo "")
-            if [ -z "$LATEST_BETA" ]; then
-              NEW_VERSION="$DATE_VERSION-beta.1"
-            else
-              NEW_VERSION="$DATE_VERSION-beta.$((LATEST_BETA + 1))"
-            fi
-            echo "is_prerelease=true" >> $GITHUB_OUTPUT
-          else
-            # Handle Daily/Stable release
-            NEW_VERSION="$DATE_VERSION"
-            
-            # Safety check: if stable version already exists, we stop
-            if git rev-parse "$DATE_VERSION" >/dev/null 2>&1; then
-              echo "::error::Stable version $DATE_VERSION already exists as a tag. Use a pre-release if you need multiple builds today."
-              exit 1
-            fi
-            echo "is_prerelease=false" >> $GITHUB_OUTPUT
-          fi
-          
-          echo "Determined version: $NEW_VERSION"
-          
-          # Update package.json
-          npm version $NEW_VERSION --no-git-tag-version --allow-same-version
-          
-          echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "version_number=$NEW_VERSION" >> $GITHUB_OUTPUT
+        run: ./scripts/release.sh ${{ github.event.inputs.prerelease }}
 
       - name: Commit version bump
         run: |
