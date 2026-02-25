@@ -2,6 +2,12 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      prerelease:
+        description: 'Is this a pre-release?'
+        required: true
+        type: boolean
+        default: true
 
 jobs:
   release:
@@ -46,27 +52,31 @@ jobs:
         id: version
         run: |
           # Get date in YYYY.M.D format (no leading zeros)
-          # %-m and %-d are GNU extensions for no padding
           DATE_VERSION=$(date +'%Y.%-m.%-d')
-          echo "Date-based version: $DATE_VERSION"
+          echo "Base date version: $DATE_VERSION"
           
-          # Fetch all tags to ensure we have the latest
+          # Fetch all tags
           git fetch --tags --force
           
-          STABLE_TAG=$(git tag -l "$DATE_VERSION")
-          BETA_TAGS=$(git tag -l "$DATE_VERSION-beta.*")
-          
-          if [ -z "$STABLE_TAG" ] && [ -z "$BETA_TAGS" ]; then
-            NEW_VERSION="$DATE_VERSION"
-          else
-            # Stable or some betas already exist for today
-            LATEST_BETA=$(echo "$BETA_TAGS" | grep -oE '[0-9]+$' | sort -n | tail -1 || echo "")
+          if [ "${{ github.event.inputs.prerelease }}" = "true" ]; then
+            # Handle Prerelease: find latest beta index for today
+            LATEST_BETA=$(git tag -l "$DATE_VERSION-beta.*" | grep -oE '[0-9]+$' | sort -n | tail -1 || echo "")
             if [ -z "$LATEST_BETA" ]; then
-              # Only stable exists
               NEW_VERSION="$DATE_VERSION-beta.1"
             else
               NEW_VERSION="$DATE_VERSION-beta.$((LATEST_BETA + 1))"
             fi
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            # Handle Daily/Stable release
+            NEW_VERSION="$DATE_VERSION"
+            
+            # Safety check: if stable version already exists, we stop
+            if git rev-parse "$DATE_VERSION" >/dev/null 2>&1; then
+              echo "::error::Stable version $DATE_VERSION already exists as a tag. Use a pre-release if you need multiple builds today."
+              exit 1
+            fi
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
           fi
           
           echo "Determined version: $NEW_VERSION"
@@ -76,12 +86,6 @@ jobs:
           
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "version_number=$NEW_VERSION" >> $GITHUB_OUTPUT
-          
-          if [[ "$NEW_VERSION" == *"-beta."* ]]; then
-            echo "is_prerelease=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_prerelease=false" >> $GITHUB_OUTPUT
-          fi
 
       - name: Commit version bump
         run: |
@@ -119,6 +123,7 @@ jobs:
             ```
           draft: false
           prerelease: ${{ steps.version.outputs.is_prerelease == 'true' }}
+
 
 
       - name: Publish to NPM
