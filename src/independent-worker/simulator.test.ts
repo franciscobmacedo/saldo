@@ -7,14 +7,19 @@ import { YEAR_BUSINESS_DAYS_BY_TAX_YEAR } from "@/independent-worker/consts";
 // Mock the calculation functions to control their output for tests
 vi.mock("@/independent-worker/calculations", () => ({
   calculateGrossIncome: vi.fn((
-    income: number,
+    income: number | number[],
     frequency: string,
     nrDaysOff: number,
     yearBusinessDays: number = 248
   ) => {
-    const year = frequency === FrequencyChoices.Year ? income :
-      frequency === FrequencyChoices.Month ? income * 12 :
-        income * (yearBusinessDays - nrDaysOff);
+    let year = 0;
+    if (Array.isArray(income)) {
+      year = (income as number[]).reduce((sum, val) => sum + val, 0);
+    } else {
+      year = frequency === FrequencyChoices.Year ? income :
+        frequency === FrequencyChoices.Month ? income * 12 :
+          income * (yearBusinessDays - nrDaysOff);
+    }
     return {
       year,
       month: year / 12,
@@ -395,5 +400,34 @@ describe("simulateIndependentWorker", () => {
     });
 
     expect(result).toBeDefined();
+  });
+
+  it("should handle an array of monthly receipts with varying retentions correctly", () => {
+    const incomeArray = [
+      [{ income: 1000, retention: 0.25 }, { income: 500 }], // 1500 total, retention = 1000*0.25 + 500*0.23 = 250 + 115 = 365
+      [{ income: 2000, retention: 0 }],                     // 2000 total, retention = 0
+      ...Array(10).fill([])                                 // remaining months 0
+    ];
+
+    const result = simulateIndependentWorker({
+      income: incomeArray,
+      irsRetentionRate: 0.23, // global fallback
+    });
+
+    expect(result.grossIncome.year).toBe(3500);
+
+    const jan = result.monthlyBreakdown.find(m => m.month === 'january');
+    expect(jan?.grossIncome).toBe(1500);
+    expect(jan?.irsRetention).toBe(365);
+
+    const feb = result.monthlyBreakdown.find(m => m.month === 'february');
+    expect(feb?.grossIncome).toBe(2000);
+    expect(feb?.irsRetention).toBe(0);
+
+    const mar = result.monthlyBreakdown.find(m => m.month === 'march');
+    expect(mar?.grossIncome).toBe(0);
+    expect(mar?.irsRetention).toBe(0);
+
+    expect(result.irsRetentionPay.year).toBe(365);
   });
 });

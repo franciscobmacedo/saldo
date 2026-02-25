@@ -1,21 +1,49 @@
 import {
   FrequencyChoices,
+  IndependentWorkerReceipt,
 } from "./schemas";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
 
-export function validateIncome(income: number | number[]): void {
-  const incomes = Array.isArray(income) ? income : [income];
-  if (Array.isArray(income) && income.length !== 12) {
-    throw new Error("Income array must have exactly 12 elements");
-  }
-  incomes.forEach((val) => {
-    if (!Number.isFinite(val)) {
+export function validateIncome(income: number | number[] | IndependentWorkerReceipt[][]): void {
+  if (Array.isArray(income)) {
+    if (income.length !== 12) {
+      throw new Error("Income array must have exactly 12 elements");
+    }
+    income.forEach((val) => {
+      if (Array.isArray(val)) {
+        val.forEach((receipt) => {
+          if (!Number.isFinite(receipt.income)) {
+            throw new Error("Receipt income must be a valid number");
+          }
+          if (receipt.income < 0) {
+            throw new Error("Receipt income must be greater than or equal to 0");
+          }
+          if (receipt.retention !== undefined) {
+            if (!Number.isFinite(receipt.retention)) {
+              throw new Error("Receipt retention must be a valid number");
+            }
+            if (receipt.retention < 0 || receipt.retention > 1) {
+              throw new Error("Receipt retention must be between 0 and 1");
+            }
+          }
+        });
+      } else {
+        if (!Number.isFinite(val as number)) {
+          throw new Error("Income must be a valid number");
+        }
+        if ((val as number) < 0) {
+          throw new Error("Income must be greater than or equal to 0");
+        }
+      }
+    });
+  } else {
+    if (!Number.isFinite(income)) {
       throw new Error("Income must be a valid number");
     }
-    if (val < 0) {
+    if (income < 0) {
       throw new Error("Income must be greater than or equal to 0");
     }
-  });
+  }
 }
 
 export function validateIncomeFrequency(frequency: FrequencyChoices): void {

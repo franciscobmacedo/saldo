@@ -35,6 +35,38 @@ describe("Independent Worker Validators", () => {
       expect(() => validateIncome(Infinity)).toThrow("Income must be a valid number");
       expect(() => validateIncome(-Infinity)).toThrow("Income must be a valid number");
     });
+
+    it("should pass for 12 months array of valid IndependentWorkerReceipts", () => {
+      expect(() => validateIncome(Array(12).fill([{ income: 1000 }]))).not.toThrow();
+      expect(() => validateIncome(Array(12).fill([{ income: 1000, retention: 0.23 }]))).not.toThrow();
+      const varyingMonths = Array(12).fill([]);
+      varyingMonths[0] = [{ income: 100, retention: 0 }];
+      varyingMonths[11] = [{ income: 50, retention: 1 }, { income: 20 }];
+      expect(() => validateIncome(varyingMonths)).not.toThrow();
+    });
+
+    it("should throw if receipt list does not have exactly 12 elements", () => {
+      expect(() => validateIncome([[{ income: 1000 }]])).toThrow("Income array must have exactly 12 elements");
+    });
+
+    it("should throw if receipt income is invalid", () => {
+      const invalidIncome = Array(12).fill([{ income: -100 }]);
+      expect(() => validateIncome(invalidIncome)).toThrow("Receipt income must be greater than or equal to 0");
+
+      const invalidIncomeNaN = Array(12).fill([{ income: NaN }]);
+      expect(() => validateIncome(invalidIncomeNaN)).toThrow("Receipt income must be a valid number");
+    });
+
+    it("should throw if receipt retention is invalid", () => {
+      const invalidRetention = Array(12).fill([{ income: 1000, retention: -0.1 }]);
+      expect(() => validateIncome(invalidRetention)).toThrow("Receipt retention must be between 0 and 1");
+
+      const invalidRetentionHigh = Array(12).fill([{ income: 1000, retention: 1.1 }]);
+      expect(() => validateIncome(invalidRetentionHigh)).toThrow("Receipt retention must be between 0 and 1");
+
+      const invalidRetentionNaN = Array(12).fill([{ income: 1000, retention: NaN }]);
+      expect(() => validateIncome(invalidRetentionNaN)).toThrow("Receipt retention must be a valid number");
+    });
   });
 
   describe("validateIncomeFrequency", () => {

@@ -51,10 +51,15 @@ export interface IndependentWorkerMonthlyBreakdownResult {
   marginalRate: number;
 }
 
+export interface IndependentWorkerReceipt {
+  income: number;
+  retention?: number;
+}
+
 export interface IndependentWorkerNormalizedInternals {
   effectiveBusinessDays: number;
   normalization: {
-    inputIncome: number | number[];
+    inputIncome: number | number[] | IndependentWorkerReceipt[][];
     inputFrequency: FrequencyChoices;
     normalizedGrossIncome: CurrencyByFrequency;
   };
@@ -119,7 +124,7 @@ export interface IndependentWorkerResult {
 }
 
 export interface SimulateIndependentWorkerOptions {
-  income: number | number[];
+  income: number | number[] | IndependentWorkerReceipt[][];
   incomeFrequency?: FrequencyChoices;
   yearBusinessDays?: number;
   nrDaysOff?: number;

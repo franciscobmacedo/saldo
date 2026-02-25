@@ -23,6 +23,7 @@ interface BuildMonthlyBreakdownOptions {
   grossAnnual: number;
   taxableIncomeAnnual: number;
   irsAnnual: number;
+  irsRetentionMonthlyAmounts?: number[];
   irsRetentionRate: number;
   ssMonthly: number | number[];
   marginalRate: number;
@@ -33,6 +34,7 @@ export function buildIndependentWorkerMonthlyBreakdown({
   grossAnnual,
   taxableIncomeAnnual,
   irsAnnual,
+  irsRetentionMonthlyAmounts,
   irsRetentionRate,
   ssMonthly,
   marginalRate,
@@ -54,7 +56,9 @@ export function buildIndependentWorkerMonthlyBreakdown({
     const mGross = getMonthVal(grossMonthly, idx);
     const mSS = getMonthVal(ssMonthly, idx);
     const mIrsPay = getMonthlyIrsPay(mGross);
-    const mIrsRetention = mGross * irsRetentionRate;
+    const mIrsRetention = irsRetentionMonthlyAmounts
+      ? irsRetentionMonthlyAmounts[idx]
+      : mGross * irsRetentionRate;
 
     // Net income month: what the worker actually pockets (gross minus SS and what's retained at source)
     const mNet = mGross - mIrsRetention - mSS;

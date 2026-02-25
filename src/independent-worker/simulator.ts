@@ -5,6 +5,7 @@ import {
   TaxRank,
   IndependentWorkerNormalizedInternals,
   CurrencyByFrequency,
+  IndependentWorkerReceipt,
 } from "./schemas";
 import {
   calculateGrossIncome,
@@ -88,7 +89,7 @@ const resolveAverageRate = (taxRank: TaxRank, taxRanks: TaxRank[]): number => {
 };
 
 interface BuildNormalizedInternalsOptions {
-  inputIncome: number | number[];
+  inputIncome: number | number[] | IndependentWorkerReceipt[][];
   inputFrequency: FrequencyChoices;
   yearBusinessDays: number;
   nrDaysOff: number;
@@ -274,9 +275,25 @@ export function simulateIndependentWorker({
   const workerWithinSecondFinancialYear = isWithinSecondFinancialYear(dateOfOpeningActivity);
   const workerWithinFirst12Months = isWithinFirst12Months(dateOfOpeningActivity);
 
+  let resolvedIncome: number | number[] = income as any;
+  let resolvedMonthlyRetentions: number[] | undefined;
+
+  if (Array.isArray(income) && income.length > 0 && Array.isArray(income[0])) {
+    const receiptsMatrix = income as IndependentWorkerReceipt[][];
+    resolvedIncome = receiptsMatrix.map(monthReceipts =>
+      monthReceipts.reduce((sum, receipt) => sum + receipt.income, 0)
+    );
+    resolvedMonthlyRetentions = receiptsMatrix.map(monthReceipts =>
+      monthReceipts.reduce(
+        (sum, receipt) => sum + receipt.income * (receipt.retention ?? irsRetentionRate),
+        0
+      )
+    );
+  }
+
   // Calculate gross income based on frequency
   const grossIncome = calculateGrossIncome(
-    income,
+    resolvedIncome,
     incomeFrequency,
     nrDaysOff,
     resolvedYearBusinessDays
@@ -286,8 +303,8 @@ export function simulateIndependentWorker({
   const currentIas = IAS_PER_YEAR[currentTaxRankYear];
   const maxSsIncome = 12 * currentIas;
 
-  const isVariable = Array.isArray(income);
-  const monthlyIncomes = isVariable ? (income as number[]) : Array(12).fill(grossIncome.month);
+  const isVariable = Array.isArray(resolvedIncome);
+  const monthlyIncomes = isVariable ? (resolvedIncome as number[]) : Array(12).fill(grossIncome.month);
 
   // Calculate social security payments
   const { totals: ssPay, monthly: ssMonthlyList, ssQ1Approximated } = calculateSsPay(
@@ -380,13 +397,16 @@ export function simulateIndependentWorker({
     grossAnnual: grossIncome.year,
     taxableIncomeAnnual: taxableIncome,
     irsAnnual: irsPay.year,
+    irsRetentionMonthlyAmounts: resolvedMonthlyRetentions,
     irsRetentionRate,
     ssMonthly: isVariable ? ssMonthlyList : ssPay.month,
     marginalRate,
   });
 
   // Calculate IRS retention (what's withheld at source from clients)
-  const irsRetentionAnnual = grossIncome.year * irsRetentionRate;
+  const irsRetentionAnnual = resolvedMonthlyRetentions
+    ? resolvedMonthlyRetentions.reduce((sum, val) => sum + val, 0)
+    : grossIncome.year * irsRetentionRate;
   const irsRetentionPay: CurrencyByFrequency = {
     year: irsRetentionAnnual,
     month: irsRetentionAnnual / 12,
