@@ -2,17 +2,6 @@ name: Release
 
 on:
   workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version type'
-        required: true
-        default: 'patch'
-        type: choice
-        options:
-          - patch
-          - minor
-          - major
-          - prerelease
 
 jobs:
   release:
@@ -56,13 +45,43 @@ jobs:
       - name: Bump version
         id: version
         run: |
-          if [ "${{ github.event.inputs.version }}" = "prerelease" ]; then
-            NEW_VERSION=$(npm version prerelease --preid=beta --no-git-tag-version)
+          # Get date in YYYY.M.D format (no leading zeros)
+          # %-m and %-d are GNU extensions for no padding
+          DATE_VERSION=$(date +'%Y.%-m.%-d')
+          echo "Date-based version: $DATE_VERSION"
+          
+          # Fetch all tags to ensure we have the latest
+          git fetch --tags --force
+          
+          STABLE_TAG=$(git tag -l "$DATE_VERSION")
+          BETA_TAGS=$(git tag -l "$DATE_VERSION-beta.*")
+          
+          if [ -z "$STABLE_TAG" ] && [ -z "$BETA_TAGS" ]; then
+            NEW_VERSION="$DATE_VERSION"
           else
-            NEW_VERSION=$(npm version ${{ github.event.inputs.version }} --no-git-tag-version)
+            # Stable or some betas already exist for today
+            LATEST_BETA=$(echo "$BETA_TAGS" | grep -oE '[0-9]+$' | sort -n | tail -1 || echo "")
+            if [ -z "$LATEST_BETA" ]; then
+              # Only stable exists
+              NEW_VERSION="$DATE_VERSION-beta.1"
+            else
+              NEW_VERSION="$DATE_VERSION-beta.$((LATEST_BETA + 1))"
+            fi
           fi
+          
+          echo "Determined version: $NEW_VERSION"
+          
+          # Update package.json
+          npm version $NEW_VERSION --no-git-tag-version --allow-same-version
+          
           echo "new_version=$NEW_VERSION" >> $GITHUB_OUTPUT
-          echo "version_number=${NEW_VERSION#v}" >> $GITHUB_OUTPUT
+          echo "version_number=$NEW_VERSION" >> $GITHUB_OUTPUT
+          
+          if [[ "$NEW_VERSION" == *"-beta."* ]]; then
+            echo "is_prerelease=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_prerelease=false" >> $GITHUB_OUTPUT
+          fi
 
       - name: Commit version bump
         run: |
@@ -99,7 +118,8 @@ jobs:
             pnpm add saldo@${{ steps.version.outputs.version_number }}
             ```
           draft: false
-          prerelease: ${{ github.event.inputs.version == 'prerelease' }}
+          prerelease: ${{ steps.version.outputs.is_prerelease == 'true' }}
+
 
       - name: Publish to NPM
         run: npm publish
