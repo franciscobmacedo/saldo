@@ -47,6 +47,48 @@ interface SimulateIndependentWorkerOptions {
 
 #### Return Value
 
+```typescript
+interface IndependentWorkerResult {
+  grossIncome: CurrencyByFrequency;
+  yearBusinessDays: number;
+  taxableIncome: number;
+  ssPay: CurrencyByFrequency;
+  specificDeductions: number;
+  expenses: number;
+  expensesNeeded: number;
+  youthIrsDiscount: number;
+  irsPay: CurrencyByFrequency;
+  netIncome: CurrencyByFrequency;
+  taxTableUsed: TaxRank[];
+  taxRank: TaxRank;
+  currentIas: number;
+  maxSsIncome: number;
+  ssTax: number;
+  maxExpensesTax: number;
+  workerWithinFirstFinancialYear: boolean;
+  workerWithinSecondFinancialYear: boolean;
+  workerWithinFirst12Months: boolean;
+  rnh: boolean;
+  rnhTax: number;
+  benefitsOfYouthIrs: boolean;
+  yearOfYouthIrs: number;
+  monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
+}
+
+interface IndependentWorkerMonthlyBreakdownResult {
+  month: IndependentMonthName;
+  grossIncome: number;
+  taxableIncome: number;
+  irsPay: number;
+  ssPay: number;
+  netIncome: number;
+  totalTax: number;
+  overallTaxBurden: number;
+  effectiveBracketRate: number | null;
+  marginalRate: number;
+}
+```
+
 | Property | Type | Description |
 |----------|------|-------------|
 | `grossIncome` | `CurrencyByFrequency` | Income per year/month/day (12 months, 248 business days) |
@@ -66,6 +108,7 @@ interface SimulateIndependentWorkerOptions {
 | `workerWithinFirst12Months` | `boolean` | SS waived for first 12 months after opening activity |
 | `rnh` / `rnhTax` | `boolean` / `number` | Indicates RNH flat rate usage |
 | `benefitsOfYouthIrs` / `yearOfYouthIrs` | `boolean` / `number` | Youth IRS inputs echoed back |
+| `monthlyBreakdown` | `IndependentWorkerMonthlyBreakdownResult[]` | Monthly breakdown with taxes and net income |
 
 #### Example
 
@@ -146,6 +189,24 @@ interface CurrencyByFrequency {
 ```
 
 Most independent worker results are returned in this shape (always using 12 months and 248 business days).
+
+### `IndependentMonthName`
+
+```typescript
+type IndependentMonthName =
+  | "january"
+  | "february"
+  | "march"
+  | "april"
+  | "may"
+  | "june"
+  | "july"
+  | "august"
+  | "september"
+  | "october"
+  | "november"
+  | "december";
+```
 
 ### `TaxRank`
 
