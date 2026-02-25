@@ -42,6 +42,7 @@ export interface IndependentWorkerMonthlyBreakdownResult {
   grossIncome: number;
   taxableIncome: number;
   irsPay: number;
+  irsRetention: number;
   ssPay: number;
   netIncome: number;
   totalTax: number;
@@ -93,6 +94,8 @@ export interface IndependentWorkerResult {
   expensesNeeded: number;
   youthIrsDiscount: number;
   irsPay: CurrencyByFrequency;
+  irsRetentionRate: number;
+  irsRetentionPay: CurrencyByFrequency;
   netIncome: CurrencyByFrequency;
   taxTableUsed: TaxRank[];
   taxRank: TaxRank;
@@ -120,6 +123,7 @@ export interface SimulateIndependentWorkerOptions {
   maxExpensesTax?: number;
   expenses?: number;
   ssTax?: number;
+  irsRetentionRate?: number;
   currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
   rnh?: boolean;
   rnhTax?: number;

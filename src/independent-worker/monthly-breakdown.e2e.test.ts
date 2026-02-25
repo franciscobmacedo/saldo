@@ -14,14 +14,20 @@ describe("simulateIndependentWorker monthlyBreakdown - End-to-End", () => {
     expect(result.monthlyBreakdown[11].month).toBe("december");
 
     result.monthlyBreakdown.forEach((item) => {
+      const expectedRetention = result.grossIncome.month * result.irsRetentionRate;
       expect(item.grossIncome).toBeCloseTo(result.grossIncome.month);
       expect(item.taxableIncome).toBeCloseTo(result.taxableIncome / 12);
-      expect(item.irsPay).toBeCloseTo(result.irsPay.month);
+      // irsPay = proportional annual IRS; for uniform income = irsPay.year / 12
+      expect(item.irsPay).toBeCloseTo(result.irsPay.year / 12);
+      // irsRetention = gross * irsRetentionRate (default 0.23)
+      expect(item.irsRetention).toBeCloseTo(expectedRetention);
       expect(item.ssPay).toBeCloseTo(result.ssPay.month);
-      expect(item.netIncome).toBeCloseTo(result.netIncome.month);
-      expect(item.totalTax).toBeCloseTo(result.irsPay.month + result.ssPay.month);
+      // net = gross - retention - SS
+      expect(item.netIncome).toBeCloseTo(result.grossIncome.month - expectedRetention - result.ssPay.month);
+      // totalTax uses retention (cash out this month), not irsPay
+      expect(item.totalTax).toBeCloseTo(expectedRetention + result.ssPay.month);
       expect(item.overallTaxBurden).toBeCloseTo(
-        (result.irsPay.month + result.ssPay.month) / result.grossIncome.month
+        (expectedRetention + result.ssPay.month) / result.grossIncome.month
       );
       expect(item.effectiveBracketRate).toBeCloseTo(item.overallTaxBurden);
       expect(item.marginalRate).toBe(result.taxRank.normalTax);

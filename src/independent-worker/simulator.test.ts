@@ -167,12 +167,19 @@ describe("simulateIndependentWorker", () => {
     expect(january).toBeDefined();
     expect(january?.grossIncome).toBeCloseTo(result.grossIncome.month);
     expect(january?.taxableIncome).toBeCloseTo(result.taxableIncome / 12);
-    expect(january?.irsPay).toBeCloseTo(result.irsPay.month);
+    // irsPay in breakdown is proportional annual IRS; for uniform income = irsPay.year / 12
+    expect(january?.irsPay).toBeCloseTo(result.irsPay.year / 12);
+    // irsRetention = gross * irsRetentionRate
+    expect(january?.irsRetention).toBeCloseTo(result.grossIncome.month * result.irsRetentionRate);
     expect(january?.ssPay).toBeCloseTo(result.ssPay.month);
-    expect(january?.netIncome).toBeCloseTo(result.netIncome.month);
-    expect(january?.totalTax).toBeCloseTo(result.irsPay.month + result.ssPay.month);
+    // netIncome = gross - irsRetention - SS
+    expect(january?.netIncome).toBeCloseTo(
+      result.grossIncome.month - result.grossIncome.month * result.irsRetentionRate - result.ssPay.month
+    );
+    // totalTax uses irsRetention (cash leaving the worker monthly), not irsPay
+    expect(january?.totalTax).toBeCloseTo(result.grossIncome.month * result.irsRetentionRate + result.ssPay.month);
     expect(january?.overallTaxBurden).toBeCloseTo(
-      (result.irsPay.month + result.ssPay.month) / result.grossIncome.month
+      (result.grossIncome.month * result.irsRetentionRate + result.ssPay.month) / result.grossIncome.month
     );
   });
 

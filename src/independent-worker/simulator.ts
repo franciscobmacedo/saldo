@@ -238,6 +238,7 @@ export function simulateIndependentWorker({
   maxExpensesTax = 15,
   expenses = 0,
   ssTax = 0.214,
+  irsRetentionRate = 0.23,
   currentTaxRankYear = SUPPORTED_TAX_RANK_YEARS[SUPPORTED_TAX_RANK_YEARS.length - 1], // latest year
   rnh = false,
   rnhTax = 0.2,
@@ -249,6 +250,9 @@ export function simulateIndependentWorker({
   validateIncome(income);
   validateIncomeFrequency(incomeFrequency);
   validateCurrentTaxRankYear(currentTaxRankYear);
+  if (irsRetentionRate < 0 || irsRetentionRate > 1) {
+    throw new Error("IRS retention rate must be between 0 and 1");
+  }
   const resolvedYearBusinessDays = resolveYearBusinessDays(
     currentTaxRankYear,
     yearBusinessDays
@@ -364,18 +368,24 @@ export function simulateIndependentWorker({
     rnh,
     rnhTax,
   });
-  const netMonthly = isVariable
-    ? monthlyIncomes.map((mGross, idx) => mGross - irsPay.month - ssMonthlyList[idx])
-    : netIncome.month;
 
   const monthlyBreakdown = buildIndependentWorkerMonthlyBreakdown({
     grossMonthly: isVariable ? monthlyIncomes : grossIncome.month,
+    grossAnnual: grossIncome.year,
     taxableIncomeAnnual: taxableIncome,
-    irsMonthly: irsPay.month,
+    irsAnnual: irsPay.year,
+    irsRetentionRate,
     ssMonthly: isVariable ? ssMonthlyList : ssPay.month,
-    netMonthly: netMonthly,
     marginalRate,
   });
+
+  // Calculate IRS retention (what's withheld at source from clients)
+  const irsRetentionAnnual = grossIncome.year * irsRetentionRate;
+  const irsRetentionPay: CurrencyByFrequency = {
+    year: irsRetentionAnnual,
+    month: irsRetentionAnnual / 12,
+    day: irsRetentionAnnual / (resolvedYearBusinessDays - nrDaysOff),
+  };
 
   return {
     grossIncome,
@@ -387,6 +397,8 @@ export function simulateIndependentWorker({
     expensesNeeded,
     youthIrsDiscount,
     irsPay,
+    irsRetentionRate,
+    irsRetentionPay,
     netIncome,
     taxTableUsed,
     taxRank,
