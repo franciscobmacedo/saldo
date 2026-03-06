@@ -138,9 +138,9 @@ describe("Independent Worker Calculations", () => {
       );
 
       expect(result.ssQ1Approximated).toBe(false);
-      expect(result.monthly[0]).toBe(0);
-      expect(result.monthly[1]).toBe(0);
-      expect(result.monthly[2]).toBe(0);
+      expect(result.monthly[0]).toBe(20);
+      expect(result.monthly[1]).toBe(20);
+      expect(result.monthly[2]).toBe(20);
     });
 
     it("should set ssQ1Approximated=false when previousYearQ4MonthlyIncome is provided", () => {
@@ -156,6 +156,110 @@ describe("Independent Worker Calculations", () => {
       );
 
       expect(result.ssQ1Approximated).toBe(false);
+    });
+
+    it("should treat undefined, null and 0 previousYearQ4MonthlyIncome the same when approximation is disabled", () => {
+      const incomes = Array(12).fill(grossIncome.month);
+
+      const resultWithUndefined = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        undefined,
+        false
+      );
+
+      const resultWithNull = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        null,
+        false
+      );
+
+      const resultWithZero = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        0,
+        false
+      );
+
+      expect(resultWithUndefined.ssQ1Approximated).toBe(false);
+      expect(resultWithNull.ssQ1Approximated).toBe(false);
+      expect(resultWithZero.ssQ1Approximated).toBe(false);
+      expect(resultWithUndefined.monthly[0]).toBeCloseTo(resultWithNull.monthly[0], 10);
+      expect(resultWithUndefined.monthly[0]).toBeCloseTo(resultWithZero.monthly[0], 10);
+      expect(resultWithNull.monthly[0]).toBeCloseTo(resultWithZero.monthly[0], 10);
+      expect(resultWithNull.monthly[1]).toBeCloseTo(resultWithZero.monthly[1], 10);
+      expect(resultWithNull.monthly[2]).toBeCloseTo(resultWithZero.monthly[2], 10);
+    });
+
+    it("should treat undefined, null and 0 previousYearQ4MonthlyIncome the same when approximation is enabled", () => {
+      const incomes = [
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0,
+        6000, 6000, 6000,
+      ];
+
+      const resultWithUndefined = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        undefined,
+        true
+      );
+
+      const resultWithNull = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        null,
+        true
+      );
+
+      const resultWithZero = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        0,
+        true
+      );
+
+      expect(resultWithUndefined.ssQ1Approximated).toBe(true);
+      expect(resultWithNull.ssQ1Approximated).toBe(true);
+      expect(resultWithZero.ssQ1Approximated).toBe(true);
+      expect(resultWithUndefined.monthly[0]).toBeCloseTo(resultWithNull.monthly[0], 10);
+      expect(resultWithUndefined.monthly[0]).toBeCloseTo(resultWithZero.monthly[0], 10);
+      expect(resultWithUndefined.monthly[1]).toBeCloseTo(resultWithNull.monthly[1], 10);
+      expect(resultWithUndefined.monthly[1]).toBeCloseTo(resultWithZero.monthly[1], 10);
+      expect(resultWithUndefined.monthly[2]).toBeCloseTo(resultWithNull.monthly[2], 10);
+      expect(resultWithUndefined.monthly[2]).toBeCloseTo(resultWithZero.monthly[2], 10);
     });
 
     it("should use previousYearQ4MonthlyIncome for Jan/Feb/Mar SS", () => {
@@ -216,7 +320,7 @@ describe("Independent Worker Calculations", () => {
       ];
       const result = calculateSsPay(incomes, 0.214, 0, maxSsIncome, false, 0, yearBusinessDays, 0);
 
-      // Jan/Feb/Mar: based on prevQ4 = 0 → minimum 20
+      // Jan/Feb/Mar: previousYearQ4MonthlyIncome=0 is treated as missing → minimum 20
       expect(result.monthly[0]).toBe(20);
       expect(result.monthly[1]).toBe(20);
       expect(result.monthly[2]).toBe(20);

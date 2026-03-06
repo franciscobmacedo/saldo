@@ -156,7 +156,7 @@ export interface SimulateIndependentWorkerOptions {
    * When omitted, Jan/Feb/Mar SS defaults to 0, unless
    * `approximateQ1FromCurrentYearQ4` is enabled.
    */
-  previousYearQ4MonthlyIncome?: number;
+  previousYearQ4MonthlyIncome?: number | null;
   /**
    * If true and previousYearQ4MonthlyIncome is omitted, estimate Jan/Feb/Mar SS
    * from the current simulated year's Q4 (Oct/Nov/Dec) average and set

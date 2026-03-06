@@ -54,7 +54,7 @@ export function calculateSsPay(
   firstYearForSs: boolean,
   nrDaysOff: number,
   yearBusinessDays: number,
-  previousYearQ4MonthlyIncome?: number,
+  previousYearQ4MonthlyIncome?: number | null,
   approximateQ1FromCurrentYearQ4: boolean = false
 ): { totals: CurrencyByFrequency; monthly: number[]; ssQ1Approximated: boolean } {
   if (firstYearForSs) {
@@ -79,8 +79,11 @@ export function calculateSsPay(
   // Priority:
   // 1) Use supplied previousYearQ4MonthlyIncome (exact)
   // 2) If approximation flag is enabled, use current-year Q4 average (approx)
-  // 3) Otherwise, Jan/Feb/Mar SS is 0
-  const hasExactPrevQ4 = previousYearQ4MonthlyIncome !== undefined;
+  // 3) Otherwise, use minimum SS contribution (20 EUR)
+  const hasExactPrevQ4 =
+    typeof previousYearQ4MonthlyIncome === "number" &&
+    Number.isFinite(previousYearQ4MonthlyIncome) &&
+    previousYearQ4MonthlyIncome > 0;
   const shouldApproximateQ1 = !hasExactPrevQ4 && approximateQ1FromCurrentYearQ4;
   const ssQ1Approximated = shouldApproximateQ1;
 
@@ -88,7 +91,7 @@ export function calculateSsPay(
     ? calcMonthSS(previousYearQ4MonthlyIncome)
     : shouldApproximateQ1
       ? calcMonthSS(q4Avg)
-      : 0;
+      : calcMonthSS(0);
   const q1SS = calcMonthSS(q1Avg);
   const q2SS = calcMonthSS(q2Avg);
   const q3SS = calcMonthSS(q3Avg);
