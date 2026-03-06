@@ -1,4 +1,4 @@
-import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
+import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 
 export const YEAR_BUSINESS_DAYS_BY_TAX_YEAR: {
   [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: number;

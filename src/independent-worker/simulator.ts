@@ -36,7 +36,8 @@ import {
   validateRnhTax,
   validateYearOfYouthIrs,
 } from "./validators";
-import { SUPPORTED_TAX_RANK_YEARS, TAX_RANKS } from "@/data/tax-ranks-data";
+import { TAX_RANKS } from "@/data/tax-ranks-data";
+import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 import { resolveYearBusinessDays } from "./consts";
 
 

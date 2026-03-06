@@ -1,8 +1,6 @@
 import { TaxRank } from "@/independent-worker/schemas";
 import { SUPPORTED_TAX_RANK_YEARS } from "./supported-tax-rank-years";
 
-export { SUPPORTED_TAX_RANK_YEARS } from "./supported-tax-rank-years";
-
 export const TAX_RANKS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: TaxRank[] } = {
   2023: [
     { id: 1, min: 0, max: 7479, normalTax: 0.145, averageTax: 0.145 },

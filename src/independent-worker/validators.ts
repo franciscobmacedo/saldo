@@ -2,7 +2,7 @@ import {
   FrequencyChoices,
   IndependentWorkerReceipt,
 } from "./schemas";
-import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
+import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 
 export function validateIncome(income: number | number[] | IndependentWorkerReceipt[][]): void {
   if (Array.isArray(income)) {

@@ -6,7 +6,7 @@ import {
 } from "./schemas";
 import { TAX_RANKS } from "@/data/tax-ranks-data";
 import { YOUTH_IRS } from "@/data/youth-irs-data";
-import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
+import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 
 export function calculateGrossIncome(
   income: number | number[],

@@ -1,5 +1,5 @@
 import { YouthIrs } from "@/independent-worker/schemas";
-import { SUPPORTED_TAX_RANK_YEARS } from "@/data/tax-ranks-data";
+import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 
 export const YOUTH_IRS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: { [key: number]: YouthIrs } } = {
     2023: {
