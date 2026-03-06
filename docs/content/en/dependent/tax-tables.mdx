@@ -2,32 +2,25 @@ import { TaxBracketsViewer } from "@/components/TaxBracketsViewer"
 
 # Tax Tables Explorer
 
-This interactive page allows you to explore all the Portuguese tax retention tables used by the Saldo library. You can filter, sort, and search through the tables to understand the different tax brackets and rates applied across different regions and time periods.
+This interactive page lets you explore every Portuguese withholding table used by Saldo. You can filter and search tables to understand tax brackets and rates across regions and periods.
 
 > These are the retention tables for the **dependent worker** simulator. Independent worker calculations use separate progressive tax ranks (2023-2025) and are not shown here.
 
 ## Features
 
-- **Real Tax Bracket Data**: View the actual tax brackets with income ranges, rates, and deductions
-- **Interactive Cards**: Expandable cards showing detailed bracket information
-- **Location Filtering**: Filter by Portuguese regions (continent, azores, madeira)
-- **Date Range Filtering**: Filter by tax periods (2025-01-01 to 2025-07-31, 2025-08-01 to 2025-09-30, 2025-10-01 to 2025-12-31)
-- **Table Type Filtering**: Filter by specific tax table types (TABLE1 through TABLE7)
-- **Searchable**: Search through table descriptions and identifiers
-- **Formatted Values**: Currency and percentage values properly formatted
-- **Copy Data**: Copy table data to clipboard
-- **Console View**: View raw data in browser console
+- **Real bracket data**: official income ranges, rates, and deductions
+- **Multi-filter support**: region, period, marital status, dependents, disability, and holders
+- **Fast search**: by table name, description, and situation
+- **Expandable details**: click a row to inspect bracket-level values
+- **Raw data access**: copy JSON or open the source file on GitHub
 
 ## Available Data
 
 The tax tables include data for:
-- **Year**: 2025
-- **Regions**: continent, azores, madeira
-- **Date Ranges**: 
-  - 2025-01-01 to 2025-07-31 (first semester)
-  - 2025-08-01 to 2025-09-30 (summer period)
-  - 2025-10-01 to 2025-12-31 (final quarter)
-- **Table Types**: TABLE1 through TABLE7 covering different marital and dependency situations
+- **Tax years**: all years bundled with the installed package
+- **Regions**: continent, Azores, and Madeira
+- **Date ranges**: one or more validity intervals per year
+- **Table types**: TABLE1 through TABLE7 for different family situations
 
 ## Tax Bracket Structure
 
@@ -42,14 +35,14 @@ Each tax bracket contains:
 
 ## Usage
 
-Use the filters above the cards to narrow down results by location and date range. You can also use the search box to filter tables by description. Click on any card to expand and view the detailed tax brackets. Each bracket shows the income range, tax rates, and deductions in a clear, formatted table.
+Use the filters above the table to narrow results by region, period, and fiscal situation. You can also search by description. Click any row to expand and inspect bracket details.
 
 <TaxBracketsViewer />
 
 ## Data Source
 
-The tax tables data comes from the official Portuguese tax retention tables and is automatically loaded from the `taxTablesData` manifest. This ensures that the displayed data is always up-to-date with the library's internal tax calculations.
+The data comes from official Portuguese withholding tables and is loaded from the `taxTablesData` manifest. This keeps the page aligned with the exact tables used by the calculation engine.
 
 :::note
-This page displays all available tax tables from the Saldo library with their actual tax bracket data, including all regions (continent, azores, madeira), time periods, and table types (TABLE1 through TABLE7) for the year 2025. Click on any card to expand and view the detailed tax brackets.
+This page shows every tax table available in your current Saldo version, with real bracket data, regions, and periods.
 :::

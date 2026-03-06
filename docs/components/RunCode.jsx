@@ -1,10 +1,63 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { simulateDependentWorker, Twelfths } from 'saldo'
+import { usePathname } from 'next/navigation'
+import { FrequencyChoices, simulateDependentWorker, simulateIndependentWorker, Twelfths } from 'saldo'
 import CodeEditor from '@uiw/react-textarea-code-editor'
+import { getLangFromPath } from '@/lib/i18n'
+
+const COPY = {
+  pt: {
+    title: 'Exemplo Interativo',
+    running: 'A executar...',
+    runCode: 'Executar Codigo',
+    output: 'Saida da Consola',
+    placeholder: `// Exemplo com imports disponiveis automaticamente:
+// simulateDependentWorker, simulateIndependentWorker,
+// Twelfths e FrequencyChoices
+
+const result = simulateDependentWorker({
+  year: 2025,
+  income: 2000,
+  location: 'continent',
+  twelfths: Twelfths.TWO_MONTHS
+});
+
+console.log(result.yearly.totalNetIncomeAmount);`,
+    referenceError: 'Erro de referencia',
+    syntaxError: 'Erro de sintaxe',
+    availableSymbols: 'Simbolos disponiveis',
+    syntaxHint: 'Verifica a sintaxe JavaScript.',
+  },
+  en: {
+    title: 'Interactive Example',
+    running: 'Running...',
+    runCode: 'Run Code',
+    output: 'Console Output',
+    placeholder: `// Example with imports available automatically:
+// simulateDependentWorker, simulateIndependentWorker,
+// Twelfths and FrequencyChoices
+
+const result = simulateDependentWorker({
+  year: 2025,
+  income: 2000,
+  location: 'continent',
+  twelfths: Twelfths.TWO_MONTHS
+});
+
+console.log(result.yearly.totalNetIncomeAmount);`,
+    referenceError: 'Reference Error',
+    syntaxError: 'Syntax Error',
+    availableSymbols: 'Available symbols',
+    syntaxHint: 'Check your JavaScript syntax.',
+  },
+}
 
 const RunCode = ({ children, defaultCode }) => {
+  const pathname = usePathname()
+  const lang = getLangFromPath(pathname)
+  const copy = COPY[lang]
+
   const [code, setCode] = useState(defaultCode || children || '')
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
@@ -12,7 +65,6 @@ const RunCode = ({ children, defaultCode }) => {
   const [isDarkMode, setIsDarkMode] = useState(false)
 
   useEffect(() => {
-    // Check if dark mode is active
     const checkDarkMode = () => {
       const isDark = document.documentElement.classList.contains('dark') || 
                     window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -21,7 +73,6 @@ const RunCode = ({ children, defaultCode }) => {
     
     checkDarkMode()
     
-    // Listen for theme changes
     const observer = new MutationObserver(checkDarkMode)
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
     
@@ -40,10 +91,11 @@ const RunCode = ({ children, defaultCode }) => {
     setResult(null)
 
     try {
-      // Create a safe execution environment
       const safeGlobals = {
         simulateDependentWorker,
+        simulateIndependentWorker,
         Twelfths,
+        FrequencyChoices,
         console: {
           log: (...args) => {
             const output = args.map(arg => 
@@ -64,7 +116,6 @@ const RunCode = ({ children, defaultCode }) => {
             setResult(prev => prev ? prev + '\nWARN: ' + output : 'WARN: ' + output)
           }
         },
-        // Add common globals that might be expected
         JSON,
         Math,
         Date,
@@ -80,26 +131,21 @@ const RunCode = ({ children, defaultCode }) => {
         clearInterval
       }
       
-      // Create function with safe globals
       const func = new Function(...Object.keys(safeGlobals), code)
-      
-      // Execute the code
       const result = await func(...Object.values(safeGlobals))
-      
-      // If the function returned something, log it
+
       if (result !== undefined) {
         const output = typeof result === 'object' ? JSON.stringify(result, null, 2) : String(result)
         setResult(prev => prev ? prev + '\n' + output : output)
       }
       
     } catch (err) {
-      // Enhanced error message with debugging info
       let errorMessage = err.message
       
       if (err.message.includes('ReferenceError')) {
-        errorMessage = `Reference Error: ${err.message}\n\n💡 Available functions: ${Object.keys(safeGlobals || {}).join(', ')}`
+        errorMessage = `${copy.referenceError}: ${err.message}\n\n${copy.availableSymbols}: ${Object.keys(safeGlobals || {}).join(', ')}`
       } else if (err.message.includes('SyntaxError')) {
-        errorMessage = `Syntax Error: ${err.message}\n\n💡 Check your JavaScript syntax.`
+        errorMessage = `${copy.syntaxError}: ${err.message}\n\n${copy.syntaxHint}`
       }
       
       setError(errorMessage)
@@ -196,7 +242,7 @@ const RunCode = ({ children, defaultCode }) => {
               <div className="w-3 h-3 rounded-full bg-green-500"></div>
             </div>
             <span className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-2">
-              Interactive Example
+              {copy.title}
             </span>
           </div>
           <button
@@ -207,14 +253,14 @@ const RunCode = ({ children, defaultCode }) => {
             {isRunning ? (
               <>
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                Running...
+                {copy.running}
               </>
             ) : (
               <>
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m6-10V7a3 3 0 00-3-3H6a3 3 0 00-3 3v10a3 3 0 003 3h7m2-13h3a3 3 0 013 3v6a3 3 0 01-3 3h-1" />
                 </svg>
-                Run Code
+                {copy.runCode}
               </>
             )}
           </button>
@@ -225,15 +271,7 @@ const RunCode = ({ children, defaultCode }) => {
         <CodeEditor
           value={code}
           language="js"
-          placeholder="// Example with proper imports:
-import { simulateDependentWorker, Twelfths } from 'saldo';
-
-const result = simulateDependentWorker({
-  income: 2000,
-  location: 'continent',
-  twelfths: Twelfths.TWO_MONTHS
-});
-console.log(result);"
+          placeholder={copy.placeholder}
           onChange={(evn) => setCode(evn.target.value)}
           padding={16}
           style={{
@@ -256,7 +294,7 @@ console.log(result);"
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Console Output
+                {copy.output}
               </span>
             </div>
           </div>

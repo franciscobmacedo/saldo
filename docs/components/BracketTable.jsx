@@ -5,8 +5,26 @@ import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
 import { formatCurrency, formatPercentage, formatBracketLimit } from "./utils"
 
-// Bracket table component using DataTable
-export function BracketTable({ brackets }) {
+const COPY = {
+  pt: {
+    incomeRange: "Intervalo de rendimento",
+    marginalRate: "Taxa marginal",
+    deduction: "Deducao",
+    dependentAddition: "Dep. Adicional",
+    effectiveRate: "Taxa efetiva",
+  },
+  en: {
+    incomeRange: "Income Range",
+    marginalRate: "Marginal Rate",
+    deduction: "Deduction",
+    dependentAddition: "Dep. Add.",
+    effectiveRate: "Eff. Rate",
+  },
+}
+
+export function BracketTable({ brackets, lang = "pt", locale = "pt-PT" }) {
+  const copy = COPY[lang]
+
   const columns = React.useMemo(() => [
     {
       accessorKey: "index",
@@ -15,12 +33,12 @@ export function BracketTable({ brackets }) {
     },
     {
       accessorKey: "limit",
-      header: "Income Range",
-      cell: ({ row }) => formatBracketLimit(row.original),
+      header: copy.incomeRange,
+      cell: ({ row }) => formatBracketLimit(row.original, locale),
     },
     {
       accessorKey: "max_marginal_rate",
-      header: "Marginal Rate",
+      header: copy.marginalRate,
       cell: ({ row }) => (
         <Badge variant="secondary">
           {formatPercentage(row.original.max_marginal_rate)}
@@ -29,38 +47,37 @@ export function BracketTable({ brackets }) {
     },
     {
       accessorKey: "deduction",
-      header: "Deduction",
+      header: copy.deduction,
       cell: ({ row }) => {
         const bracket = row.original
         const hasVar1 = bracket.var1_deduction && bracket.var1_deduction !== 0
         const hasVar2 = bracket.var2_deduction && bracket.var2_deduction !== 0
 
         if (hasVar1 && hasVar2) {
-          // Show formula format when both var1 and var2 exist
           const marginalRate = formatPercentage(bracket.max_marginal_rate)
-          const var2Value = formatCurrency(bracket.var2_deduction)
+          const var2Value = formatCurrency(bracket.var2_deduction, locale)
           return (
             <div className="text-sm font-mono">
               {marginalRate} * {bracket.var1_deduction} * ({var2Value} - R)
             </div>
           )
         } else if (hasVar1) {
-          return formatCurrency(bracket.var1_deduction)
+          return formatCurrency(bracket.var1_deduction, locale)
         } else if (hasVar2) {
-          return formatCurrency(bracket.var2_deduction)
+          return formatCurrency(bracket.var2_deduction, locale)
         } else {
-          return formatCurrency(bracket.deduction)
+          return formatCurrency(bracket.deduction, locale)
         }
       },
     },
     {
       accessorKey: "dependent_aditional_deduction",
-      header: "Dep. Add.",
-      cell: ({ row }) => formatCurrency(row.original.dependent_aditional_deduction),
+      header: copy.dependentAddition,
+      cell: ({ row }) => formatCurrency(row.original.dependent_aditional_deduction, locale),
     },
     {
       accessorKey: "effective_mensal_rate",
-      header: "Eff. Rate",
+      header: copy.effectiveRate,
       cell: ({ row }) => {
         const rate = row.original.effective_mensal_rate
         return rate === -1 ? (
@@ -72,7 +89,7 @@ export function BracketTable({ brackets }) {
         )
       },
     },
-  ], [])
+  ], [copy, locale])
 
-  return <DataTable data={brackets} columns={columns} />
+  return <DataTable data={brackets} columns={columns} lang={lang} filterColumnId="limit" />
 }

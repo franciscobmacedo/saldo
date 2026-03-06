@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 import logo from '../../public/logo.svg'
+import { isPortuguese } from '@/lib/i18n'
 
 import '../globals.css'
 
@@ -58,6 +59,21 @@ export async function generateStaticParams() {
 export default async function RootLayout({ children, params: paramsPromise }) {
   const params = await paramsPromise
   const lang = params?.lang || defaultLocale
+  const pt = isPortuguese(lang)
+
+  const copy = pt
+    ? {
+      subtitle: 'Calculadora salarial portuguesa',
+      alphaBanner: 'O Saldo esta em fase alpha - reporte bugs',
+      here: 'aqui',
+      editLink: 'Editar esta pagina no GitHub',
+    }
+    : {
+      subtitle: 'Portuguese salary calculator',
+      alphaBanner: 'Saldo is currently in alpha - report bugs',
+      here: 'here',
+      editLink: 'Edit this page on GitHub',
+    }
 
   if (!locales.some(l => l.locale === lang)) {
     return children
@@ -69,7 +85,7 @@ export default async function RootLayout({ children, params: paramsPromise }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Image src={logo} width={24} height={24} alt="Saldo logo" />
           <b>Saldo</b>{' '}
-          <span style={{ opacity: '60%' }}>Portuguese Salary Calculator</span>
+          <span style={{ opacity: '60%' }}>{copy.subtitle}</span>
         </div>
       }
     // GitHub repository for issues and discussions
@@ -82,11 +98,11 @@ export default async function RootLayout({ children, params: paramsPromise }) {
       <Head />
       <body>
         <Layout
-          banner={<Banner storageKey="saldo-docs">Saldo is currently in alpha - report any bugs <Link target="_blank" className="underline" href="https://github.com/franciscobmacedo/saldo/issues">here </Link></Banner>}
+          banner={<Banner storageKey="saldo-docs">{copy.alphaBanner} <Link target="_blank" className="underline" href="https://github.com/franciscobmacedo/saldo/issues">{copy.here}</Link></Banner>}
           navbar={navbar}
           footer={<Footer>MIT {new Date().getFullYear()} © Saldo.</Footer>}
-          editLink="Edit this page on GitHub"
-          docsRepositoryBase="https://github.com/franciscomacedo/saldo-ts/blob/main/docs"
+          editLink={copy.editLink}
+          docsRepositoryBase="https://github.com/franciscobmacedo/saldo/blob/main/docs"
           sidebar={{ defaultMenuCollapseLevel: 1 }}
           pageMap={pageMap}
           i18n={locales}
@@ -97,4 +113,3 @@ export default async function RootLayout({ children, params: paramsPromise }) {
     </html>
   )
 }
-

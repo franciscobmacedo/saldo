@@ -2,28 +2,20 @@
 
 import * as React from "react"
 import {
-  ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ChevronDown } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
@@ -36,11 +28,37 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export function DataTable({ data, columns }) {
+export function DataTable({ data, columns, lang = "pt", filterColumnId }) {
+  const copy = lang === "en"
+    ? {
+      filter: "Filter tables...",
+      columns: "Columns",
+      noResults: "No results.",
+      selectedRows: "row(s) selected.",
+      of: "of",
+      previous: "Previous",
+      next: "Next",
+    }
+    : {
+      filter: "Filtrar tabelas...",
+      columns: "Colunas",
+      noResults: "Sem resultados.",
+      selectedRows: "linha(s) selecionada(s).",
+      of: "de",
+      previous: "Anterior",
+      next: "Seguinte",
+    }
+
   const [sorting, setSorting] = React.useState([])
   const [columnFilters, setColumnFilters] = React.useState([])
   const [columnVisibility, setColumnVisibility] = React.useState({})
   const [rowSelection, setRowSelection] = React.useState({})
+
+  const resolvedFilterColumnId = React.useMemo(() => {
+    if (filterColumnId) return filterColumnId
+    const firstAccessorColumn = columns.find((column) => typeof column.accessorKey === "string")
+    return firstAccessorColumn?.accessorKey
+  }, [columns, filterColumnId])
 
   const table = useReactTable({
     data,
@@ -61,21 +79,23 @@ export function DataTable({ data, columns }) {
     },
   })
 
+  const filterColumn = resolvedFilterColumnId ? table.getColumn(resolvedFilterColumnId) : null
+
   return (
     <div className="w-full">
       <div className="flex items-center py-4">
-        <Input
-          placeholder="Filter tables..."
-          value={(table.getColumn("description")?.getFilterValue() ?? "")}
-          onChange={(event) =>
-            table.getColumn("description")?.setFilterValue(event.target.value)
-          }
-          className="max-w-sm"
-        />
+        {filterColumn ? (
+          <Input
+            placeholder={copy.filter}
+            value={String(filterColumn.getFilterValue() ?? "")}
+            onChange={(event) => filterColumn.setFilterValue(event.target.value)}
+            className="max-w-sm"
+          />
+        ) : null}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
-              Columns <ChevronDown />
+              {copy.columns} <ChevronDown />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
@@ -142,7 +162,7 @@ export function DataTable({ data, columns }) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {copy.noResults}
                 </TableCell>
               </TableRow>
             )}
@@ -151,8 +171,8 @@ export function DataTable({ data, columns }) {
       </div>
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredSelectedRowModel().rows.length} {copy.of}{" "}
+          {table.getFilteredRowModel().rows.length} {copy.selectedRows}
         </div>
         <div className="space-x-2">
           <Button
@@ -161,7 +181,7 @@ export function DataTable({ data, columns }) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            {copy.previous}
           </Button>
           <Button
             variant="outline"
@@ -169,7 +189,7 @@ export function DataTable({ data, columns }) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            {copy.next}
           </Button>
         </div>
       </div>

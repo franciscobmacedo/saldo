@@ -2,7 +2,7 @@ import { SituationUtils } from "saldo"
 import { formatDateRange } from "./utils"
 
 // Transform the tax tables data into a flat structure
-export function transformTaxTablesData(taxTablesData) {
+export function transformTaxTablesData(taxTablesData, locale = "pt-PT") {
   const transformedData = []
 
   for (const [key, tableData] of Object.entries(taxTablesData)) {
@@ -19,14 +19,14 @@ export function transformTaxTablesData(taxTablesData) {
       year,
       region,
       dateRange,
-      formattedDateRange: formatDateRange(dateRange),
+      formattedDateRange: formatDateRange(dateRange, locale),
       tableName: tableData.table,
       description: tableData.description,
       brackets: tableData.brackets,
       dependentDisabledDeduction: tableData.dependent_disabled_addition_deduction || 0,
       situationCode: tableName,
       situation: situation,
-      situationDescription: situation?.description || 'Unknown situation',
+      situationDescription: situation?.description || "Unknown situation",
       // Condition properties for filtering
       conditions: allConditions,
       // Extract unique values for filtering

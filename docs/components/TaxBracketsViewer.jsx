@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname } from "next/navigation"
 import { ChevronDown, ChevronRight, Copy, ExternalLink, Search } from "lucide-react"
 
 import { Alert, AlertDescription } from "@/components/ui/alert"
@@ -11,8 +12,57 @@ import { transformTaxTablesData } from "./dataTransformation"
 import { FilterControls } from "./FilterControls"
 import { BracketTable } from "./BracketTable"
 import { formatCurrency, generateGitHubUrl } from "./utils"
+import { getLangFromPath, getLocaleFromLang } from "@/lib/i18n"
 
-function TaxTableRow({ table }) {
+const COPY = {
+  pt: {
+    copyJson: "Copiar JSON",
+    viewOnGitHub: "Ver no GitHub",
+    brackets: "escaloes",
+    dependentDisabledShort: "dep. def.",
+    totalLabel: "de",
+    tablesPlural: "tabelas",
+    expandHint: "clique numa linha para abrir os escaloes",
+    noResults: "Nenhuma tabela fiscal corresponde aos filtros atuais.",
+    table: "Tabela",
+    description: "Descricao",
+    region: "Regiao",
+    period: "Periodo",
+    bracketsHeader: "Escaloes",
+    dependentDisabledHeader: "Dep. Def.",
+  },
+  en: {
+    copyJson: "Copy JSON",
+    viewOnGitHub: "View on GitHub",
+    brackets: "brackets",
+    dependentDisabledShort: "dep. disabled",
+    totalLabel: "of",
+    tablesPlural: "tables",
+    expandHint: "click a row to expand brackets",
+    noResults: "No tax tables match the current filters.",
+    table: "Table",
+    description: "Description",
+    region: "Region",
+    period: "Period",
+    bracketsHeader: "Brackets",
+    dependentDisabledHeader: "Dep. Disabled",
+  },
+}
+
+const REGION_LABELS = {
+  pt: {
+    continent: "Continente",
+    azores: "Acores",
+    madeira: "Madeira",
+  },
+  en: {
+    continent: "Continent",
+    azores: "Azores",
+    madeira: "Madeira",
+  },
+}
+
+function TaxTableRow({ table, copy, locale, lang }) {
   const [expanded, setExpanded] = React.useState(false)
 
   const handleCopyData = (e) => {
@@ -49,11 +99,11 @@ function TaxTableRow({ table }) {
           {table.formattedDateRange}
         </td>
         <td className="py-2 px-3 text-xs text-muted-foreground">
-          {table.brackets.length} brackets
+          {table.brackets.length} {copy.brackets}
         </td>
         {table.dependentDisabledDeduction > 0 && (
           <td className="py-2 px-3 text-xs text-green-700">
-            +{formatCurrency(table.dependentDisabledDeduction)} dep. disabled
+            +{formatCurrency(table.dependentDisabledDeduction, locale)} {copy.dependentDisabledShort}
           </td>
         )}
         {table.dependentDisabledDeduction === 0 && (
@@ -66,7 +116,7 @@ function TaxTableRow({ table }) {
               size="sm"
               onClick={handleCopyData}
               className="h-6 w-6 p-0"
-              title="Copy JSON"
+              title={copy.copyJson}
             >
               <Copy className="h-3 w-3" />
             </Button>
@@ -75,7 +125,7 @@ function TaxTableRow({ table }) {
               size="sm"
               onClick={handleExternalLink}
               className="h-6 w-6 p-0"
-              title="View on GitHub"
+              title={copy.viewOnGitHub}
             >
               <ExternalLink className="h-3 w-3" />
             </Button>
@@ -85,7 +135,7 @@ function TaxTableRow({ table }) {
       {expanded && (
         <tr>
           <td colSpan={8} className="bg-muted/20 px-6 py-4 border-b">
-            <BracketTable brackets={table.brackets} />
+            <BracketTable brackets={table.brackets} lang={lang} locale={locale} />
           </td>
         </tr>
       )}
@@ -94,7 +144,13 @@ function TaxTableRow({ table }) {
 }
 
 export function TaxBracketsViewer() {
-  const data = React.useMemo(() => transformTaxTablesData(taxTablesData), [])
+  const pathname = usePathname()
+  const lang = getLangFromPath(pathname)
+  const locale = getLocaleFromLang(lang)
+  const copy = COPY[lang]
+  const regionLabels = REGION_LABELS[lang]
+
+  const data = React.useMemo(() => transformTaxTablesData(taxTablesData, locale), [locale])
 
   const [regionFilter, setRegionFilter] = React.useState([])
   const [dateRangeFilter, setDateRangeFilter] = React.useState([])
@@ -131,6 +187,8 @@ export function TaxBracketsViewer() {
     })
   }, [data, regionFilter, dateRangeFilter, marriedFilter, dependentsFilter, disabledFilter, partnerDisabledFilter, numberOfHoldersFilter, searchFilter])
 
+  const renderRegion = (region) => regionLabels[region] || region
+
   return (
     <div className="space-y-4">
       <FilterControls
@@ -160,13 +218,13 @@ export function TaxBracketsViewer() {
       />
 
       <div className="text-xs text-muted-foreground">
-        {filteredData.length} of {data.length} tables — click a row to expand brackets
+        {filteredData.length} {copy.totalLabel} {data.length} {copy.tablesPlural} - {copy.expandHint}
       </div>
 
       {filteredData.length === 0 ? (
         <Alert>
           <Search className="h-4 w-4" />
-          <AlertDescription>No tax tables match the current filters.</AlertDescription>
+          <AlertDescription>{copy.noResults}</AlertDescription>
         </Alert>
       ) : (
         <div className="rounded-md border overflow-x-auto">
@@ -174,19 +232,22 @@ export function TaxBracketsViewer() {
             <thead>
               <tr className="border-b bg-muted/50 text-xs text-muted-foreground">
                 <th className="py-2 px-3 w-6" />
-                <th className="py-2 px-3 text-left font-medium">Table</th>
-                <th className="py-2 px-3 text-left font-medium">Description</th>
-                <th className="py-2 px-3 text-left font-medium">Region</th>
-                <th className="py-2 px-3 text-left font-medium whitespace-nowrap">Period</th>
-                <th className="py-2 px-3 text-left font-medium">Brackets</th>
-                <th className="py-2 px-3 text-left font-medium">Dep. Disabled</th>
+                <th className="py-2 px-3 text-left font-medium">{copy.table}</th>
+                <th className="py-2 px-3 text-left font-medium">{copy.description}</th>
+                <th className="py-2 px-3 text-left font-medium">{copy.region}</th>
+                <th className="py-2 px-3 text-left font-medium whitespace-nowrap">{copy.period}</th>
+                <th className="py-2 px-3 text-left font-medium">{copy.bracketsHeader}</th>
+                <th className="py-2 px-3 text-left font-medium">{copy.dependentDisabledHeader}</th>
                 <th className="py-2 px-3" />
               </tr>
             </thead>
             <tbody>
-              {filteredData.map((table) => (
-                <TaxTableRow key={table.id} table={table} />
-              ))}
+              {filteredData.map((table) => {
+                const tableWithRegion = { ...table, region: renderRegion(table.region) }
+                return (
+                  <TaxTableRow key={table.id} table={tableWithRegion} copy={copy} locale={locale} lang={lang} />
+                )
+              })}
             </tbody>
           </table>
         </div>

@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { usePathname } from "next/navigation"
 import { Search, Filter, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -16,6 +17,79 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { formatDateRange } from "./utils"
+import { getLangFromPath, getLocaleFromLang } from "@/lib/i18n"
+
+const COPY = {
+  pt: {
+    searchPlaceholder: "Pesquisar tabelas fiscais...",
+    region: "Regiao",
+    dateRange: "Periodo",
+    married: "Casamento",
+    dependents: "Dependentes",
+    disabled: "Deficiencia",
+    partnerDisabled: "Deficiencia do conjuge",
+    holders: "Titulares",
+    filterByRegion: "Filtrar por regiao",
+    filterByDateRange: "Filtrar por periodo",
+    filterByMaritalStatus: "Filtrar por estado civil",
+    filterByDependents: "Filtrar por dependentes",
+    filterByDisability: "Filtrar por deficiencia",
+    filterByPartnerDisability: "Filtrar por deficiencia do conjuge",
+    filterByNumberOfHolders: "Filtrar por numero de titulares",
+    clearAll: "Limpar",
+    clearAllFilters: "Limpar filtros",
+    marriedYes: "Casado",
+    marriedNo: "Solteiro",
+    dependentsYes: "Com dependentes",
+    dependentsNo: "Sem dependentes",
+    disabledYes: "Pessoa com deficiencia",
+    disabledNo: "Pessoa sem deficiencia",
+    partnerDisabledYes: "Conjuge com deficiencia",
+    partnerDisabledNo: "Conjuge sem deficiencia",
+    holder: "Titular",
+  },
+  en: {
+    searchPlaceholder: "Search tax tables...",
+    region: "Region",
+    dateRange: "Date Range",
+    married: "Married",
+    dependents: "Dependents",
+    disabled: "Disability",
+    partnerDisabled: "Partner Disability",
+    holders: "Holders",
+    filterByRegion: "Filter by Region",
+    filterByDateRange: "Filter by Date Range",
+    filterByMaritalStatus: "Filter by Marital Status",
+    filterByDependents: "Filter by Dependents",
+    filterByDisability: "Filter by Disability",
+    filterByPartnerDisability: "Filter by Partner Disability",
+    filterByNumberOfHolders: "Filter by Number of Holders",
+    clearAll: "Clear all",
+    clearAllFilters: "Clear all filters",
+    marriedYes: "Married",
+    marriedNo: "Single",
+    dependentsYes: "Has Dependents",
+    dependentsNo: "No Dependents",
+    disabledYes: "Person Disabled",
+    disabledNo: "Person Not Disabled",
+    partnerDisabledYes: "Partner Disabled",
+    partnerDisabledNo: "Partner Not Disabled",
+    holder: "Holder",
+  },
+}
+
+const REGION_LABELS = {
+  pt: {
+    continent: "Continente",
+    azores: "Acores",
+    madeira: "Madeira",
+  },
+  en: {
+    continent: "Continent",
+    azores: "Azores",
+    madeira: "Madeira",
+  },
+}
 
 export function FilterControls({
   searchFilter,
@@ -42,6 +116,12 @@ export function FilterControls({
   uniquePartnerDisabledValues,
   uniqueNumberOfHoldersValues,
 }) {
+  const pathname = usePathname()
+  const lang = getLangFromPath(pathname)
+  const locale = getLocaleFromLang(lang)
+  const copy = COPY[lang]
+  const regionLabels = REGION_LABELS[lang]
+
   const hasActiveFilters = regionFilter.length > 0 || 
     dateRangeFilter.length > 0 || 
     marriedFilter.length > 0 || 
@@ -62,14 +142,23 @@ export function FilterControls({
     setSearchFilter("")
   }
 
+  const toggleInFilter = (checked, value, setter) => {
+    setter((prev) => {
+      if (checked) {
+        return prev.includes(value) ? prev : [...prev, value]
+      }
+
+      return prev.filter((item) => item !== value)
+    })
+  }
+
   return (
     <div className="flex flex-wrap gap-4 items-center">
-      {/* Search Input */}
       <div className="flex-1">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
           <Input
-            placeholder="Search tax tables..."
+            placeholder={copy.searchPlaceholder}
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             className="pl-10 max-w-sm"
@@ -77,12 +166,11 @@ export function FilterControls({
         </div>
       </div>
 
-      {/* Region Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Region
+            {copy.region}
             {regionFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {regionFilter.length}
@@ -91,21 +179,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <DropdownMenuLabel>Filter by Region</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByRegion}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniqueRegions.map((region) => (
             <DropdownMenuCheckboxItem
               key={region}
               checked={regionFilter.includes(region)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setRegionFilter(prev => [...prev, region])
-                } else {
-                  setRegionFilter(prev => prev.filter(r => r !== region))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, region, setRegionFilter)}
             >
-              {region.charAt(0).toUpperCase() + region.slice(1)}
+              {regionLabels[region] || region}
             </DropdownMenuCheckboxItem>
           ))}
           {regionFilter.length > 0 && (
@@ -113,19 +195,18 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setRegionFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Date Range Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Date Range
+            {copy.dateRange}
             {dateRangeFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {dateRangeFilter.length}
@@ -134,21 +215,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-64">
-          <DropdownMenuLabel>Filter by Date Range</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByDateRange}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniqueDateRanges.map((dateRange) => (
             <DropdownMenuCheckboxItem
               key={dateRange}
               checked={dateRangeFilter.includes(dateRange)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setDateRangeFilter(prev => [...prev, dateRange])
-                } else {
-                  setDateRangeFilter(prev => prev.filter(d => d !== dateRange))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, dateRange, setDateRangeFilter)}
             >
-              {formatDateRange(dateRange)}
+              {formatDateRange(dateRange, locale)}
             </DropdownMenuCheckboxItem>
           ))}
           {dateRangeFilter.length > 0 && (
@@ -156,19 +231,18 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setDateRangeFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Married Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Married
+            {copy.married}
             {marriedFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {marriedFilter.length}
@@ -177,21 +251,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <DropdownMenuLabel>Filter by Marital Status</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByMaritalStatus}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniqueMarriedValues.map((value) => (
             <DropdownMenuCheckboxItem
               key={value}
               checked={marriedFilter.includes(value)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setMarriedFilter(prev => [...prev, value])
-                } else {
-                  setMarriedFilter(prev => prev.filter(v => v !== value))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, value, setMarriedFilter)}
             >
-              {value ? 'Married' : 'Single'}
+              {value ? copy.marriedYes : copy.marriedNo}
             </DropdownMenuCheckboxItem>
           ))}
           {marriedFilter.length > 0 && (
@@ -199,19 +267,18 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setMarriedFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Dependents Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Dependents
+            {copy.dependents}
             {dependentsFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {dependentsFilter.length}
@@ -220,21 +287,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <DropdownMenuLabel>Filter by Dependents</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByDependents}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniqueDependentsValues.map((value) => (
             <DropdownMenuCheckboxItem
               key={value}
               checked={dependentsFilter.includes(value)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setDependentsFilter(prev => [...prev, value])
-                } else {
-                  setDependentsFilter(prev => prev.filter(v => v !== value))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, value, setDependentsFilter)}
             >
-              {value ? 'Has Dependents' : 'No Dependents'}
+              {value ? copy.dependentsYes : copy.dependentsNo}
             </DropdownMenuCheckboxItem>
           ))}
           {dependentsFilter.length > 0 && (
@@ -242,19 +303,18 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setDependentsFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Disabled Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Disabled
+            {copy.disabled}
             {disabledFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {disabledFilter.length}
@@ -263,21 +323,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <DropdownMenuLabel>Filter by Disability</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByDisability}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniqueDisabledValues.map((value) => (
             <DropdownMenuCheckboxItem
               key={value}
               checked={disabledFilter.includes(value)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setDisabledFilter(prev => [...prev, value])
-                } else {
-                  setDisabledFilter(prev => prev.filter(v => v !== value))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, value, setDisabledFilter)}
             >
-              {value ? 'Person Disabled' : 'Person Not Disabled'}
+              {value ? copy.disabledYes : copy.disabledNo}
             </DropdownMenuCheckboxItem>
           ))}
           {disabledFilter.length > 0 && (
@@ -285,19 +339,18 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setDisabledFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Partner Disabled Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Partner Disabled
+            {copy.partnerDisabled}
             {partnerDisabledFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {partnerDisabledFilter.length}
@@ -306,21 +359,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <DropdownMenuLabel>Filter by Partner Disability</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByPartnerDisability}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniquePartnerDisabledValues.map((value) => (
             <DropdownMenuCheckboxItem
               key={value}
               checked={partnerDisabledFilter.includes(value)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setPartnerDisabledFilter(prev => [...prev, value])
-                } else {
-                  setPartnerDisabledFilter(prev => prev.filter(v => v !== value))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, value, setPartnerDisabledFilter)}
             >
-              {value ? 'Partner Disabled' : 'Partner Not Disabled'}
+              {value ? copy.partnerDisabledYes : copy.partnerDisabledNo}
             </DropdownMenuCheckboxItem>
           ))}
           {partnerDisabledFilter.length > 0 && (
@@ -328,19 +375,18 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setPartnerDisabledFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Number of Holders Filter */}
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-9">
             <Filter className="mr-2 h-4 w-4" />
-            Holders
+            {copy.holders}
             {numberOfHoldersFilter.length > 0 && (
               <Badge variant="default" className="ml-2">
                 {numberOfHoldersFilter.length}
@@ -349,21 +395,15 @@ export function FilterControls({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-48">
-          <DropdownMenuLabel>Filter by Number of Holders</DropdownMenuLabel>
+          <DropdownMenuLabel>{copy.filterByNumberOfHolders}</DropdownMenuLabel>
           <DropdownMenuSeparator />
           {uniqueNumberOfHoldersValues.map((value) => (
             <DropdownMenuCheckboxItem
               key={value}
               checked={numberOfHoldersFilter.includes(value)}
-              onCheckedChange={(checked) => {
-                if (checked) {
-                  setNumberOfHoldersFilter(prev => [...prev, value])
-                } else {
-                  setNumberOfHoldersFilter(prev => prev.filter(v => v !== value))
-                }
-              }}
+              onCheckedChange={(checked) => toggleInFilter(checked, value, setNumberOfHoldersFilter)}
             >
-              {value} Holder{value > 1 ? 's' : ''}
+              {value} {copy.holder}{value > 1 ? "s" : ""}
             </DropdownMenuCheckboxItem>
           ))}
           {numberOfHoldersFilter.length > 0 && (
@@ -371,14 +411,13 @@ export function FilterControls({
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => setNumberOfHoldersFilter([])}>
                 <X className="mr-2 h-4 w-4" />
-                Clear all
+                {copy.clearAll}
               </DropdownMenuItem>
             </>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {/* Clear All Filters */}
       {hasActiveFilters && (
         <Button
           variant="ghost"
@@ -386,7 +425,7 @@ export function FilterControls({
           className="h-9"
         >
           <X className="mr-2 h-4 w-4" />
-          Clear all filters
+          {copy.clearAllFilters}
         </Button>
       )}
     </div>

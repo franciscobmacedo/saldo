@@ -1,6 +1,6 @@
 // Format currency values
-export function formatCurrency(value) {
-  return new Intl.NumberFormat('pt-PT', {
+export function formatCurrency(value, locale = 'pt-PT') {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: 'EUR',
     minimumFractionDigits: 2,
@@ -14,16 +14,16 @@ export function formatPercentage(value) {
 }
 
 // Format bracket limit
-export function formatBracketLimit(bracket) {
+export function formatBracketLimit(bracket, locale = 'pt-PT') {
   if (bracket.signal === "min") {
-    return `≥ ${formatCurrency(bracket.limit)}`
+    return `≥ ${formatCurrency(bracket.limit, locale)}`
   } else {
-    return `≤ ${formatCurrency(bracket.limit)}`
+    return `≤ ${formatCurrency(bracket.limit, locale)}`
   }
 }
 
 // Format date range from YYYY-MM-DD_YYYY-MM-DD to human readable format
-export function formatDateRange(dateRange) {
+export function formatDateRange(dateRange, locale = 'en-US') {
   if (!dateRange || typeof dateRange !== 'string') return dateRange
   
   const [startDate, endDate] = dateRange.split('_')
@@ -33,20 +33,18 @@ export function formatDateRange(dateRange) {
     const start = new Date(startDate)
     const end = new Date(endDate)
     
-    // Format as "Jan 1 - Jul 31, 2025" or "Jan 1 - Dec 31, 2025"
-    const startFormatted = start.toLocaleDateString('en-US', { 
+    const startFormatted = start.toLocaleDateString(locale, { 
       month: 'short', 
       day: 'numeric' 
     })
-    const endFormatted = end.toLocaleDateString('en-US', { 
+    const endFormatted = end.toLocaleDateString(locale, { 
       month: 'short', 
       day: 'numeric' 
     })
     const year = start.getFullYear()
     
     return `${startFormatted} - ${endFormatted}, ${year}`
-  } catch (error) {
-    // Fallback to original format if parsing fails
+  } catch {
     return dateRange
   }
 }
