@@ -84,8 +84,10 @@ const HEADERS: (keyof GreenReceiptRawRow)[] = [
  * @throws {Error} If a row has an unexpected number of columns.
  */
 export function parseGreenReceiptsCsv(content: string): GreenReceiptRawRow[] {
-    const lines = content
-        .split(/\r?\n/)
+    // Handle potential BOM and normalize line endings
+    const cleanContent = content.replace(/^\uFEFF/, "");
+    const lines = cleanContent
+        .split(/\r\n|\r|\n/)
         .map((l) => l.trim())
         .filter(Boolean);
 
@@ -202,8 +204,17 @@ export function prepareIndependentWorkerDataFromCsv(
     csvContent: string,
     targetYear: number = 2024
 ): GreenReceiptsData {
+    // Ensure targetYear is a number
+    const yearToMatch = Number(targetYear);
     const rawRows = parseGreenReceiptsCsv(csvContent);
     const receipts = rawRows.map(toGreenReceipt);
+
+    // For debugging
+    const foundYears = new Set<number>();
+    receipts.forEach(r => {
+        const y = r.dataTransacao.getFullYear();
+        if (!isNaN(y)) foundYears.add(y);
+    });
 
     const incomeMatrix: IndependentWorkerReceipt[][] = Array.from({ length: 12 }, () => []);
 
@@ -225,7 +236,7 @@ export function prepareIndependentWorkerDataFromCsv(
         const month = r.dataTransacao.getMonth();
 
         // Include receipts for the target year
-        if (year === targetYear) {
+        if (year === yearToMatch) {
             incomeMatrix[month].push({
                 income: r.valorTributavel,
                 // Only consider retention valid if the receipt has IRS withheld.
@@ -235,10 +246,16 @@ export function prepareIndependentWorkerDataFromCsv(
             });
         }
         // Accumulate data for the previous year's Q4 (Oct, Nov, Dec)
-        else if (year === targetYear - 1 && month >= 9 && month <= 11) {
+        else if (year === yearToMatch - 1 && month >= 9 && month <= 11) {
             q4Total += r.valorTributavel;
             q4ReceiptCount++;
         }
+    }
+
+    const totalIncomeFound = incomeMatrix.reduce((acc, month) => acc + month.reduce((sum, r) => sum + r.income, 0), 0);
+
+    if (totalIncomeFound === 0) {
+        console.error(`\x1b[33m⚠ No income found for year ${yearToMatch}. Found data for years: ${Array.from(foundYears).join(", ")}\x1b[0m`);
     }
 
     const hasPreviousYearQ4 = q4ReceiptCount > 0;

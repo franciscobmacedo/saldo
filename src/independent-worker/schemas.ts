@@ -65,7 +65,11 @@ export interface IndependentWorkerNormalizedInternals {
   };
   socialSecurity: {
     firstYearExemptionApplied: boolean;
-    /** True when previousYearQ4MonthlyIncome was NOT provided and Jan/Feb/Mar SS is estimated from current-year data */
+    /**
+     * True when previousYearQ4MonthlyIncome was NOT provided and Jan/Feb/Mar SS
+     * is estimated from current-year Q4 (Oct/Nov/Dec) due to
+     * approximateQ1FromCurrentYearQ4 being enabled.
+     */
     ssQ1Approximated: boolean;
     baseMonthlyBeforeDiscountAndCap: number | number[];
     baseMonthlyAfterDiscountBeforeCap: number | number[];
@@ -117,7 +121,11 @@ export interface IndependentWorkerResult {
   rnhTax: number;
   benefitsOfYouthIrs: boolean;
   yearOfYouthIrs: number;
-  /** True when previousYearQ4MonthlyIncome was NOT provided and Jan/Feb/Mar SS is estimated from current-year data */
+  /**
+   * True when previousYearQ4MonthlyIncome was NOT provided and Jan/Feb/Mar SS
+   * is estimated from current-year Q4 (Oct/Nov/Dec) due to
+   * approximateQ1FromCurrentYearQ4 being enabled.
+   */
   ssQ1Approximated: boolean;
   monthlyBreakdown: IndependentWorkerMonthlyBreakdownResult[];
   normalizedInternals: IndependentWorkerNormalizedInternals;
@@ -145,10 +153,18 @@ export interface SimulateIndependentWorkerOptions {
    * contribution due in January, February, and March (which is always based on
    * the previous quarter's income under Portuguese SS rules).
    *
-   * When omitted the simulator falls back to using the current-year Q3 average
-   * as a proxy and sets `ssQ1Approximated = true` on the result.
+   * When omitted, Jan/Feb/Mar SS defaults to 0, unless
+   * `approximateQ1FromCurrentYearQ4` is enabled.
    */
   previousYearQ4MonthlyIncome?: number;
+  /**
+   * If true and previousYearQ4MonthlyIncome is omitted, estimate Jan/Feb/Mar SS
+   * from the current simulated year's Q4 (Oct/Nov/Dec) average and set
+   * `ssQ1Approximated = true`.
+   *
+   * If false (default) and previousYearQ4MonthlyIncome is omitted, Jan/Feb/Mar SS is 0.
+   */
+  approximateQ1FromCurrentYearQ4?: boolean;
 }
 
 export type SimulateIndependentWorkerMonthlyIncomeSweepOptions =

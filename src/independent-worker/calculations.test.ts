@@ -125,7 +125,7 @@ describe("Independent Worker Calculations", () => {
       expect(result.totals.year).toBeGreaterThan(0);
     });
 
-    it("should set ssQ1Approximated=true when previousYearQ4MonthlyIncome is not provided", () => {
+    it("should set ssQ1Approximated=false when previousYearQ4MonthlyIncome is not provided and approximation is disabled", () => {
       const result = calculateSsPay(
         Array(12).fill(grossIncome.month),
         0.214,
@@ -137,7 +137,10 @@ describe("Independent Worker Calculations", () => {
         // no previousYearQ4MonthlyIncome
       );
 
-      expect(result.ssQ1Approximated).toBe(true);
+      expect(result.ssQ1Approximated).toBe(false);
+      expect(result.monthly[0]).toBe(0);
+      expect(result.monthly[1]).toBe(0);
+      expect(result.monthly[2]).toBe(0);
     });
 
     it("should set ssQ1Approximated=false when previousYearQ4MonthlyIncome is provided", () => {
@@ -168,13 +171,39 @@ describe("Independent Worker Calculations", () => {
         currentYearIncomes, 0.214, 0, maxSsIncome, false, 0, yearBusinessDays
       );
 
-      // With prevQ4 supplied, Jan SS is based on 1000; without it, Jan SS falls
-      // back to Q3 of the current year (also 3000), so the two should differ.
+      // With prevQ4 supplied, Jan SS is based on 1000; without it and with
+      // approximation disabled, Jan SS is 0.
       const janWithPrev = resultWithPrevQ4.monthly[0];
       const janWithout = resultWithout.monthly[0];
-      expect(janWithPrev).toBeLessThan(janWithout);
+      expect(janWithPrev).toBeGreaterThan(janWithout);
       // Apr–Jun should be identical (both use Q1 of current year)
       expect(resultWithPrevQ4.monthly[3]).toBeCloseTo(resultWithout.monthly[3], 5);
+    });
+
+    it("should approximate Jan/Feb/Mar SS from current-year Q4 when flag is enabled", () => {
+      const incomes = [
+        0, 0, 0,
+        0, 0, 0,
+        0, 0, 0,
+        6000, 6000, 6000,
+      ];
+
+      const result = calculateSsPay(
+        incomes,
+        0.214,
+        0,
+        maxSsIncome,
+        false,
+        0,
+        yearBusinessDays,
+        undefined,
+        true
+      );
+
+      expect(result.ssQ1Approximated).toBe(true);
+      expect(result.monthly[0]).toBeGreaterThan(20);
+      expect(result.monthly[1]).toBeCloseTo(result.monthly[0], 5);
+      expect(result.monthly[2]).toBeCloseTo(result.monthly[0], 5);
     });
 
     it("should map payment quarters correctly (SS paid 1 quarter after income)", () => {

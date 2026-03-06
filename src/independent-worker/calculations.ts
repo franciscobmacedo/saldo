@@ -54,7 +54,8 @@ export function calculateSsPay(
   firstYearForSs: boolean,
   nrDaysOff: number,
   yearBusinessDays: number,
-  previousYearQ4MonthlyIncome?: number
+  previousYearQ4MonthlyIncome?: number,
+  approximateQ1FromCurrentYearQ4: boolean = false
 ): { totals: CurrencyByFrequency; monthly: number[]; ssQ1Approximated: boolean } {
   if (firstYearForSs) {
     return {
@@ -75,12 +76,19 @@ export function calculateSsPay(
   };
 
   // Jan/Feb/Mar SS is determined by prior-year Q4 (Oct/Nov/Dec) income.
-  // Use the supplied previousYearQ4MonthlyIncome when available; otherwise fall
-  // back to the current-year Q3 average and flag the result as approximated.
-  const ssQ1Approximated = previousYearQ4MonthlyIncome === undefined;
-  const prevQ4Avg = previousYearQ4MonthlyIncome ?? q3Avg;
+  // Priority:
+  // 1) Use supplied previousYearQ4MonthlyIncome (exact)
+  // 2) If approximation flag is enabled, use current-year Q4 average (approx)
+  // 3) Otherwise, Jan/Feb/Mar SS is 0
+  const hasExactPrevQ4 = previousYearQ4MonthlyIncome !== undefined;
+  const shouldApproximateQ1 = !hasExactPrevQ4 && approximateQ1FromCurrentYearQ4;
+  const ssQ1Approximated = shouldApproximateQ1;
 
-  const prevQ4SS = calcMonthSS(prevQ4Avg);
+  const prevQ4SS = hasExactPrevQ4
+    ? calcMonthSS(previousYearQ4MonthlyIncome)
+    : shouldApproximateQ1
+      ? calcMonthSS(q4Avg)
+      : 0;
   const q1SS = calcMonthSS(q1Avg);
   const q2SS = calcMonthSS(q2Avg);
   const q3SS = calcMonthSS(q3Avg);

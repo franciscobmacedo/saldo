@@ -60,6 +60,12 @@ export function buildIndependentWorkerMonthlyBreakdown({
       ? irsRetentionMonthlyAmounts[idx]
       : mGross * irsRetentionRate;
 
+    // Distribute taxable income proportionally to gross income if it's variable.
+    // This makes the monthly breakdown more intuitive.
+    const mTaxableIncome = isVariable
+      ? (grossAnnual > 0 ? (mGross / grossAnnual) * taxableIncomeAnnual : 0)
+      : taxableIncomeMonthly;
+
     // Net income month: what the worker actually pockets (gross minus SS and what's retained at source)
     const mNet = mGross - mIrsRetention - mSS;
     const totalTax = mIrsRetention + mSS;
@@ -68,7 +74,7 @@ export function buildIndependentWorkerMonthlyBreakdown({
     return {
       month,
       grossIncome: mGross,
-      taxableIncome: taxableIncomeMonthly,
+      taxableIncome: mTaxableIncome,
       irsPay: mIrsPay,
       irsRetention: mIrsRetention,
       ssPay: mSS,

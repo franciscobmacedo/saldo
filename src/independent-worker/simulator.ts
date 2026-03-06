@@ -250,6 +250,7 @@ export function simulateIndependentWorker({
   benefitsOfYouthIrs = false,
   yearOfYouthIrs = 1,
   previousYearQ4MonthlyIncome,
+  approximateQ1FromCurrentYearQ4 = false,
 }: SimulateIndependentWorkerOptions): IndependentWorkerResult {
   // Validate all inputs
   validateIncome(income);
@@ -315,7 +316,8 @@ export function simulateIndependentWorker({
     workerWithinFirst12Months,
     nrDaysOff,
     resolvedYearBusinessDays,
-    previousYearQ4MonthlyIncome
+    previousYearQ4MonthlyIncome,
+    approximateQ1FromCurrentYearQ4
   );
 
   // Calculate specific deductions

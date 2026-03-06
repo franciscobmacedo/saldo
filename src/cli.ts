@@ -78,6 +78,7 @@ program
     .option("--benefits-of-youth-irs", "Benefits of youth IRS", false)
     .option("--year-of-youth-irs <number>", "Year of youth IRS", Number)
     .option("--previous-year-q4-monthly-income <number>", "Average monthly income in Q4 of previous year", Number)
+    .option("--approximate-q1-from-current-year-q4", "If previous year Q4 is missing, estimate Q1 SS from current-year Q4", false)
     .action((options) => {
         try {
             let parsedIncome: number | number[];
@@ -108,6 +109,7 @@ program
                 benefitsOfYouthIrs: options.benefitsOfYouthIrs,
                 yearOfYouthIrs: options.yearOfYouthIrs,
                 previousYearQ4MonthlyIncome: options.previousYearQ4MonthlyIncome,
+                approximateQ1FromCurrentYearQ4: options.approximateQ1FromCurrentYearQ4,
             });
             console.log(JSON.stringify(result, null, 2));
         } catch (e: any) {
@@ -133,9 +135,16 @@ program
     .option("--date-of-opening-activity <date>", "Date of opening activity (YYYY-MM-DD)")
     .option("--benefits-of-youth-irs", "Benefits of youth IRS", false)
     .option("--year-of-youth-irs <number>", "Year of youth IRS", Number)
+    .option("--approximate-q1-from-current-year-q4", "If previous year Q4 is missing, estimate Q1 SS from current-year Q4", false)
     .action((options) => {
         try {
             const csvContent = fs.readFileSync(options.csv, "utf-8");
+
+            // Log some summary information to help the user
+            const targetYear = options.currentTaxRankYear || 2024;
+            console.error(`\x1b[1m\x1b[34m→ Simulating independent worker from CSV: ${options.csv}\x1b[0m`);
+            console.error(`\x1b[1m\x1b[34m→ Target collection/simulation year: ${targetYear}\x1b[0m`);
+
             const result = simulateFromGreenReceiptsCsv({
                 csvContent,
                 yearBusinessDays: options.yearBusinessDays,
@@ -151,7 +160,19 @@ program
                 dateOfOpeningActivity: options.dateOfOpeningActivity ? new Date(options.dateOfOpeningActivity) : undefined,
                 benefitsOfYouthIrs: options.benefitsOfYouthIrs,
                 yearOfYouthIrs: options.yearOfYouthIrs,
+                approximateQ1FromCurrentYearQ4: options.approximateQ1FromCurrentYearQ4,
             });
+
+            // Log a summary of picked up income
+            const yearIncome = result.grossIncome.year;
+            console.error(`\x1b[1m\x1b[32m✔ Detected gross income for ${targetYear}: ${yearIncome.toFixed(2)}€\x1b[0m`);
+
+            if (result.ssQ1Approximated) {
+                console.error(`\x1b[33m⚠ Previous-year Q4 income not found in CSV. Q1 SS was estimated from current-year Q4 because approximation was enabled.\x1b[0m`);
+            } else {
+                console.error(`\x1b[32m✔ Q1 SS was not approximated. It used previous-year Q4 when available; otherwise Jan/Feb/Mar SS is 0.\x1b[0m`);
+            }
+
             console.log(JSON.stringify(result, null, 2));
         } catch (e: any) {
             console.error(e.message);
