@@ -21,3 +21,4 @@ docs/public/sitemap.xml
 
 # Playwright mcp
 .playwright-mcp/
+local/
