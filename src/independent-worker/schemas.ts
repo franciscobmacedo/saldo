@@ -1,3 +1,5 @@
+import type { SupportedTaxRankYear } from "@/data/supported-tax-rank-years";
+
 export enum FrequencyChoices {
   Year = "year",
   Month = "month",
@@ -141,7 +143,7 @@ export interface SimulateIndependentWorkerOptions {
   expenses?: number;
   ssTax?: number;
   irsRetentionRate?: number;
-  currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
+  currentTaxRankYear?: SupportedTaxRankYear;
   rnh?: boolean;
   rnhTax?: number;
   dateOfOpeningActivity?: Date | null;

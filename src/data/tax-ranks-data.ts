@@ -1,4 +1,7 @@
 import { TaxRank } from "@/independent-worker/schemas";
+import { SUPPORTED_TAX_RANK_YEARS } from "./supported-tax-rank-years";
+
+export { SUPPORTED_TAX_RANK_YEARS } from "./supported-tax-rank-years";
 
 export const TAX_RANKS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: TaxRank[] } = {
   2023: [
@@ -46,6 +49,3 @@ export const TAX_RANKS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: TaxRan
     { id: 9, min: 86634, normalTax: 0.48, max: null, averageTax: null },
   ]
 };
-
-
-export const SUPPORTED_TAX_RANK_YEARS = [2023, 2024, 2025, 2026] as const;

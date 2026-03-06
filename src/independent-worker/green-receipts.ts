@@ -1,6 +1,8 @@
 import { GreenReceiptRawRow, GreenReceipt, GreenReceiptAnnualStats } from "./green-receipts-schema";
 import { simulateIndependentWorker } from "./simulator";
 import { FrequencyChoices, SimulateIndependentWorkerOptions, IndependentWorkerResult, IndependentWorkerReceipt } from "./schemas";
+import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
+import type { SupportedTaxRankYear } from "@/data/supported-tax-rank-years";
 
 export interface SimulateFromGreenReceiptsCsvOptions extends Omit<SimulateIndependentWorkerOptions, "income" | "incomeFrequency" | "previousYearQ4MonthlyIncome"> {
     csvContent: string;
@@ -8,7 +10,7 @@ export interface SimulateFromGreenReceiptsCsvOptions extends Omit<SimulateIndepe
      * The year for which the simulation takes place. We will filter the CSV receipts for this year 
      * and construct the 12-month income array.
      */
-    currentTaxRankYear?: 2023 | 2024 | 2025 | 2026;
+    currentTaxRankYear?: SupportedTaxRankYear;
 }
 
 /**
@@ -189,6 +191,36 @@ export function computeGreenReceiptsAnnualStats(receipts: GreenReceipt[]): Map<n
 export interface GreenReceiptsData {
     income: IndependentWorkerReceipt[][];
     previousYearQ4MonthlyIncome?: number;
+    targetYear: SupportedTaxRankYear;
+}
+
+function isSupportedTaxRankYear(year: number): year is SupportedTaxRankYear {
+    return SUPPORTED_TAX_RANK_YEARS.includes(year as SupportedTaxRankYear);
+}
+
+function inferMostCommonReceiptYear(receipts: GreenReceipt[]): number | undefined {
+    const yearCounts = new Map<number, number>();
+
+    for (const receipt of receipts) {
+        const year = receipt.dataTransacao.getFullYear();
+        if (isNaN(year)) {
+            continue;
+        }
+
+        yearCounts.set(year, (yearCounts.get(year) ?? 0) + 1);
+    }
+
+    let mostCommonYear: number | undefined;
+    let mostCommonCount = -1;
+
+    for (const [year, count] of yearCounts) {
+        if (count > mostCommonCount || (count === mostCommonCount && (mostCommonYear === undefined || year > mostCommonYear))) {
+            mostCommonYear = year;
+            mostCommonCount = count;
+        }
+    }
+
+    return mostCommonYear;
 }
 
 /**
@@ -202,12 +234,23 @@ export interface GreenReceiptsData {
  */
 export function prepareIndependentWorkerDataFromCsv(
     csvContent: string,
-    targetYear: number = 2024
+    targetYear?: number
 ): GreenReceiptsData {
-    // Ensure targetYear is a number
-    const yearToMatch = Number(targetYear);
     const rawRows = parseGreenReceiptsCsv(csvContent);
     const receipts = rawRows.map(toGreenReceipt);
+
+    const inferredYear = inferMostCommonReceiptYear(receipts);
+    const yearToMatch = Number(targetYear ?? inferredYear);
+
+    if (!isSupportedTaxRankYear(yearToMatch)) {
+        const yearsFound = receipts
+            .map((receipt) => receipt.dataTransacao.getFullYear())
+            .filter((year) => !isNaN(year));
+
+        throw new Error(
+            `Could not resolve a supported tax rank year from CSV. Found years: ${yearsFound.length ? Array.from(new Set(yearsFound)).join(", ") : "none"}. Supported years: ${SUPPORTED_TAX_RANK_YEARS.join(", ")}.`
+        );
+    }
 
     // For debugging
     const foundYears = new Set<number>();
@@ -265,7 +308,8 @@ export function prepareIndependentWorkerDataFromCsv(
 
     return {
         income: incomeMatrix,
-        previousYearQ4MonthlyIncome
+        previousYearQ4MonthlyIncome,
+        targetYear: yearToMatch
     };
 }
 
@@ -282,16 +326,16 @@ export function prepareIndependentWorkerDataFromCsv(
  */
 export function simulateFromGreenReceiptsCsv({
     csvContent,
-    currentTaxRankYear = 2024,
+    currentTaxRankYear,
     ...restParams
 }: SimulateFromGreenReceiptsCsvOptions): IndependentWorkerResult {
-    const { income, previousYearQ4MonthlyIncome } = prepareIndependentWorkerDataFromCsv(csvContent, currentTaxRankYear);
+    const { income, previousYearQ4MonthlyIncome, targetYear } = prepareIndependentWorkerDataFromCsv(csvContent, currentTaxRankYear);
 
     return simulateIndependentWorker({
         ...restParams,
         income,
         incomeFrequency: FrequencyChoices.Year,
-        currentTaxRankYear,
+        currentTaxRankYear: targetYear,
         previousYearQ4MonthlyIncome,
     });
 }
