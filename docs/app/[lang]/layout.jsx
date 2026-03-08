@@ -5,7 +5,7 @@ import { getPageMap } from 'nextra/page-map'
 import Link from 'next/link'
 import Image from 'next/image'
 
-import logo from '../../public/logo.svg'
+import logo from '../../public/logo.png'
 import { isPortuguese } from '@/lib/i18n'
 
 import '../globals.css'
