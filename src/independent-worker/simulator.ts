@@ -368,7 +368,8 @@ export function simulateIndependentWorker({
     grossIncome,
     irsPay,
     ssPay,
-    resolvedYearBusinessDays
+    resolvedYearBusinessDays,
+    nrDaysOff
   );
   const marginalRate = rnh ? rnhTax : taxRank.normalTax;
   const normalizedInternals = buildNormalizedInternals({

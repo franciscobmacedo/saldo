@@ -248,13 +248,14 @@ export function calculateNetIncome(
   grossIncome: CurrencyByFrequency,
   irsPay: CurrencyByFrequency,
   ssPay: CurrencyByFrequency,
-  yearBusinessDays: number
+  yearBusinessDays: number,
+  nrDaysOff: number
 ): CurrencyByFrequency {
   const monthIncome = grossIncome.month - irsPay.month - ssPay.month;
   const yearIncome = grossIncome.year - irsPay.year - ssPay.year;
   return {
     year: yearIncome,
     month: monthIncome,
-    day: yearIncome / yearBusinessDays,
+    day: yearIncome / (yearBusinessDays - nrDaysOff),
   };
 }

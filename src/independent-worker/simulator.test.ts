@@ -117,12 +117,13 @@ vi.mock("@/independent-worker/calculations", () => ({
     grossIncome: any,
     irsPay: any,
     ssPay: any,
-    yearBusinessDays: number = 248
+    yearBusinessDays: number = 248,
+    nrDaysOff: number = 0
   ) => {
     return {
       year: grossIncome.year - irsPay.year - ssPay.year,
       month: grossIncome.month - irsPay.month - ssPay.month,
-      day: (grossIncome.year - irsPay.year - ssPay.year) / yearBusinessDays
+      day: (grossIncome.year - irsPay.year - ssPay.year) / (yearBusinessDays - nrDaysOff)
     };
   }),
   TAX_RANKS: {},

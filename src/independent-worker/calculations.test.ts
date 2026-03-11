@@ -512,18 +512,20 @@ describe("Independent Worker Calculations", () => {
     const grossIncome = { year: 30000, month: 2500, day: 120.97 };
     const irsPay = { year: 3000, month: 250, day: 12.10 };
     const ssPay = { year: 2000, month: 166.67, day: 8.06 };
+    const nrDaysOff = 22;
 
     it("should calculate net income correctly", () => {
       const result = calculateNetIncome(
         grossIncome,
         irsPay,
         ssPay,
-        yearBusinessDays
+        yearBusinessDays,
+        nrDaysOff
       );
 
       expect(result.year).toBe(25000); // 30000 - 3000 - 2000
       expect(result.month).toBeCloseTo(2083.33, 2); // 2500 - 250 - 166.67
-      expect(result.day).toBeCloseTo(100.81, 2); // 25000 / 248
+      expect(result.day).toBeCloseTo(110.62, 2); // 25000 / (248 - 22)
     });
   });
 
