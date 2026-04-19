@@ -7,6 +7,7 @@ describe("simulateIndependentWorker monthlyBreakdown - End-to-End", () => {
       income: 36000,
       currentTaxRankYear: 2026,
       rnh: false,
+      previousYearQ4MonthlyIncome: 3000,
     });
 
     expect(result.monthlyBreakdown).toHaveLength(12);
