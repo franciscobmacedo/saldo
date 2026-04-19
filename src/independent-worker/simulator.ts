@@ -403,7 +403,7 @@ export function simulateIndependentWorker({
     irsAnnual: irsPay.year,
     irsRetentionMonthlyAmounts: resolvedMonthlyRetentions,
     irsRetentionRate,
-    ssMonthly: isVariable ? ssMonthlyList : ssPay.month,
+    ssMonthly: ssMonthlyList,
     marginalRate,
   });
 
