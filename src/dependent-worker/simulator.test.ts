@@ -22,6 +22,10 @@ vi.mock("@/dependent-worker/calculations", () => ({
   getTwelfthsIncome: vi.fn((income: number, twelfths: Twelfths) => {
     return (income * Number(twelfths)) / 12;
   }),
+  getIsencaoHorarioTwelfthsContribution: vi.fn(
+    (iht: number, feriasInTwelfthsFraction: number) =>
+      (iht * feriasInTwelfthsFraction) / 12
+  ),
   getDisabledDependentExtraDeduction: vi.fn(
     (taxRetentionTable: ActualTaxRetentionTable, numDisabled: number) => {
       const baseDeduction =

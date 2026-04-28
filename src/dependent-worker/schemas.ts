@@ -40,6 +40,10 @@ export interface SimulateDependentWorkerOptions {
   lunchAllowanceDaysCount?: number;
   includeLunchAllowanceInJune?: boolean;
   oneHalfMonthTwelfthsLumpSumMonth?: OneHalfMonthTwelfthsLumpSumMonth;
+  // Monthly "isenção de horário" supplement (Art. 218.º–219.º + 265.º CT).
+  // Taxed and SS-deducted like base salary; counted in subsídio de férias
+  // but NOT in subsídio de Natal.
+  isencaoHorarioMonthly?: number;
 }
 
 export type SimulateDependentWorkerMonthlyIncomeSweepOptions =

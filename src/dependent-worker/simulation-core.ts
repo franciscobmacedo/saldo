@@ -20,11 +20,13 @@ import { LunchAllowance } from "@/dependent-worker/lunch-allowance";
 import {
   getPartnerExtraDeduction,
   getTwelfthsIncome,
+  getIsencaoHorarioTwelfthsContribution,
   getDisabledDependentExtraDeduction,
 } from "@/dependent-worker/calculations";
 import {
   HOLIDAY_ALLOWANCE_MONTH,
   buildTwelfthsLumpSumByMonth,
+  getSubsidyLumpSumFractions,
 } from "@/dependent-worker/monthly-breakdown";
 
 export type SharedDependentWorkerSimulationOptions = Omit<
@@ -48,6 +50,7 @@ interface ResolvedDependentWorkerSharedOptions {
   lunchAllowanceDaysCount: number;
   includeLunchAllowanceInJune: boolean;
   oneHalfMonthTwelfthsLumpSumMonth: OneHalfMonthTwelfthsLumpSumMonth;
+  isencaoHorarioMonthly: number;
 }
 
 export interface DependentWorkerSharedSimulationContext
@@ -82,6 +85,7 @@ function resolveDependentWorkerSharedOptions({
   lunchAllowanceDaysCount = 22,
   includeLunchAllowanceInJune = false,
   oneHalfMonthTwelfthsLumpSumMonth = "december",
+  isencaoHorarioMonthly = 0,
 }: SharedDependentWorkerSimulationOptions): ResolvedDependentWorkerSharedOptions {
   return {
     year,
@@ -99,6 +103,7 @@ function resolveDependentWorkerSharedOptions({
     lunchAllowanceDaysCount,
     includeLunchAllowanceInJune,
     oneHalfMonthTwelfthsLumpSumMonth,
+    isencaoHorarioMonthly,
   };
 }
 
@@ -167,8 +172,21 @@ export function prepareDependentWorkerIncomeContext(
   sharedContext: DependentWorkerSharedSimulationContext,
   income: number
 ): DependentWorkerSimulationContext {
-  const twelfthsIncome = getTwelfthsIncome(income, sharedContext.twelfths);
+  const iht = sharedContext.isencaoHorarioMonthly;
+
+  const subsidyLumpFractions = getSubsidyLumpSumFractions(
+    sharedContext.twelfths,
+    sharedContext.oneHalfMonthTwelfthsLumpSumMonth
+  );
+  const feriasInTwelfthsFraction = 1 - subsidyLumpFractions.ferias;
+
+  const twelfthsIncome =
+    getTwelfthsIncome(income, sharedContext.twelfths) +
+    getIsencaoHorarioTwelfthsContribution(iht, feriasInTwelfthsFraction);
+
+  // The férias subsídio includes IHT; the natal subsídio does not.
   const twelfthsLumpSumByMonth = buildTwelfthsLumpSumByMonth(
+    income + iht,
     income,
     sharedContext.twelfths,
     sharedContext.oneHalfMonthTwelfthsLumpSumMonth
@@ -177,7 +195,9 @@ export function prepareDependentWorkerIncomeContext(
   const yearlyLunchAllowance =
     sharedContext.lunchAllowance.monthlyValue *
     (sharedContext.includeLunchAllowanceInJune ? 12 : 11);
-  const yearlyGrossSalary = income * 14 + yearlyLunchAllowance;
+  // Annual: 12 months base + 1 férias + 1 natal of base, plus 12 months IHT
+  // + 1 férias of IHT (no natal) = income*14 + iht*13.
+  const yearlyGrossSalary = income * 14 + iht * 13 + yearlyLunchAllowance;
 
   return {
     ...sharedContext,
@@ -220,15 +240,22 @@ export function calculateDependentWorkerMonthBreakdown(
     ? context.lunchAllowance.taxFreeMonthlyValue
     : 0;
 
-  const monthTaxableIncome = context.income + monthLunchTaxable;
+  // IHT is taxed and SS-deducted exactly like base salary, so it joins the
+  // base-salary stream for monthly tax/SS calculations. Its asymmetric
+  // contribution to subsídios is already baked into context.twelfthsIncome
+  // and context.twelfthsLumpSumByMonth upstream.
+  const monthBaseSalaryWithIht = context.income + context.isencaoHorarioMonthly;
+
+  const monthTaxableIncome = monthBaseSalaryWithIht + monthLunchTaxable;
   const monthTwelfthsDistributed = context.twelfthsIncome;
   const monthTwelfthsLumpSum = context.twelfthsLumpSumByMonth[month];
   const monthTwelfthsTotal = monthTwelfthsDistributed + monthTwelfthsLumpSum;
 
   const monthRetentionIncome = monthTaxableIncome + monthTwelfthsTotal;
   const monthGrossIncome = monthRetentionIncome + monthLunchTaxFree;
-  const monthGrossBaseSalary = context.income;
-  const monthGrossBaseSalaryAndLunchAllowance = context.income + monthLunchGross;
+  const monthGrossBaseSalary = monthBaseSalaryWithIht;
+  const monthGrossBaseSalaryAndLunchAllowance =
+    monthBaseSalaryWithIht + monthLunchGross;
 
   const monthBracket = taxRetentionTable.find_bracket(monthTaxableIncome);
 
@@ -240,7 +267,7 @@ export function calculateDependentWorkerMonthBreakdown(
   );
 
   const monthSocialSecurityBase =
-    context.income * context.socialSecurityContributionRate;
+    monthBaseSalaryWithIht * context.socialSecurityContributionRate;
   const monthSocialSecurityLunchAllowance =
     monthLunchTaxable * context.socialSecurityContributionRate;
   const monthSocialSecurityTwelfths =
@@ -251,7 +278,9 @@ export function calculateDependentWorkerMonthBreakdown(
     monthSocialSecurityTwelfths;
 
   const monthIrsBase =
-    monthRetentionIncome === 0 ? 0 : monthTax * (context.income / monthRetentionIncome);
+    monthRetentionIncome === 0
+      ? 0
+      : monthTax * (monthBaseSalaryWithIht / monthRetentionIncome);
   const monthIrsLunchAllowance =
     monthRetentionIncome === 0
       ? 0
@@ -262,7 +291,7 @@ export function calculateDependentWorkerMonthBreakdown(
       : monthTax * (monthTwelfthsTotal / monthRetentionIncome);
 
   const monthBaseNetIncome =
-    context.income - monthIrsBase - monthSocialSecurityBase;
+    monthBaseSalaryWithIht - monthIrsBase - monthSocialSecurityBase;
   const monthTwelfthsNet =
     monthTwelfthsTotal - monthIrsTwelfths - monthSocialSecurityTwelfths;
   const monthLunchAllowanceNet =

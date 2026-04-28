@@ -36,6 +36,18 @@ export function getTwelfthsIncome(income: number, twelfths: number): number {
     return income * twelfthsCoefficient;
 }
 
+/**
+ * Returns the per-month twelfths income coming from an "isenção de horário"
+ * supplement. The supplement only counts in subsídio de férias (Art. 264.º
+ * CT), so only the férias fraction of the twelfths is contributed.
+ */
+export function getIsencaoHorarioTwelfthsContribution(
+    isencaoHorarioMonthly: number,
+    feriasInTwelfthsFraction: number
+): number {
+    return (isencaoHorarioMonthly * feriasInTwelfthsFraction) / 12;
+}
+
 export function getDisabledDependentExtraDeduction(
     taxRetentionTable: TaxRetentionTable,
     numberOfDependentsDisabled: number
