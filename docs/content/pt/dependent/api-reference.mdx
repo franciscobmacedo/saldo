@@ -207,6 +207,29 @@ type SituationCodesT =
   | "TABLE7_MARRIED_1_HOLDER_PERSON_WITH_DISABILITY";    // Casado um titular + deficiência
 ```
 
+### `Situation`
+
+```typescript
+interface Situation {
+  code: SituationCodesT;
+  description: string;
+  conditions: Condition[];
+}
+```
+
+### `Condition`
+
+```typescript
+interface Condition {
+  married: boolean;
+  dependents: boolean;
+  disabled: boolean;
+  partnerDisabled: boolean;
+  description: string;
+  numberOfHolders?: number | null;
+}
+```
+
 ### `BracketResult`
 
 ```typescript
