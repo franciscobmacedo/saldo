@@ -16,7 +16,8 @@ export function middleware(request: NextRequest) {
   )
 
   if (pathnameIsMissingLocale) {
-    // We could redirect here too, but let's see if the root redirect is enough for the user's issue
+    request.nextUrl.pathname = `/${defaultLocale}${pathname}`
+    return NextResponse.redirect(request.nextUrl)
   }
 }
 
