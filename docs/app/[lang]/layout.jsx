@@ -17,7 +17,7 @@ const locales = [
 const defaultLocale = process.env.NEXTRA_DEFAULT_LOCALE || 'pt'
 
 export const metadata = {
-  metadataBase: new URL('https://saldo-docs.vercel.app'),
+  metadataBase: new URL('https://saldo.fmacedo.com'),
   title: {
     template: '%s - Saldo'
   },
@@ -42,7 +42,7 @@ export const metadata = {
     'msapplication-TileColor': '#fff'
   },
   twitter: {
-    site: 'https://saldo-docs.vercel.app'
+    site: 'https://saldo.fmacedo.com'
   },
   alternates: {
     languages: {
