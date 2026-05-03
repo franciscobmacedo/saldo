@@ -1,4 +1,4 @@
-import { YouthIrs } from "@/independent-worker/schemas";
+import type { YouthIrs } from "@/youth-irs";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 
 export const YOUTH_IRS: { [K in typeof SUPPORTED_TAX_RANK_YEARS[number]]: { [key: number]: YouthIrs } } = {

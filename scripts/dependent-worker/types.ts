@@ -22,6 +22,11 @@ export interface DoutorFinancasRequest {
   month: string;
   processType: number;
   operationType: number;
+  // IRS Jovem fields — only sent by the simulator-irs-jovem variant
+  // (processType: 4, operationType: 2). activity_start_year encodes the year
+  // bracket: "1" = 1.º ano, "3" = 2.º–4.º, "4" = 5.º–7.º, "5" = 8.º–10.º.
+  apply_irs_jovem?: "true" | "false";
+  activity_start_year?: "1" | "3" | "4" | "5";
 }
 
 export interface DoutorFinancasResponse {

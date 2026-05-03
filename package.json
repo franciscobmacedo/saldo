@@ -28,6 +28,7 @@
     "dev": "tsx src/index.ts",
     "saldo:docs": "pnpm build && cd docs && pnpm install && pnpm dev",
     "compare:dependent": "tsx scripts/dependent-worker/index.ts",
+    "compare:dependent:youth-irs": "tsx scripts/dependent-worker/youth-irs-compare.ts",
     "compare:independent": "tsx scripts/independent-worker/index.ts",
     "update:manifest": "tsx scripts/update-manifest-2025.ts",
     "convert": "tsx scripts/excel-retention-table-to-json.ts",

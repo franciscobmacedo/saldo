@@ -1,4 +1,5 @@
 import type { SupportedTaxRankYear } from "@/data/supported-tax-rank-years";
+export type { YouthIrs } from "@/youth-irs";
 
 export enum FrequencyChoices {
   Year = "year",
@@ -12,11 +13,6 @@ export interface TaxRank {
   max: number | null;
   normalTax: number;
   averageTax: number | null;
-}
-
-export interface YouthIrs {
-  maxDiscountPercentage: number;
-  maxDiscountIasMultiplier: number;
 }
 
 export interface CurrencyByFrequency {

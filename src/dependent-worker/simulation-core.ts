@@ -8,6 +8,7 @@ import {
   validateLunchAllowanceMode,
   validateOneHalfMonthTwelfthsLumpSumMonth,
   validateYear,
+  validateYouthIrsForDependentWorker,
 } from "@/dependent-worker/validators";
 import {
   MonthName,
@@ -16,6 +17,14 @@ import {
   SimulateDependentWorkerOptions,
   Twelfths,
 } from "@/dependent-worker/schemas";
+import {
+  calculateMonthlyYouthIrsExemption,
+  getYouthIrsRules,
+  isSupportedYouthIrsYear,
+  YOUTH_IRS_PAYMENTS_PER_YEAR,
+} from "@/youth-irs";
+import { IAS_PER_YEAR } from "@/data/ias-data";
+import type { SupportedTaxRankYear } from "@/data/supported-tax-rank-years";
 import { LunchAllowance } from "@/dependent-worker/lunch-allowance";
 import {
   getPartnerExtraDeduction,
@@ -51,6 +60,8 @@ interface ResolvedDependentWorkerSharedOptions {
   includeLunchAllowanceInJune: boolean;
   oneHalfMonthTwelfthsLumpSumMonth: OneHalfMonthTwelfthsLumpSumMonth;
   isencaoHorarioMonthly: number;
+  benefitsOfYouthIrs: boolean;
+  yearOfYouthIrs: number;
 }
 
 export interface DependentWorkerSharedSimulationContext
@@ -58,6 +69,11 @@ export interface DependentWorkerSharedSimulationContext
   lunchAllowance: LunchAllowance;
   partnerExtraDeduction: number;
   situationCode: SituationCodesT;
+  // null when IRS Jovem is not applied or the simulation year falls outside
+  // the supported range for which Youth IRS rules are tabulated.
+  youthIrsRules: { maxDiscountPercentage: number; maxDiscountIasMultiplier: number } | null;
+  youthIrsTaxYear: SupportedTaxRankYear;
+  youthIrsMonthlyExemptCap: number;
 }
 
 export interface DependentWorkerSimulationContext
@@ -86,6 +102,8 @@ function resolveDependentWorkerSharedOptions({
   includeLunchAllowanceInJune = false,
   oneHalfMonthTwelfthsLumpSumMonth = "december",
   isencaoHorarioMonthly = 0,
+  benefitsOfYouthIrs = false,
+  yearOfYouthIrs = 1,
 }: SharedDependentWorkerSimulationOptions): ResolvedDependentWorkerSharedOptions {
   return {
     year,
@@ -104,6 +122,8 @@ function resolveDependentWorkerSharedOptions({
     includeLunchAllowanceInJune,
     oneHalfMonthTwelfthsLumpSumMonth,
     isencaoHorarioMonthly,
+    benefitsOfYouthIrs,
+    yearOfYouthIrs,
   };
 }
 
@@ -139,6 +159,11 @@ export function prepareDependentWorkerSharedContext(
   validateLunchAllowanceMode(lunchAllowanceMode);
   validateOneHalfMonthTwelfthsLumpSumMonth(oneHalfMonthTwelfthsLumpSumMonth);
   validateYear(year);
+  validateYouthIrsForDependentWorker(
+    resolvedOptions.benefitsOfYouthIrs,
+    resolvedOptions.yearOfYouthIrs,
+    year
+  );
 
   const partnerExtraDeduction = getPartnerExtraDeduction(
     married,
@@ -160,11 +185,29 @@ export function prepareDependentWorkerSharedContext(
     );
   }
 
+  // The supported tax-rank years drive the Youth IRS rules table. For years
+  // outside that range we silently skip the exemption — the rest of the
+  // simulator still works with retention tables loaded by period.
+  const youthIrsTaxYear: SupportedTaxRankYear = isSupportedYouthIrsYear(year)
+    ? year
+    : 2025;
+  const youthIrsRules =
+    resolvedOptions.benefitsOfYouthIrs && isSupportedYouthIrsYear(year)
+      ? getYouthIrsRules(youthIrsTaxYear, resolvedOptions.yearOfYouthIrs)
+      : null;
+  const youthIrsMonthlyExemptCap = youthIrsRules
+    ? (youthIrsRules.maxDiscountIasMultiplier * IAS_PER_YEAR[youthIrsTaxYear]) /
+      YOUTH_IRS_PAYMENTS_PER_YEAR
+    : 0;
+
   return {
     ...resolvedOptions,
     lunchAllowance,
     partnerExtraDeduction,
     situationCode: situation.code,
+    youthIrsRules,
+    youthIrsTaxYear,
+    youthIrsMonthlyExemptCap,
   };
 }
 
@@ -259,12 +302,30 @@ export function calculateDependentWorkerMonthBreakdown(
 
   const monthBracket = taxRetentionTable.find_bracket(monthTaxableIncome);
 
-  const monthTax = monthBracket.calculate_tax(
+  const monthTaxBeforeYouthIrs = monthBracket.calculate_tax(
     monthTaxableIncome,
     monthTwelfthsTotal,
     context.numberOfDependents || 0,
     monthExtraDeduction
   );
+
+  // IRS Jovem (Despacho 9971-A/2024 alínea g)): bracket lookup uses the full
+  // remuneration; the resulting effective rate is then applied only to the
+  // non-exempt portion. The exempt amount per payment is capped at
+  // (multiplier × IAS) / 14.
+  const youthIrsExemptIncome = context.youthIrsRules
+    ? calculateMonthlyYouthIrsExemption(
+        true,
+        monthRetentionIncome,
+        context.youthIrsTaxYear,
+        context.yearOfYouthIrs
+      )
+    : 0;
+  const youthIrsNonExemptFraction =
+    monthRetentionIncome > 0
+      ? 1 - youthIrsExemptIncome / monthRetentionIncome
+      : 1;
+  const monthTax = monthTaxBeforeYouthIrs * youthIrsNonExemptFraction;
 
   const monthSocialSecurityBase =
     monthBaseSalaryWithIht * context.socialSecurityContributionRate;
@@ -340,5 +401,12 @@ export function calculateDependentWorkerMonthBreakdown(
     },
     bracket: monthBracket.toJSON(),
     taxRetentionTable: taxRetentionTable.toJSON(),
+    youthIrs: {
+      applied: context.youthIrsRules !== null,
+      yearOfBenefit: context.yearOfYouthIrs,
+      exemptionPercentage: context.youthIrsRules?.maxDiscountPercentage ?? 0,
+      monthlyExemptCap: context.youthIrsMonthlyExemptCap,
+      exemptIncome: youthIrsExemptIncome,
+    },
   };
 }

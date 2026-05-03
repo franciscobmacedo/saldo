@@ -1,4 +1,8 @@
 import { getPeriodsForYear } from "@/config/schemas";
+import {
+  isSupportedYouthIrsYear,
+  validateYearOfYouthIrs,
+} from "@/youth-irs";
 
 export const validateNumberOfHolders = (numberOfHolders?: number | null): void => {
   if (
@@ -88,4 +92,20 @@ export const validateYear = (year: number): void => {
   if (getPeriodsForYear(year).length === 0) {
     throw new Error(`No retention tax periods found for year: ${year}`);
   }
+};
+
+export const validateYouthIrsForDependentWorker = (
+  benefitsOfYouthIrs: boolean,
+  yearOfYouthIrs: number,
+  year: number
+): void => {
+  if (!benefitsOfYouthIrs) {
+    return;
+  }
+  if (!isSupportedYouthIrsYear(year)) {
+    throw new Error(
+      `'benefitsOfYouthIrs' is not supported for year ${year}`
+    );
+  }
+  validateYearOfYouthIrs(yearOfYouthIrs, year);
 };

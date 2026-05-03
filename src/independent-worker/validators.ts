@@ -3,6 +3,7 @@ import {
   IndependentWorkerReceipt,
 } from "./schemas";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
+import { validateYearOfYouthIrs as sharedValidateYearOfYouthIrs } from "@/youth-irs";
 
 export function validateIncome(income: number | number[] | IndependentWorkerReceipt[][]): void {
   if (Array.isArray(income)) {
@@ -138,13 +139,7 @@ export function validateYearOfYouthIrs(
   year: number,
   currentTaxRankYear: typeof SUPPORTED_TAX_RANK_YEARS[number]
 ): void {
-  const validRange = currentTaxRankYear >= 2025 ? 10 : 5;
-  if (year < 1 || year > validRange) {
-    throw new Error(`Year of youth IRS must be between 1 and ${validRange} for tax year ${currentTaxRankYear}`);
-  }
-  if (!Number.isInteger(year)) {
-    throw new Error("Year of youth IRS must be an integer");
-  }
+  sharedValidateYearOfYouthIrs(year, currentTaxRankYear);
 }
 
 export function validateFirstAndSecondYear(firstYear: boolean, secondYear: boolean): void {

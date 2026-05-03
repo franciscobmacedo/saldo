@@ -1,11 +1,10 @@
 import {
   TaxRank,
-  YouthIrs,
   CurrencyByFrequency,
   FrequencyChoices,
 } from "./schemas";
 import { TAX_RANKS } from "@/data/tax-ranks-data";
-import { YOUTH_IRS } from "@/data/youth-irs-data";
+import { calculateAnnualYouthIrsDiscount } from "@/youth-irs";
 import { SUPPORTED_TAX_RANK_YEARS } from "@/data/supported-tax-rank-years";
 
 export function calculateGrossIncome(
@@ -165,13 +164,13 @@ export function calculateYouthIrsDiscount(
   yearOfYouthIrs: number,
   currentIas: number
 ): number {
-  if (!benefitsOfYouthIrs) {
-    return 0;
-  }
-  const youthIrsRank = YOUTH_IRS[currentTaxRankYear][yearOfYouthIrs];
-  const maxDiscount = youthIrsRank.maxDiscountPercentage * grossIncome.year;
-  const maxDiscountIas = youthIrsRank.maxDiscountIasMultiplier * currentIas;
-  return Math.min(maxDiscount, maxDiscountIas);
+  return calculateAnnualYouthIrsDiscount(
+    benefitsOfYouthIrs,
+    grossIncome.year,
+    currentTaxRankYear,
+    yearOfYouthIrs,
+    currentIas
+  );
 }
 
 export function findTaxRank(

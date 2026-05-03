@@ -63,6 +63,9 @@ import { midYearPeriodScenarios } from "./edge-cases/mid-year-period-scenarios";
 import { lateYearPeriodScenarios } from "./edge-cases/late-year-period-scenarios";
 import { maximumIncomeScenarios } from "./edge-cases/maximum-income-scenarios";
 
+// IRS Jovem Scenarios
+import { youthIrsScenarios } from "./youth-irs/youth-irs-scenarios";
+
 export const testScenarios: TestScenario[] = [
     // Marital Status Scenarios
     ...singlePersonScenarios,  // ✅
@@ -120,6 +123,10 @@ export const testScenarios: TestScenario[] = [
     ...edgeCasesScenarios, // ✅ Edge cases and boundary conditions
     ...dateRangeEdgeCasesScenarios, // ✅ Date range edge cases (multiple periods, boundaries, full year, partial year)
     ...maximumIncomeScenarios, // ✅ Maximum income scenarios (5000€+ and highest tax brackets)
+
+    // IRS Jovem Scenarios — DF's IRS-Jovem variant (processType:4, operationType:2)
+    // Note: DF pins IAS to 2026 regardless of `year`, so all scenarios use year=2026.
+    ...youthIrsScenarios,
     
     // Commented out failing scenarios
     // ...personDisabilitySpouseDisabilityScenariosFAILING, // ❌ I believe it's because Doutor Finanças is using the wrong table for this scenario - they select table 1, when the person itself has disability - doesn't make sense.

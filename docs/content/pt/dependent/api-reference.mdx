@@ -28,6 +28,9 @@ interface SimulateDependentWorkerOptions {
   lunchAllowanceDaysCount?: number;
   includeLunchAllowanceInJune?: boolean;
   oneHalfMonthTwelfthsLumpSumMonth?: "june" | "december";
+  isencaoHorarioMonthly?: number;
+  benefitsOfYouthIrs?: boolean;
+  yearOfYouthIrs?: number;
 }
 ```
 
@@ -49,6 +52,9 @@ interface SimulateDependentWorkerOptions {
 | `lunchAllowanceDaysCount` | `number` | `22` | Dias úteis por mês para subsídio de refeição |
 | `includeLunchAllowanceInJune` | `boolean` | `false` | Se junho inclui subsídio de refeição |
 | `oneHalfMonthTwelfthsLumpSumMonth` | `"june" \| "december"` | `"december"` | Mês para o pagamento único de ONE_HALF_MONTH |
+| `isencaoHorarioMonthly` | `number` | `0` | Suplemento mensal de isenção de horário (Art. 218.º–219.º + 265.º CT). Conta para o subsídio de férias mas **não** para o subsídio de Natal |
+| `benefitsOfYouthIrs` | `boolean` | `false` | Aplica a isenção parcial mensal do IRS Jovem (Art. 2.º-C CIRS) |
+| `yearOfYouthIrs` | `number` | `1` | Ano de benefício (1–10 a partir de 2025, 1–5 para 2023/2024) |
 
 #### Valor de Retorno
 
@@ -78,6 +84,15 @@ interface MonthlyBreakdownResult {
   subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
   bracket: BracketResult;
   taxRetentionTable: TaxRetentionTableResult;
+  youthIrs: YouthIrsBreakdown;
+}
+
+interface YouthIrsBreakdown {
+  applied: boolean;            // true se o IRS Jovem reduz a retenção deste mês
+  yearOfBenefit: number;       // ano de benefício (1–10)
+  exemptionPercentage: number; // 0–1 (ex.: 0.75 para o 2.º–4.º ano em 2025+)
+  monthlyExemptCap: number;    // tecto por pagamento = (multiplicador × IAS) / 14
+  exemptIncome: number;        // parte isenta do mês (após aplicação do tecto)
 }
 ```
 
@@ -100,6 +115,10 @@ interface MonthlyBreakdownResult {
 | `monthlyBreakdown[n].subsidyTwelfths.lumpSumAmount` | `number` | Duodécimos em montante único neste mês |
 | `monthlyBreakdown[n].bracket` | `BracketResult` | Informação do escalão fiscal |
 | `monthlyBreakdown[n].taxRetentionTable` | `TaxRetentionTableResult` | Dados completos da tabela de retenção |
+| `monthlyBreakdown[n].youthIrs.applied` | `boolean` | `true` quando o IRS Jovem reduz a retenção deste mês |
+| `monthlyBreakdown[n].youthIrs.exemptionPercentage` | `number` | Percentagem de isenção do ano de benefício (`0`–`1`) |
+| `monthlyBreakdown[n].youthIrs.monthlyExemptCap` | `number` | Tecto por pagamento = `(multiplicador × IAS) / 14` |
+| `monthlyBreakdown[n].youthIrs.exemptIncome` | `number` | Parte isenta da remuneração do mês (após o tecto) |
 
 #### Exemplo
 
@@ -290,6 +309,7 @@ A biblioteca inclui funções de validação internas que são chamadas automati
 - `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
 - `validateLunchAllowanceMode(lunchAllowanceMode)`
 - `validateYear(year)`
+- `validateYouthIrsForDependentWorker(benefitsOfYouthIrs, yearOfYouthIrs, year)`
 
 ## Tratamento de Erros
 
@@ -340,6 +360,51 @@ console.log('=== Comparação de Benefícios de Deficiência (Janeiro) ===');
 console.log(\`Deficiência do Trabalhador - Líquido: €\${workerDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
 console.log(\`Deficiência do Cônjuge - Líquido: €\${partnerDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
 console.log(\`Deficiência do Dependente - Líquido: €\${dependentDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
+
+### IRS Jovem
+
+Isenção parcial mensal da retenção na fonte para jovens trabalhadores. O
+escalão é determinado pela **totalidade** da remuneração mensal; a taxa
+efectiva resultante incide **apenas sobre a parte não isenta**. A parte isenta
+de cada pagamento está sujeita ao tecto `(multiplicador × IAS) / 14`.
+
+**Tabela de anos de benefício** (a partir de 2025, conforme Lei n.º 45-A/2024 — OE 2025):
+
+| Ano de benefício | Isenção  | Multiplicador IAS (tecto anual) |
+|------------------|----------|----------------------------------|
+| 1.º              | 100 %    | 55 × IAS                         |
+| 2.º – 4.º        | 75 %     | 55 × IAS                         |
+| 5.º – 7.º        | 50 %     | 55 × IAS                         |
+| 8.º – 10.º       | 25 %     | 55 × IAS                         |
+
+Para 2023 e 2024 o regime é mais restrito (5 anos, percentagens inferiores) —
+ver `youth-irs-data.ts`.
+
+**Referências legais:**
+
+- [Art. 2.º-C do Código do IRS (CIRS)](https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/irs2.aspx#a2c) — define a isenção parcial para jovens trabalhadores.
+- [Despacho n.º 9971-A/2024, alínea g) do n.º 7](https://diariodarepublica.pt/dr/detalhe/despacho/9971-a-2024-885806206) — manda aplicar o escalão da remuneração total e cobrar retenção apenas sobre a parte não isenta.
+- [Lei n.º 45-A/2024 (Orçamento do Estado para 2025)](https://diariodarepublica.pt/dr/detalhe/lei/45-a-2024-901437264) — alarga o regime para 10 anos e fixa o tecto anual em 55 × IAS.
+- [Lei n.º 13/2023](https://diariodarepublica.pt/dr/detalhe/lei/13-2023-210935308) — regime original do IRS Jovem (5 anos).
+
+<RunCode defaultCode={`// Solteiro, 2.º–4.º ano de benefício (75% isenção), sem duodécimos
+const result = simulateDependentWorker({
+  year: 2026,
+  income: 3000,
+  numberOfHolders: 1,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+const jan = result.monthlyBreakdown[0];
+console.log('=== IRS Jovem (Ano 2 de benefício, 75%) ===');
+console.log(\`% de isenção:  \${(jan.youthIrs.exemptionPercentage * 100).toFixed(0)}%\`);
+console.log(\`Tecto mensal:  €\${jan.youthIrs.monthlyExemptCap.toFixed(2)}\`);
+console.log(\`Parte isenta:  €\${jan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`Retenção IRS:  €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`SS (sem alteração): €\${jan.socialSecurityContribution.totalAmount.toFixed(2)}\`);`} />
 
 ### Taxa de Segurança Social Personalizada
 

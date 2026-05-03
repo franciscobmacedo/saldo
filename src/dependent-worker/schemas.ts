@@ -44,6 +44,11 @@ export interface SimulateDependentWorkerOptions {
   // Taxed and SS-deducted like base salary; counted in subsídio de férias
   // but NOT in subsídio de Natal.
   isencaoHorarioMonthly?: number;
+  // IRS Jovem (Art. 2.º-C CIRS, Despacho 9971-A/2024 alínea g)).
+  // When true, monthly retention is reduced by an exempt fraction of the
+  // remuneration capped at (multiplier × IAS) / 14 per payment.
+  benefitsOfYouthIrs?: boolean;
+  yearOfYouthIrs?: number;
 }
 
 export type SimulateDependentWorkerMonthlyIncomeSweepOptions =
@@ -110,6 +115,14 @@ export interface TaxRetentionTableResult {
   dependent_disabled_addition_deduction?: number;
 }
 
+export interface YouthIrsBreakdown {
+  applied: boolean;
+  yearOfBenefit: number;
+  exemptionPercentage: number;
+  monthlyExemptCap: number;
+  exemptIncome: number;
+}
+
 export interface MonthlyBreakdownResult {
   month: MonthName;
   period: PeriodT;
@@ -123,6 +136,7 @@ export interface MonthlyBreakdownResult {
   subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
   bracket: BracketResult;
   taxRetentionTable: TaxRetentionTableResult;
+  youthIrs: YouthIrsBreakdown;
 }
 
 export interface YearlyDependentWorkerSummary {

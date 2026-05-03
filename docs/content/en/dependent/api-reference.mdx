@@ -28,6 +28,9 @@ interface SimulateDependentWorkerOptions {
   lunchAllowanceDaysCount?: number;
   includeLunchAllowanceInJune?: boolean;
   oneHalfMonthTwelfthsLumpSumMonth?: "june" | "december";
+  isencaoHorarioMonthly?: number;
+  benefitsOfYouthIrs?: boolean;
+  yearOfYouthIrs?: number;
 }
 ```
 
@@ -49,6 +52,9 @@ interface SimulateDependentWorkerOptions {
 | `lunchAllowanceDaysCount` | `number` | `22` | Working days per month for lunch allowance |
 | `includeLunchAllowanceInJune` | `boolean` | `false` | Whether June includes lunch allowance |
 | `oneHalfMonthTwelfthsLumpSumMonth` | `"june" \| "december"` | `"december"` | Month for the ONE_HALF_MONTH lump sum payment |
+| `isencaoHorarioMonthly` | `number` | `0` | Monthly "isenção de horário" supplement (Art. 218.º–219.º + 265.º CT). Counts in subsídio de férias but **not** in subsídio de Natal |
+| `benefitsOfYouthIrs` | `boolean` | `false` | Apply IRS Jovem partial monthly retention exemption (Art. 2.º-C CIRS) |
+| `yearOfYouthIrs` | `number` | `1` | Year of benefit (1–10 from 2025 onwards, 1–5 for 2023/2024) |
 
 #### Return Value
 
@@ -78,6 +84,15 @@ interface MonthlyBreakdownResult {
   subsidyTwelfths: SubsidyTwelfthsAmountBreakdown;
   bracket: BracketResult;
   taxRetentionTable: TaxRetentionTableResult;
+  youthIrs: YouthIrsBreakdown;
+}
+
+interface YouthIrsBreakdown {
+  applied: boolean;            // true when IRS Jovem reduces this month's retention
+  yearOfBenefit: number;       // resolved year of benefit (1–10)
+  exemptionPercentage: number; // 0–1, e.g. 0.75 for 2.º–4.º year in 2025+
+  monthlyExemptCap: number;    // (multiplier × IAS) / 14 in euros
+  exemptIncome: number;        // amount exempted this month, after the cap
 }
 ```
 
@@ -100,6 +115,10 @@ interface MonthlyBreakdownResult {
 | `monthlyBreakdown[n].subsidyTwelfths.lumpSumAmount` | `number` | Lump-sum twelfths for this month |
 | `monthlyBreakdown[n].bracket` | `BracketResult` | Tax bracket information |
 | `monthlyBreakdown[n].taxRetentionTable` | `TaxRetentionTableResult` | Complete tax retention table data |
+| `monthlyBreakdown[n].youthIrs.applied` | `boolean` | `true` when IRS Jovem reduces this month's retention |
+| `monthlyBreakdown[n].youthIrs.exemptionPercentage` | `number` | Exemption percentage for the resolved year of benefit (`0`–`1`) |
+| `monthlyBreakdown[n].youthIrs.monthlyExemptCap` | `number` | Per-payment cap = `(multiplier × IAS) / 14` |
+| `monthlyBreakdown[n].youthIrs.exemptIncome` | `number` | Exempt portion of this month's remuneration (after cap) |
 
 #### Example
 
@@ -290,6 +309,7 @@ The library includes internal validation functions called automatically:
 - `validateDependents(numberOfDependents, numberOfDependentsDisabled)`
 - `validateLunchAllowanceMode(lunchAllowanceMode)`
 - `validateYear(year)`
+- `validateYouthIrsForDependentWorker(benefitsOfYouthIrs, yearOfYouthIrs, year)`
 
 ## Error Handling
 
@@ -340,6 +360,51 @@ console.log('=== Disability Benefits Comparison (January) ===');
 console.log(\`Worker Disability - Net: €\${workerDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
 console.log(\`Partner Disability - Net: €\${partnerDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);
 console.log(\`Dependent Disability - Net: €\${dependentDisability.monthlyBreakdown[0].netIncome.totalAmount.toFixed(2)}\`);`} />
+
+### IRS Jovem (Youth IRS)
+
+Partial monthly IRS retention exemption for young workers. Bracket lookup uses
+the **full** monthly remuneration; the resulting effective rate is then applied
+**only to the non-exempt portion**. The exempt amount per payment is capped at
+`(multiplier × IAS) / 14`.
+
+**Year-of-benefit table** (2025 onwards, per Lei n.º 45-A/2024 — Orçamento do Estado para 2025):
+
+| Year of benefit | Exemption | IAS multiplier (annual cap) |
+|-----------------|-----------|------------------------------|
+| 1.º             | 100 %     | 55 × IAS                     |
+| 2.º – 4.º       | 75 %      | 55 × IAS                     |
+| 5.º – 7.º       | 50 %      | 55 × IAS                     |
+| 8.º – 10.º      | 25 %      | 55 × IAS                     |
+
+For 2023 and 2024 the regime is narrower (5 years, lower percentages) — see
+`youth-irs-data.ts`.
+
+**Legal references:**
+
+- [Art. 2.º-C do Código do IRS (CIRS)](https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/irs2.aspx#a2c) — defines the partial exemption for young workers.
+- [Despacho n.º 9971-A/2024, alínea g) do n.º 7](https://diariodarepublica.pt/dr/detalhe/despacho/9971-a-2024-885806206) — instructs employers to apply the bracket of the full remuneration but charge retention only on the non-exempt part.
+- [Lei n.º 45-A/2024 (Orçamento do Estado para 2025)](https://diariodarepublica.pt/dr/detalhe/lei/45-a-2024-901437264) — extends the regime to 10 years and sets the 55 × IAS annual cap.
+- [Lei n.º 13/2023](https://diariodarepublica.pt/dr/detalhe/lei/13-2023-210935308) — original Youth IRS regime (5 years).
+
+<RunCode defaultCode={`// Single worker, 2.º–4.º year of benefit (75% exemption), no twelfths
+const result = simulateDependentWorker({
+  year: 2026,
+  income: 3000,
+  numberOfHolders: 1,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+const jan = result.monthlyBreakdown[0];
+console.log('=== IRS Jovem (Year 2 of benefit, 75%) ===');
+console.log(\`Exemption %: \${(jan.youthIrs.exemptionPercentage * 100).toFixed(0)}%\`);
+console.log(\`Monthly cap:  €\${jan.youthIrs.monthlyExemptCap.toFixed(2)}\`);
+console.log(\`Exempt income: €\${jan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`IRS retention: €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`SS contribution (unchanged): €\${jan.socialSecurityContribution.totalAmount.toFixed(2)}\`);`} />
 
 ### Custom Social Security Rate
 
