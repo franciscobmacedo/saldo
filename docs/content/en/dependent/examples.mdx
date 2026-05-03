@@ -249,6 +249,88 @@ console.log(\`Net: €\${jan.netIncome.totalAmount.toFixed(2)}\`);
 console.log(\`Effective Rate: \${(jan.irsWithholdingTax.totalAmount / jan.taxableIncomeForIrsCalculation * 100).toFixed(1)}%\`);
 console.log(\`Annual Net: €\${executive.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
+## IRS Jovem (Youth IRS)
+
+See the [IRS Jovem section in the API reference](/en/dependent/api-reference#irs-jovem-youth-irs) for the legal references and the year-of-benefit table.
+
+### Year 1: Full Exemption (100%)
+
+<RunCode defaultCode={`// Single worker on €1500/month, 1.º ano of IRS Jovem (100% exemption).
+// Income is below the per-payment cap, so retention drops to zero.
+const baseline = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+});
+
+const youthIrs = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+const baseJan = baseline.monthlyBreakdown[0];
+const youthJan = youthIrs.monthlyBreakdown[0];
+console.log('=== IRS Jovem - 1.º Ano (100% Exemption) ===');
+console.log(\`IRS without Youth IRS:  €\${baseJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`IRS with Youth IRS:     €\${youthJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Exempt income (Jan):    €\${youthJan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`Monthly net gain:       €\${(youthJan.netIncome.totalAmount - baseJan.netIncome.totalAmount).toFixed(2)}\`);`} />
+
+### Year 2-4: Partial Exemption (75%)
+
+<RunCode defaultCode={`// Same worker, now in their 2.º-4.º year of benefit (75% exemption).
+// Retention scales linearly with the non-exempt fraction.
+const youthIrs = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+const baseline = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+});
+
+const baseJan = baseline.monthlyBreakdown[0];
+const youthJan = youthIrs.monthlyBreakdown[0];
+console.log('=== IRS Jovem - 2.º-4.º Ano (75% Exemption) ===');
+console.log(\`Exemption %:           \${(youthJan.youthIrs.exemptionPercentage * 100).toFixed(0)}%\`);
+console.log(\`Exempt income (Jan):   €\${youthJan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`IRS without:           €\${baseJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`IRS with:              €\${youthJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Annual net gain:       €\${(youthIrs.yearly.totalNetIncomeAmount - baseline.yearly.totalNetIncomeAmount).toFixed(2)}\`);`} />
+
+### Above the IAS Cap
+
+<RunCode defaultCode={`// High earner: income exceeds the per-payment cap = (55 × IAS) / 14.
+// The exempt portion is capped, so the rest of the salary is taxed normally.
+const highEarner = simulateDependentWorker({
+  year: 2025,
+  income: 5000,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+const jan = highEarner.monthlyBreakdown[0];
+console.log('=== IRS Jovem - Above the Cap ===');
+console.log(\`Gross monthly income:  €\${jan.grossIncome.baseSalaryAmount.toFixed(2)}\`);
+console.log(\`Monthly exempt cap:    €\${jan.youthIrs.monthlyExemptCap.toFixed(2)}\`);
+console.log(\`Exempt income (Jan):   €\${jan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`Non-exempt portion:    €\${(jan.grossIncome.baseSalaryAmount - jan.youthIrs.exemptIncome).toFixed(2)}\`);
+console.log(\`IRS retention (Jan):   €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);`} />
+
 ## Complex Scenarios
 
 ### Family with Disabled Dependent

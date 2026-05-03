@@ -249,6 +249,88 @@ console.log(\`Líquido: €\${jan.netIncome.totalAmount.toFixed(2)}\`);
 console.log(\`Taxa Efetiva: \${(jan.irsWithholdingTax.totalAmount / jan.taxableIncomeForIrsCalculation * 100).toFixed(1)}%\`);
 console.log(\`Líquido Anual: €\${executive.yearly.totalNetIncomeAmount.toFixed(2)}\`);`} />
 
+## IRS Jovem
+
+Ver a [secção IRS Jovem na referência da API](/pt/dependent/api-reference#irs-jovem) para as referências legais e a tabela de anos de benefício.
+
+### 1.º Ano: Isenção Total (100%)
+
+<RunCode defaultCode={`// Solteiro a ganhar €1500/mês, 1.º ano de IRS Jovem (100% de isenção).
+// O rendimento está abaixo do tecto por pagamento, logo a retenção é zero.
+const baseline = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+});
+
+const youthIrs = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+const baseJan = baseline.monthlyBreakdown[0];
+const youthJan = youthIrs.monthlyBreakdown[0];
+console.log('=== IRS Jovem - 1.º Ano (100% Isenção) ===');
+console.log(\`IRS sem IRS Jovem:    €\${baseJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`IRS com IRS Jovem:    €\${youthJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Parte isenta (Jan):   €\${youthJan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`Ganho líquido mensal: €\${(youthJan.netIncome.totalAmount - baseJan.netIncome.totalAmount).toFixed(2)}\`);`} />
+
+### 2.º-4.º Ano: Isenção Parcial (75%)
+
+<RunCode defaultCode={`// Mesmo trabalhador, agora no 2.º-4.º ano de benefício (75% de isenção).
+// A retenção escala linearmente com a fracção não isenta.
+const youthIrs = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 2,
+});
+
+const baseline = simulateDependentWorker({
+  year: 2025,
+  income: 1500,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+});
+
+const baseJan = baseline.monthlyBreakdown[0];
+const youthJan = youthIrs.monthlyBreakdown[0];
+console.log('=== IRS Jovem - 2.º-4.º Ano (75% Isenção) ===');
+console.log(\`% de isenção:          \${(youthJan.youthIrs.exemptionPercentage * 100).toFixed(0)}%\`);
+console.log(\`Parte isenta (Jan):    €\${youthJan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`IRS sem:               €\${baseJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`IRS com:               €\${youthJan.irsWithholdingTax.totalAmount.toFixed(2)}\`);
+console.log(\`Ganho líquido anual:   €\${(youthIrs.yearly.totalNetIncomeAmount - baseline.yearly.totalNetIncomeAmount).toFixed(2)}\`);`} />
+
+### Acima do Tecto IAS
+
+<RunCode defaultCode={`// Rendimento alto: ultrapassa o tecto por pagamento = (55 × IAS) / 14.
+// A parte isenta fica limitada e o restante é tributado normalmente.
+const highEarner = simulateDependentWorker({
+  year: 2025,
+  income: 5000,
+  twelfths: Twelfths.NONE,
+  lunchAllowanceDailyValue: 0,
+  benefitsOfYouthIrs: true,
+  yearOfYouthIrs: 1,
+});
+
+const jan = highEarner.monthlyBreakdown[0];
+console.log('=== IRS Jovem - Acima do Tecto ===');
+console.log(\`Rendimento bruto:      €\${jan.grossIncome.baseSalaryAmount.toFixed(2)}\`);
+console.log(\`Tecto mensal isento:   €\${jan.youthIrs.monthlyExemptCap.toFixed(2)}\`);
+console.log(\`Parte isenta (Jan):    €\${jan.youthIrs.exemptIncome.toFixed(2)}\`);
+console.log(\`Parte não isenta:      €\${(jan.grossIncome.baseSalaryAmount - jan.youthIrs.exemptIncome).toFixed(2)}\`);
+console.log(\`Retenção IRS (Jan):    €\${jan.irsWithholdingTax.totalAmount.toFixed(2)}\`);`} />
+
 ## Cenários Complexos
 
 ### Família com Dependente com Deficiência
