@@ -248,5 +248,67 @@ describe("simulateIndependentWorker - End-to-End", () => {
       expect(resultYear5.benefitsOfYouthIrs).toBe(true);
       expect(resultYear5.yearOfYouthIrs).toBe(5);
     });
+
+    it("should fully exempt youth IRS (year 1) when income is below the IAS cap", () => {
+      // Year 1 exempts 100% of the income subject to tax, capped at 55 × IAS.
+      // €20,000 gross stays under the cap, so it is fully exempt and IRS is zero.
+      const result = simulateIndependentWorker({
+        income: 20000,
+        currentTaxRankYear: 2025,
+        benefitsOfYouthIrs: true,
+        yearOfYouthIrs: 1,
+      });
+
+      const taxable = result.normalizedInternals.taxableIncome;
+      const cap = 55 * result.currentIas;
+
+      expect(taxable.incomeForRateDetermination).toBeLessThan(cap);
+      // 100% of the income is exempt → nothing collectable → no IRS.
+      expect(result.youthIrsDiscount).toBeCloseTo(taxable.incomeForRateDetermination, 6);
+      expect(result.taxableIncome).toBeCloseTo(0, 6);
+      expect(taxable.collectableIncome).toBeCloseTo(0, 6);
+      expect(result.irsPay.year).toBeCloseTo(0, 6);
+    });
+
+    it("should apply youth IRS (year 1) proportionally when income exceeds the IAS cap", () => {
+      // €80,000 gross is far above the 55 × IAS cap, so only the cap is exempt
+      // and the remainder is taxed at the rate determined by the full income.
+      const shared = {
+        income: 80000,
+        currentTaxRankYear: 2025 as const,
+      };
+
+      const withYouthIrs = simulateIndependentWorker({
+        ...shared,
+        benefitsOfYouthIrs: true,
+        yearOfYouthIrs: 1,
+      });
+      const withoutYouthIrs = simulateIndependentWorker({
+        ...shared,
+        benefitsOfYouthIrs: false,
+      });
+
+      const taxable = withYouthIrs.normalizedInternals.taxableIncome;
+      const cap = 55 * withYouthIrs.currentIas;
+
+      // The exemption is limited to the cap, not 100% of the income.
+      expect(taxable.incomeForRateDetermination).toBeGreaterThan(cap);
+      expect(withYouthIrs.youthIrsDiscount).toBeCloseTo(cap, 2);
+      expect(taxable.collectableIncome).toBeCloseTo(
+        taxable.incomeForRateDetermination - cap,
+        2
+      );
+
+      // The rate is set by the full income (same bracket as the no-youth run),
+      // so the IRS due is the collectable share of the full tax.
+      const collectableProportion =
+        taxable.collectableIncome / taxable.incomeForRateDetermination;
+      expect(withYouthIrs.irsPay.year).toBeCloseTo(
+        withoutYouthIrs.irsPay.year * collectableProportion,
+        6
+      );
+      expect(withYouthIrs.irsPay.year).toBeLessThan(withoutYouthIrs.irsPay.year);
+      expect(withYouthIrs.irsPay.year).toBeGreaterThan(0);
+    });
   });
 });
