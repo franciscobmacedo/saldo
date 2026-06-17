@@ -61,14 +61,14 @@ vi.mock("@/independent-worker/calculations", () => ({
     const expenses = maxExpenses - specificDeductions;
     return expenses > 0 ? expenses : 0;
   }),
-  calculateTaxableIncome: vi.fn((grossIncome: any, youthIrsDiscount: number, firstYear: boolean, secondYear: boolean, expensesNeeded: number, expenses: number) => {
+  calculateTaxableIncome: vi.fn((grossIncome: any, firstYear: boolean, secondYear: boolean, expensesNeeded: number, expenses: number) => {
     const expensesMissing = expensesNeeded > expenses ? expensesNeeded - expenses : 0;
-    return (grossIncome.year - youthIrsDiscount) * (firstYear ? 0.375 : secondYear ? 0.5625 : 0.75) + expensesMissing;
+    return grossIncome.year * (firstYear ? 0.375 : secondYear ? 0.5625 : 0.75) + expensesMissing;
   }),
-  calculateYouthIrsDiscount: vi.fn((benefitsOfYouthIrs: boolean, grossIncome: any, currentTaxRankYear: number, yearOfYouthIrs: number, currentIas: number) => {
+  calculateYouthIrsDiscount: vi.fn((benefitsOfYouthIrs: boolean, taxableIncomeBeforeYouthIrs: number, currentTaxRankYear: number, yearOfYouthIrs: number, currentIas: number) => {
     if (!benefitsOfYouthIrs) return 0;
     // Mock calculation
-    return Math.min(grossIncome.year * 0.5, currentIas * 12.5);
+    return Math.min(taxableIncomeBeforeYouthIrs * 0.5, currentIas * 12.5);
   }),
   findTaxRank: vi.fn((taxableIncome: number, currentTaxRankYear: number) => {
     // Mock tax rank for testing
@@ -87,13 +87,17 @@ vi.mock("@/independent-worker/calculations", () => ({
     rnhTax: number,
     nrDaysOff: number,
     _taxRanks: any[],
-    yearBusinessDays: number = 248
+    yearBusinessDays: number = 248,
+    youthIrsExemptIncome: number = 0
   ) => {
     let yearIRS: number;
     if (rnh) {
       yearIRS = taxableIncome * rnhTax;
     } else {
-      yearIRS = taxableIncome * taxRank.normalTax;
+      const incomeForRate = taxableIncome + youthIrsExemptIncome;
+      const taxOnIncomeForRate = incomeForRate * taxRank.normalTax;
+      const collectableProportion = incomeForRate > 0 ? taxableIncome / incomeForRate : 0;
+      yearIRS = taxOnIncomeForRate * collectableProportion;
     }
     return {
       year: Math.max(yearIRS, 0),
@@ -217,13 +221,17 @@ describe("simulateIndependentWorker", () => {
       (result.normalizedInternals.socialSecurity.baseMonthlyAfterCap as number) * result.ssTax
     );
 
-    expect(result.normalizedInternals.taxableIncome.coefficientApplied).toBe(0.75);
+    const taxable = result.normalizedInternals.taxableIncome;
+    expect(taxable.coefficientApplied).toBe(0.75);
+    expect(taxable.incomeAfterCoefficient).toBeCloseTo(result.grossIncome.year * 0.75);
+    expect(taxable.incomeForRateDetermination).toBeCloseTo(
+      taxable.incomeAfterCoefficient + taxable.expensesMissing
+    );
+    // No youth IRS benefit in this scenario, so nothing is exempt
+    expect(taxable.youthIrsExemptIncome).toBe(0);
+    expect(taxable.collectableIncome).toBeCloseTo(result.taxableIncome);
     expect(
-      result.normalizedInternals.taxableIncome.baseAnnualAfterYouthIrsDiscount
-    ).toBeCloseTo(result.grossIncome.year - result.youthIrsDiscount);
-    expect(
-      result.normalizedInternals.taxableIncome.valueFromCoefficient +
-      result.normalizedInternals.taxableIncome.valueFromExpensesMissing
+      taxable.incomeForRateDetermination - taxable.youthIrsExemptIncome
     ).toBeCloseTo(result.taxableIncome);
   });
 

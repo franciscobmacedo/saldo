@@ -380,45 +380,53 @@ describe("Independent Worker Calculations", () => {
     const grossIncome = { year: 30000, month: 2500, day: 120.97 };
 
     it("should calculate taxable income for regular scenario", () => {
-      const result = calculateTaxableIncome(grossIncome, 0, false, false, 396, 396);
+      const result = calculateTaxableIncome(grossIncome, false, false, 396, 396);
 
       expect(result).toBeCloseTo(22500, 0); // 30000 * 0.75
     });
 
     it("should calculate taxable income for first year", () => {
-      const result = calculateTaxableIncome(grossIncome, 0, true, false, 396, 396);
+      const result = calculateTaxableIncome(grossIncome, true, false, 396, 396);
 
       expect(result).toBeCloseTo(11250, 0); // 30000 * 0.375
     });
 
     it("should calculate taxable income for second year", () => {
-      const result = calculateTaxableIncome(grossIncome, 0, false, true, 396, 396);
+      const result = calculateTaxableIncome(grossIncome, false, true, 396, 396);
 
       expect(result).toBeCloseTo(16875, 0); // 30000 * 0.5625
     });
 
     it("should handle missing expenses", () => {
-      const result = calculateTaxableIncome(grossIncome, 0, false, false, 396, 200);
+      const result = calculateTaxableIncome(grossIncome, false, false, 396, 200);
 
       expect(result).toBeCloseTo(22696, 0); // (30000 * 0.75) + (396 - 200) = 22500 + 196 = 22696
     });
   });
 
   describe("calculateYouthIrsDiscount", () => {
-    const grossIncome = { year: 30000, month: 2500, day: 120.97 };
+    const taxableIncomeBeforeYouthIrs = 22500; // 0.75 × 30000
     const currentIas = 522.50;
 
     it("should return zero when benefits are disabled", () => {
-      const result = calculateYouthIrsDiscount(false, grossIncome, 2025, 1, currentIas);
+      const result = calculateYouthIrsDiscount(false, taxableIncomeBeforeYouthIrs, 2025, 1, currentIas);
 
       expect(result).toBe(0);
     });
 
     it("should calculate youth IRS discount correctly", () => {
-      const result = calculateYouthIrsDiscount(true, grossIncome, 2025, 1, currentIas);
+      const result = calculateYouthIrsDiscount(true, taxableIncomeBeforeYouthIrs, 2025, 1, currentIas);
 
       expect(result).toBeGreaterThan(0);
-      expect(result).toBeLessThanOrEqual(grossIncome.year);
+      expect(result).toBeLessThanOrEqual(taxableIncomeBeforeYouthIrs);
+    });
+
+    it("should cap the exemption at the IAS multiple", () => {
+      // Year 1 (2025) exempts 100% of income but is capped at 55 × IAS.
+      const cap = 55 * currentIas; // 28 737,50
+      const result = calculateYouthIrsDiscount(true, 100000, 2025, 1, currentIas);
+
+      expect(result).toBeCloseTo(cap, 2);
     });
   });
 
@@ -505,6 +513,39 @@ describe("Independent Worker Calculations", () => {
       // Allow small rounding differences (within 5€)
       expect(result.year).toBeCloseTo(47061, -1);
       expect(result.year).toBeGreaterThan(40000); // Should never be 0!
+    });
+
+    it("should be unaffected by a zero Youth IRS exemption (backward compatible)", () => {
+      const withoutArg = calculateIrsPay(10000, taxRank, false, 0.2, 0, mockTaxRanks, yearBusinessDays);
+      const withZeroExempt = calculateIrsPay(10000, taxRank, false, 0.2, 0, mockTaxRanks, yearBusinessDays, 0);
+
+      expect(withZeroExempt.year).toBeCloseTo(withoutArg.year, 6);
+    });
+
+    it("should apply the Youth IRS exemption proportionally", () => {
+      // The rate is set by the full income; only the collectable proportion is taxed
+      const bracket: TaxRank = { id: 3, min: 20000, max: 40000, normalTax: 0.30, averageTax: 0.20 };
+      const ranks: TaxRank[] = [bracket];
+
+      const collectableIncome = 10000;
+      const exemptIncome = 20000;
+      const incomeForRate = collectableIncome + exemptIncome; // 30000
+
+      // Tax over the full income for rate purposes (no exemption).
+      const taxOnFull = calculateIrsPay(
+        incomeForRate, bracket, false, 0, 0, ranks, yearBusinessDays, 0
+      );
+
+      // Tax due once the exempt portion is removed proportionally.
+      const taxDue = calculateIrsPay(
+        collectableIncome, bracket, false, 0, 0, ranks, yearBusinessDays, exemptIncome
+      );
+
+      // Both calls use the same bracket (rate determined by the full income),
+      // and the tax due is the collectable share of the full tax.
+      const collectableProportion = collectableIncome / incomeForRate; // 1/3
+      expect(taxDue.year).toBeCloseTo(taxOnFull.year * collectableProportion, 6);
+      expect(taxDue.year).toBeLessThan(taxOnFull.year);
     });
   });
 
