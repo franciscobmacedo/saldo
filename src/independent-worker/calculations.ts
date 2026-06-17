@@ -139,7 +139,6 @@ export function calculateExpensesNeeded(maxExpenses: number, specificDeductions:
 
 export function calculateTaxableIncome(
   grossIncome: CurrencyByFrequency,
-  youthIrsDiscount: number,
   firstYear: boolean,
   secondYear: boolean,
   expensesNeeded: number,
@@ -151,7 +150,7 @@ export function calculateTaxableIncome(
       : 0;
 
   return (
-    (grossIncome.year - youthIrsDiscount) *
+    grossIncome.year *
     (firstYear ? 0.375 : secondYear ? 0.5625 : 0.75) +
     expensesMissing
   );
@@ -159,14 +158,14 @@ export function calculateTaxableIncome(
 
 export function calculateYouthIrsDiscount(
   benefitsOfYouthIrs: boolean,
-  grossIncome: CurrencyByFrequency,
+  taxableIncomeBeforeYouthIrs: number,
   currentTaxRankYear: typeof SUPPORTED_TAX_RANK_YEARS[number],
   yearOfYouthIrs: number,
   currentIas: number
 ): number {
   return calculateAnnualYouthIrsDiscount(
     benefitsOfYouthIrs,
-    grossIncome.year,
+    taxableIncomeBeforeYouthIrs,
     currentTaxRankYear,
     yearOfYouthIrs,
     currentIas
@@ -215,14 +214,16 @@ export function calculateIrsPay(
   rnhTax: number,
   nrDaysOff: number,
   taxRanks: TaxRank[],
-  yearBusinessDays: number
+  yearBusinessDays: number,
+  youthIrsExemptIncome: number = 0
 ): CurrencyByFrequency {
   let yearIRS: number;
   if (rnh) {
     yearIRS = taxableIncome * rnhTax;
   } else {
-    const taxIncomeAvg = calculateTaxIncomeAvg(taxRank, taxableIncome);
-    const taxIncomeNormal = calculateTaxIncomeNormal(taxRank, taxableIncome);
+    const incomeForRate = taxableIncome + youthIrsExemptIncome;
+    const taxIncomeAvg = calculateTaxIncomeAvg(taxRank, incomeForRate);
+    const taxIncomeNormal = calculateTaxIncomeNormal(taxRank, incomeForRate);
 
     // For the last bracket (averageTax is null), use previous bracket's averageTax
     let avgTax = taxRank.averageTax;
@@ -231,7 +232,13 @@ export function calculateIrsPay(
       avgTax = previousBracket?.averageTax ?? 0;
     }
 
-    yearIRS = taxIncomeAvg * avgTax + taxIncomeNormal * taxRank.normalTax;
+    const taxOnIncomeForRate =
+      taxIncomeAvg * avgTax + taxIncomeNormal * taxRank.normalTax;
+
+    // Only the collectable proportion of the tax is due; the youth IRS exempt part still sets the rate
+    const collectableProportion =
+      incomeForRate > 0 ? taxableIncome / incomeForRate : 0;
+    yearIRS = taxOnIncomeForRate * collectableProportion;
   }
 
   const monthIRS = Math.max(yearIRS / 12, 0); // Always use 12 months for calculations

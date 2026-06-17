@@ -79,10 +79,19 @@ export interface IndependentWorkerNormalizedInternals {
   };
   taxableIncome: {
     coefficientApplied: number;
-    baseAnnualAfterYouthIrsDiscount: number;
+    /** Post-coefficient income (coefficient × gross), before the expenses add-back. */
+    incomeAfterCoefficient: number;
+    /** Unjustified-expenses add-back. */
     expensesMissing: number;
-    valueFromCoefficient: number;
-    valueFromExpensesMissing: number;
+    /**
+     * Income used to determine the marginal rate (`incomeAfterCoefficient +
+     * expensesMissing`), before the youth IRS exemption is removed.
+     */
+    incomeForRateDetermination: number;
+    /** Youth IRS exempt income, still counted for rate purposes. */
+    youthIrsExemptIncome: number;
+    /** Collectable income actually taxed. */
+    collectableIncome: number;
   };
   irs: {
     rnhApplied: boolean;

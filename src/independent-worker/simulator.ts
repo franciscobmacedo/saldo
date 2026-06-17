@@ -102,7 +102,8 @@ interface BuildNormalizedInternalsOptions {
   workerWithinFirst12Months: boolean;
   workerWithinFirstFinancialYear: boolean;
   workerWithinSecondFinancialYear: boolean;
-  youthIrsDiscount: number;
+  youthIrsExemptIncome: number;
+  taxableIncomeBeforeYouthIrs: number;
   expensesNeeded: number;
   expenses: number;
   taxableIncome: number;
@@ -126,7 +127,8 @@ const buildNormalizedInternals = ({
   workerWithinFirst12Months,
   workerWithinFirstFinancialYear,
   workerWithinSecondFinancialYear,
-  youthIrsDiscount,
+  youthIrsExemptIncome,
+  taxableIncomeBeforeYouthIrs,
   expensesNeeded,
   expenses,
   taxableIncome,
@@ -181,23 +183,19 @@ const buildNormalizedInternals = ({
     workerWithinFirstFinancialYear,
     workerWithinSecondFinancialYear
   );
-  const taxableBaseAnnualAfterYouthIrsDiscount =
-    grossIncome.year - youthIrsDiscount;
   const expensesMissing = expensesNeeded > expenses ? expensesNeeded - expenses : 0;
-  const taxableIncomeFromCoefficient =
-    taxableBaseAnnualAfterYouthIrsDiscount * coefficientApplied;
-  const taxableIncomeFromExpensesMissing = expensesMissing;
+  const incomeAfterCoefficient = grossIncome.year * coefficientApplied;
 
   const averageRateApplied = rnh
     ? rnhTax
     : resolveAverageRate(taxRank, taxRanks);
   const marginalRateApplied = rnh ? rnhTax : taxRank.normalTax;
   const taxableIncomeAtAverageRate = rnh
-    ? taxableIncome
-    : calculateTaxIncomeAvg(taxRank, taxableIncome);
+    ? taxableIncomeBeforeYouthIrs
+    : calculateTaxIncomeAvg(taxRank, taxableIncomeBeforeYouthIrs);
   const taxableIncomeAtMarginalRate = rnh
     ? 0
-    : calculateTaxIncomeNormal(taxRank, taxableIncome);
+    : calculateTaxIncomeNormal(taxRank, taxableIncomeBeforeYouthIrs);
 
   return {
     effectiveBusinessDays,
@@ -219,10 +217,11 @@ const buildNormalizedInternals = ({
     },
     taxableIncome: {
       coefficientApplied,
-      baseAnnualAfterYouthIrsDiscount: taxableBaseAnnualAfterYouthIrsDiscount,
+      incomeAfterCoefficient,
       expensesMissing,
-      valueFromCoefficient: taxableIncomeFromCoefficient,
-      valueFromExpensesMissing: taxableIncomeFromExpensesMissing,
+      incomeForRateDetermination: taxableIncomeBeforeYouthIrs,
+      youthIrsExemptIncome,
+      collectableIncome: taxableIncome,
     },
     irs: {
       rnhApplied: rnh,
@@ -328,29 +327,38 @@ export function simulateIndependentWorker({
   const maxExpenses = calculateMaxExpenses(grossIncome, maxExpensesTax);
   const expensesNeeded = calculateExpensesNeeded(maxExpenses, specificDeductions);
 
-  // Calculate youth IRS discount
-  const youthIrsDiscount = calculateYouthIrsDiscount(
-    benefitsOfYouthIrs,
+  // Calculate taxable income (before the youth IRS exemption is removed)
+  const taxableIncomeBeforeYouthIrs = calculateTaxableIncome(
     grossIncome,
-    currentTaxRankYear,
-    yearOfYouthIrs,
-    currentIas
-  );
-
-  // Calculate taxable income
-  const taxableIncome = calculateTaxableIncome(
-    grossIncome,
-    youthIrsDiscount,
     workerWithinFirstFinancialYear,
     workerWithinSecondFinancialYear,
     expensesNeeded,
     expenses
   );
 
+  // Calculate youth IRS discount, capped at the income it applies to
+  const youthIrsDiscount = calculateYouthIrsDiscount(
+    benefitsOfYouthIrs,
+    taxableIncomeBeforeYouthIrs,
+    currentTaxRankYear,
+    yearOfYouthIrs,
+    currentIas
+  );
+  const youthIrsExemptIncome = Math.min(
+    youthIrsDiscount,
+    Math.max(0, taxableIncomeBeforeYouthIrs)
+  );
+
+  // Calculate collectable income after the youth IRS exemption
+  const taxableIncome = Math.max(
+    0,
+    taxableIncomeBeforeYouthIrs - youthIrsExemptIncome
+  );
+
   const taxTableUsed = TAX_RANKS[currentTaxRankYear].map((rank) => ({ ...rank }));
 
-  // Find tax rank
-  const taxRank = findTaxRank(taxableIncome, currentTaxRankYear);
+  // Find tax rank (rate is determined by the income before the youth IRS exemption)
+  const taxRank = findTaxRank(taxableIncomeBeforeYouthIrs, currentTaxRankYear);
 
   // Calculate IRS payments
   const irsPay = calculateIrsPay(
@@ -360,7 +368,8 @@ export function simulateIndependentWorker({
     rnhTax,
     nrDaysOff,
     taxTableUsed,
-    resolvedYearBusinessDays
+    resolvedYearBusinessDays,
+    youthIrsExemptIncome
   );
 
   // Calculate net income
@@ -385,7 +394,8 @@ export function simulateIndependentWorker({
     workerWithinFirst12Months,
     workerWithinFirstFinancialYear,
     workerWithinSecondFinancialYear,
-    youthIrsDiscount,
+    youthIrsExemptIncome,
+    taxableIncomeBeforeYouthIrs,
     expensesNeeded,
     expenses,
     taxableIncome,
@@ -425,7 +435,7 @@ export function simulateIndependentWorker({
     specificDeductions,
     expenses,
     expensesNeeded,
-    youthIrsDiscount,
+    youthIrsDiscount: youthIrsExemptIncome,
     irsPay,
     irsRetentionRate,
     irsRetentionPay,
